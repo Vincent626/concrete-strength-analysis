@@ -30,20 +30,20 @@
 
 ### 相關係數長條圖
 <p float="left">
-  <img src="S60_correlation_bar.png" width="49%" />
-  <img src="M60_correlation_bar.png" width="49%" /> 
+  <a href="S60_correlation_bar.png"><img src="S60_correlation_bar.png" width="49%" /></a>
+  <a href="M60_correlation_bar.png"><img src="M60_correlation_bar.png" width="49%" /></a> 
 </p>
 
 ### Top 5 因子散佈圖
 <p float="left">
-  <img src="S60_top5_scatter.png" width="49%" />
-  <img src="M60_top5_scatter.png" width="49%" /> 
+  <a href="S60_top5_scatter.png"><img src="S60_top5_scatter.png" width="49%" /></a>
+  <a href="M60_top5_scatter.png"><img src="M60_top5_scatter.png" width="49%" /></a> 
 </p>
 
 ### 特徵重要性 (Random Forest)
 <p float="left">
-  <img src="S60_feature_importance.png" width="49%" />
-  <img src="M60_feature_importance.png" width="49%" /> 
+  <a href="S60_feature_importance.png"><img src="S60_feature_importance.png" width="49%" /></a>
+  <a href="M60_feature_importance.png"><img src="M60_feature_importance.png" width="49%" /></a> 
 </p>
 
 ## 📁 檔案說明
