@@ -1,0 +1,6 @@
+# 排除 Python 腳本
+*.py
+
+# 排除快取
+__pycache__/
+*.pyc
