@@ -29,19 +29,22 @@
 ## 📈 分析圖表
 
 ### 相關係數長條圖
-| S60 | M60 |
-|:---:|:---:|
-| ![S60](S60_correlation_bar.png) | ![M60](M60_correlation_bar.png) |
+<p float="left">
+  <img src="S60_correlation_bar.png" width="49%" />
+  <img src="M60_correlation_bar.png" width="49%" /> 
+</p>
 
 ### Top 5 因子散佈圖
-| S60 | M60 |
-|:---:|:---:|
-| ![S60](S60_top5_scatter.png) | ![M60](M60_top5_scatter.png) |
+<p float="left">
+  <img src="S60_top5_scatter.png" width="49%" />
+  <img src="M60_top5_scatter.png" width="49%" /> 
+</p>
 
 ### 特徵重要性 (Random Forest)
-| S60 | M60 |
-|:---:|:---:|
-| ![S60](S60_feature_importance.png) | ![M60](M60_feature_importance.png) |
+<p float="left">
+  <img src="S60_feature_importance.png" width="49%" />
+  <img src="M60_feature_importance.png" width="49%" /> 
+</p>
 
 ## 📁 檔案說明
 
