@@ -743,13 +743,14 @@
                 tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
 
                 const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
+                const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
 
                 tr.innerHTML = `
                     <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
                     <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
                     <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
                     <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
-                    <td class="p-3 text-right font-bold text-white">${row['平均強度']}</td>
+                    <td class="p-3 text-right font-bold text-white">${strength}</td>
                 `;
                 tbody.appendChild(tr);
             });
