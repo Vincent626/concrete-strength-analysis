@@ -173,10 +173,219 @@
     </div>
 
     <!-- Data Logic -->
+
+    <!-- AI Prediction Tool Section -->
+    <div id="ai-tool-container"
+        class="glass-panel p-6 mb-8 border-l-4 border-neon-blue animate-fade-in relative overflow-hidden">
+        <div class="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
+            <i class="fas fa-robot text-8xl text-white"></i>
+        </div>
+
+        <h2 class="text-xl font-bold mb-6 text-white flex items-center gap-3">
+            <span class="w-1 h-6 bg-neon-blue rounded-sm"></span>
+            AI 強度預測工具 (AI Strength Predictor)
+            <span class="text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-400 font-mono">Model v8</span>
+        </h2>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
+            <!-- Input Controls -->
+            <div class="space-y-6">
+                <!-- S60 Inputs -->
+                <div id="inputs-s60" class="space-y-5">
+                    <!-- W/B Ratio -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">水膠比 (W/B Ratio)</label>
+                            <span id="val-s60-wb" class="text-neon-blue font-mono font-bold">0.32</span>
+                        </div>
+                        <input type="range" id="input-s60-wb" min="0.28" max="0.36" step="0.01" value="0.32"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue hover:bg-slate-600 transition-colors">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>0.28 (濃)</span>
+                            <span>0.36 (稀)</span>
+                        </div>
+                    </div>
+
+                    <!-- Slump -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">坍度 (Slump)</label>
+                            <span id="val-s60-slump" class="text-neon-blue font-mono font-bold">4.2 cm</span>
+                        </div>
+                        <input type="range" id="input-s60-slump" min="1.0" max="8.0" step="0.5" value="4.2"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                    </div>
+
+                    <!-- Temp -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">混凝土溫度 (Temp)</label>
+                            <span id="val-s60-temp" class="text-neon-blue font-mono font-bold">28 °C</span>
+                        </div>
+                        <input type="range" id="input-s60-temp" min="20" max="35" step="1" value="28"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                    </div>
+                </div>
+
+                <!-- M60 Inputs (Hidden by default) -->
+                <div id="inputs-m60" class="space-y-5 hidden">
+                    <!-- Silica Fume -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">矽灰取代率 (Silica Fume)</label>
+                            <span id="val-m60-sf" class="text-neon-green font-mono font-bold">6 %</span>
+                        </div>
+                        <input type="range" id="input-m60-sf" min="0" max="12" step="1" value="6"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                    </div>
+
+                    <!-- Final Current -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">最終電流 (Final Current)</label>
+                            <span id="val-m60-cur" class="text-neon-green font-mono font-bold">78 A</span>
+                        </div>
+                        <input type="range" id="input-m60-cur" min="60" max="100" step="1" value="78"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                    </div>
+
+                    <!-- Slump -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">坍度 (Slump)</label>
+                            <span id="val-m60-slump" class="text-neon-green font-mono font-bold">4.5 cm</span>
+                        </div>
+                        <input type="range" id="input-m60-slump" min="1.0" max="8.0" step="0.5" value="4.5"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Output Display -->
+            <div
+                class="flex flex-col justify-center items-center bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-inner">
+                <span class="text-slate-400 text-sm font-bold uppercase tracking-wider mb-2">AI 預測 28 天強度</span>
+                <div class="relative group cursor-help">
+                    <span id="ai-prediction-val"
+                        class="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300">--</span>
+                    <div
+                        class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded text-xs text-slate-300 pointer-events-none">
+                        基於 v8 線性回歸模型
+                    </div>
+                </div>
+                <span class="text-xl text-slate-500 mt-2 font-bold">kgf/cm²</span>
+
+                <!-- Confidence Interval mockup -->
+                <div class="mt-6 flex items-center gap-2 text-xs text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full">
+                    <i class="fas fa-chart-line"></i>
+                    <span>95% 信賴區間: <span id="ai-conf-interval" class="text-slate-300">--</span></span>
+                </div>
+
+                <div id="ai-factor-impact" class="mt-4 w-full text-center">
+                    <!-- Dynamic Impact Text -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="model_data.js"></script>
     <script>
-        let allData = [];
-        let currentTab = 'S60'; // Default
-        let mainChart = null;
+        // Prediction Logic
+        function updatePrediction() {
+            if (typeof MODEL_DATA === 'undefined') return;
+
+            const model = MODEL_DATA[currentTab];
+            if (!model) return;
+
+            let score = model.intercept;
+
+            // Helper to get scaled value
+            const getScaled = (name, val) => {
+                const feat = model.features.find(f => f.name === name);
+                if (!feat) return 0; // Should not happen if name matches
+                return (val - feat.mean) / feat.scale * feat.coef;
+            };
+
+            // Add contribution of visible sliders
+            if (currentTab === 'S60') {
+                const wb = parseFloat(document.getElementById('input-s60-wb').value);
+                const slump = parseFloat(document.getElementById('input-s60-slump').value);
+                const temp = parseFloat(document.getElementById('input-s60-temp').value);
+
+                score += getScaled('水膠比', wb);
+                score += getScaled('坍度(cm)', slump);
+                score += getScaled('混凝土溫度(℃)', temp);
+
+                // Update Labels
+                document.getElementById('val-s60-wb').innerText = wb.toFixed(2);
+                document.getElementById('val-s60-slump').innerText = slump.toFixed(1) + ' cm';
+                document.getElementById('val-s60-temp').innerText = temp + ' °C';
+
+            } else {
+                const sf = parseFloat(document.getElementById('input-m60-sf').value);
+                const cur = parseFloat(document.getElementById('input-m60-cur').value);
+                const slump = parseFloat(document.getElementById('input-m60-slump').value);
+
+                score += getScaled('矽灰取代率', sf);
+                score += getScaled('最終電流', cur);
+                score += getScaled('坍度(cm)', slump);
+
+                // Update Labels
+                document.getElementById('val-m60-sf').innerText = sf + ' %';
+                document.getElementById('val-m60-cur').innerText = cur + ' A';
+                document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
+            }
+
+            // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
+            // Linear Model: Intercept + Sum(Coef * (Input - Mean)/Scale)
+            // If Input = Mean, term is 0. So we don't need to add anything!
+
+            const result = Math.round(score);
+            const el = document.getElementById('ai-prediction-val');
+
+            // Animation
+            // el.style.transform = 'scale(1.1)';
+            // setTimeout(() => el.style.transform = 'scale(1)', 100);
+
+            let colorClass = currentTab === 'S60' ? 'text-neon-purple' : 'text-neon-green';
+            // Force white for better contrast or use neon
+            // el.className = `text-6xl font-black ${colorClass} drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300`;
+            el.innerText = result;
+
+            // Interval (approx RMSE ~45)
+            const margin = 45;
+            document.getElementById('ai-conf-interval').innerText = `${result - margin} ~ ${result + margin}`;
+        }
+
+        // Bind Events
+        ['s60-wb', 's60-slump', 's60-temp', 'm60-sf', 'm60-cur', 'm60-slump'].forEach(id => {
+            const el = document.getElementById(`input-${id}`);
+            if (el) el.addEventListener('input', updatePrediction);
+        });
+
+        // Update on tab switch
+        const originalSwitch = switchTab;
+        switchTab = function (tab) {
+            originalSwitch(tab);
+
+            // Toggle AI inputs
+            if (tab === 'S60') {
+                document.getElementById('inputs-s60').classList.remove('hidden');
+                document.getElementById('inputs-m60').classList.add('hidden');
+                document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-purple animate-fade-in relative overflow-hidden";
+            } else {
+                document.getElementById('inputs-s60').classList.add('hidden');
+                document.getElementById('inputs-m60').classList.remove('hidden');
+                document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-green animate-fade-in relative overflow-hidden";
+            }
+            updatePrediction();
+        };
+
+        // Init call
+        setTimeout(updatePrediction, 500); // Delay to ensure model loaded
+    </script>
+    <script>
+
 
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
 
