@@ -16,7 +16,7 @@ export const ConcreteReportVideo: React.FC<{ data: ConcreteData[] }> = ({ data }
     const recentS60 = s60Data.slice(-30);
 
     // Avg Calcs
-    const avg = (arr: number[]) => arr.reduce((a, b) => a + b, 0) / arr.length;
+    const avg = (arr: number[]) => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
     const m60Str = avg(m60Data.map(d => d.strength));
     const m60Curr = avg(m60Data.map(d => d.current));
     const s60Str = avg(s60Data.map(d => d.strength));
@@ -63,7 +63,7 @@ export const ConcreteReportVideo: React.FC<{ data: ConcreteData[] }> = ({ data }
                 <AbsoluteFill className="flex flex-row p-10 gap-8">
                     {/* Left: KPIs */}
                     <div className="flex flex-col w-1/3 gap-4 justify-center">
-                        <h2 className="text-3xl font-bold text-neon-purple mb-4">S60 Standard Pipe</h2>
+                        <h2 className="text-3xl font-bold text-neon-purple mb-4">S60 Propulsion Pipe</h2>
                         <div className="h-32">
                             <KpiCard title="Avg Strength" value={s60Str} unit="kgf/cm²" color="purple" />
                         </div>
