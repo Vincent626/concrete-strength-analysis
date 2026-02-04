@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="zh-Hant">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -11,8 +12,10 @@
     <!-- PapaParse (CSV Parser) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <!-- Google Fonts -->
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap" rel="stylesheet">
-    
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=JetBrains+Mono:wght@400;700&display=swap"
+        rel="stylesheet">
+
     <script>
         tailwind.config = {
             theme: {
@@ -39,16 +42,24 @@
         }
     </script>
     <style>
-        body { background-color: #0f172a; color: #e2e8f0; }
+        body {
+            background-color: #0f172a;
+            color: #e2e8f0;
+        }
+
         .glass-panel {
             background: rgba(30, 41, 59, 0.7);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
         }
-        .stat-value { font-family: 'JetBrains Mono', monospace; }
+
+        .stat-value {
+            font-family: 'JetBrains Mono', monospace;
+        }
     </style>
 </head>
+
 <body class="min-h-screen p-4 md:p-8 bg-gradient-to-br from-slate-950 to-slate-900">
 
     <!-- Header -->
@@ -59,7 +70,8 @@
             </h1>
             <p class="text-slate-400 text-sm mt-1">S60 / M60 推進管即時監控儀表板 (v8)</p>
         </div>
-        <div class="flex items-center gap-2 text-xs text-slate-500 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+        <div
+            class="flex items-center gap-2 text-xs text-slate-500 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
             <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span>
             System Online
             <span id="last-updated" class="ml-2 pl-2 border-l border-slate-700">Waiting for data...</span>
@@ -69,97 +81,109 @@
     <!-- KPI Grid -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
         <!-- M60 Avg Strength -->
-        <div class="glass-panel p-4 relative overflow-hidden group hover:border-neon-blue/50 transition-colors">
-            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                </svg>
-            </div>
+        <div
+            class="glass-panel p-4 relative overflow-hidden group hover:border-neon-green/50 transition-colors border-l-4 border-neon-green">
             <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">M60 平均強度 (All)</h3>
             <div class="mt-2 flex items-baseline gap-2">
                 <span id="kpi-m60-strength" class="text-2xl font-bold stat-value text-white">--</span>
                 <span class="text-xs text-slate-500">kgf/cm²</span>
             </div>
             <div class="mt-2 text-xs text-neon-green flex items-center gap-1">
-                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path></svg>
-                Target: > 600
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"></path>
+                </svg>
+                關鍵因子: 電流
             </div>
         </div>
 
         <!-- M60 Final Current -->
         <div class="glass-panel p-4 relative overflow-hidden group hover:border-neon-green/50 transition-colors">
-            <div class="absolute right-0 top-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-16 w-16" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z" />
-                </svg>
-            </div>
             <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">M60 平均最終電流</h3>
             <div class="mt-2 flex items-baseline gap-2">
                 <span id="kpi-m60-current" class="text-2xl font-bold stat-value text-neon-green">--</span>
                 <span class="text-xs text-slate-500">Amps</span>
             </div>
-             <div class="mt-2 text-xs text-slate-400">
-                關鍵監控指標 (Rank #2)
-            </div>
-        </div>
-        
-        <!-- S60 Avg Strength -->
-        <div class="glass-panel p-4 relative overflow-hidden group hover:border-neon-purple/50 transition-colors">
-            <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">S60 平均強度 (All)</h3>
-             <div class="mt-2 flex items-baseline gap-2">
-                <span id="kpi-s60-strength" class="text-2xl font-bold stat-value text-white">--</span>
-                 <span class="text-xs text-slate-500">kgf/cm²</span>
-            </div>
-             <div class="mt-2 text-xs text-neon-purple flex items-center gap-1">
-                 <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"></path></svg>
-                Stable
+            <div class="mt-2 text-xs text-slate-400">
+                Rank #2 Predictor
             </div>
         </div>
 
-         <!-- Data Count -->
-         <div class="glass-panel p-4 relative overflow-hidden group hover:border-slate-500 transition-colors">
-            <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">總監控批次</h3>
-             <div class="mt-2 flex items-baseline gap-2">
-                <span id="kpi-total-batches" class="text-2xl font-bold stat-value text-white">--</span>
-                 <span class="text-xs text-slate-500">Batches</span>
+        <!-- S60 Avg Strength -->
+        <div
+            class="glass-panel p-4 relative overflow-hidden group hover:border-neon-purple/50 transition-colors border-l-4 border-neon-purple">
+            <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">S60 平均強度 (All)</h3>
+            <div class="mt-2 flex items-baseline gap-2">
+                <span id="kpi-s60-strength" class="text-2xl font-bold stat-value text-white">--</span>
+                <span class="text-xs text-slate-500">kgf/cm²</span>
             </div>
-             <div class="mt-2 text-xs text-slate-400">
-                Data Version: v8
+            <div class="mt-2 text-xs text-neon-purple flex items-center gap-1">
+                <svg class="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
+                </svg>
+                關鍵因子: 水膠比
+            </div>
+        </div>
+
+        <!-- S60 W/B Ratio -->
+        <div class="glass-panel p-4 relative overflow-hidden group hover:border-neon-purple/50 transition-colors">
+            <h3 class="text-slate-400 text-xs font-semibold uppercase tracking-wider">S60 平均水膠比</h3>
+            <div class="mt-2 flex items-baseline gap-2">
+                <span id="kpi-s60-wb" class="text-2xl font-bold stat-value text-neon-purple">--</span>
+                <span class="text-xs text-slate-500">W/B</span>
+            </div>
+            <div class="mt-2 text-xs text-slate-400">
+                Rank #2 Predictor
             </div>
         </div>
     </div>
 
-    <!-- Charts Area -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        
-        <!-- Chart 1: M60 Current vs Strength Scatter -->
+    <!-- Charts Area Row 1: Key Factors -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 mb-6">
+
+        <!-- Chart 1: M60 Current vs Strength -->
         <div class="glass-panel p-6">
             <h2 class="text-lg font-semibold mb-4 text-neon-green flex items-center gap-2">
                 <span class="w-2 h-6 bg-neon-green rounded-sm"></span>
-                M60 最終電流強度關聯分析
+                M60 關鍵：最終電流 vs 強度 (製程觀點)
             </h2>
             <div class="h-[300px] w-full">
-                <canvas id="scatterChart"></canvas>
+                <canvas id="m60ScatterChart"></canvas>
             </div>
             <p class="text-xs text-slate-400 mt-2 text-center">
-                *電流值 (X軸) 與強度 (Y軸) 呈現正相關，證明電流可作為強度的早期指標
+                *電流越高 (料越乾) -> 強度趨勢越高
             </p>
         </div>
 
-        <!-- Chart 2: Recent Trend -->
+        <!-- Chart 2: S60 W/B vs Strength -->
         <div class="glass-panel p-6">
-            <h2 class="text-lg font-semibold mb-4 text-neon-blue flex items-center gap-2">
-                <span class="w-2 h-6 bg-neon-blue rounded-sm"></span>
-                S60/M60 強度趨勢監控
+            <h2 class="text-lg font-semibold mb-4 text-neon-purple flex items-center gap-2">
+                <span class="w-2 h-6 bg-neon-purple rounded-sm"></span>
+                S60 關鍵：水膠比 vs 強度 (配方觀點)
             </h2>
-             <div class="h-[300px] w-full">
-                <canvas id="trendChart"></canvas>
+            <div class="h-[300px] w-full">
+                <canvas id="s60ScatterChart"></canvas>
             </div>
+            <p class="text-xs text-slate-400 mt-2 text-center">
+                *水膠比越低 (越濃) -> 強度趨勢越高 (經典定律)
+            </p>
+        </div>
+    </div>
+
+    <!-- Charts Area Row 2: Timeline -->
+    <div class="glass-panel p-6 mb-6">
+        <h2 class="text-lg font-semibold mb-4 text-neon-blue flex items-center gap-2">
+            <span class="w-2 h-6 bg-neon-blue rounded-sm"></span>
+            全產線強度趨勢監控 (Timeline)
+        </h2>
+        <div class="h-[300px] w-full">
+            <canvas id="trendChart"></canvas>
         </div>
     </div>
 
     <!-- Data Table Preview -->
-    <div class="glass-panel mt-6 p-6">
+    <div class="glass-panel p-6">
         <h2 class="text-lg font-semibold mb-4 text-slate-300">最新批次數據</h2>
         <div class="overflow-x-auto">
             <table class="w-full text-sm text-left text-slate-400">
@@ -167,8 +191,7 @@
                     <tr>
                         <th class="px-4 py-3 rounded-l-lg">日期/批次</th>
                         <th class="px-4 py-3">類型</th>
-                        <th class="px-4 py-3">最終電流 (A)</th>
-                        <th class="px-4 py-3">矽灰取代率 (%)</th>
+                        <th class="px-4 py-3">關鍵因子</th>
                         <th class="px-4 py-3">坍度 (cm)</th>
                         <th class="px-4 py-3 text-right rounded-r-lg">強度 (kgf/cm²)</th>
                     </tr>
@@ -181,9 +204,9 @@
     </div>
 
     <script>
-        // Data URL (Relative path to the shared CSV)
+        // Data URL
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
-        
+
         // Color Palette
         const colors = {
             m60Points: 'rgba(0, 255, 157, 0.6)',
@@ -196,94 +219,82 @@
         Papa.parse(CSV_URL, {
             download: true,
             header: true,
-            complete: function(results) {
-                const data = results.data.filter(row => row.match_key); // Filter empty rows
+            complete: function (results) {
+                const data = results.data.filter(row => row.match_key);
                 processData(data);
-                
-                // Update timestamp
+
                 const now = new Date();
                 document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
             },
-            error: function(err) {
+            error: function (err) {
                 console.error("CSV Load Error:", err);
-                alert("無法讀取數據集，請確認 CSV 檔案存在。");
             }
         });
 
         function processData(data) {
-            // Split Data
             const s60Data = data.filter(d => d['母體'] === 'S60');
             const m60Data = data.filter(d => d['母體'] === 'M60');
 
+            const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
+            const getVal = (arr, key) => arr.map(d => parseFloat(d[key]) || 0).filter(v => v > 0);
+
             // --- KPI Updates ---
-            const m60Str = m60Data.map(d => parseFloat(d['平均強度']) || 0).filter(v=>v>0);
-            const s60Str = s60Data.map(d => parseFloat(d['平均強度']) || 0).filter(v=>v>0);
-            const m60Curr = m60Data.map(d => parseFloat(d['最終電流']) || 0).filter(v=>v>0);
+            document.getElementById('kpi-m60-strength').innerText = avg(getVal(m60Data, '平均強度')).toFixed(0);
+            document.getElementById('kpi-m60-current').innerText = avg(getVal(m60Data, '最終電流')).toFixed(1);
 
-            const avg = arr => arr.reduce((a,b) => a+b, 0) / arr.length;
+            document.getElementById('kpi-s60-strength').innerText = avg(getVal(s60Data, '平均強度')).toFixed(0);
+            document.getElementById('kpi-s60-wb').innerText = avg(getVal(s60Data, '水膠比')).toFixed(2);
 
-            document.getElementById('kpi-m60-strength').innerText = avg(m60Str).toFixed(0);
-            document.getElementById('kpi-s60-strength').innerText = avg(s60Str).toFixed(0);
-            document.getElementById('kpi-m60-current').innerText = avg(m60Curr).toFixed(1);
-            document.getElementById('kpi-total-batches').innerText = data.length;
-
-            // --- Chart 1: Scatter (M60 Current vs Strength) ---
-            new Chart(document.getElementById('scatterChart'), {
+            // --- Chart 1: M60 Current vs Strength ---
+            new Chart(document.getElementById('m60ScatterChart'), {
                 type: 'scatter',
                 data: {
                     datasets: [{
                         label: 'M60 批次',
-                        data: m60Data.map(d => ({
-                            x: parseFloat(d['最終電流']),
-                            y: parseFloat(d['平均強度'])
-                        })).filter(p => p.x > 0 && p.y > 0),
+                        data: m60Data.map(d => ({ x: parseFloat(d['最終電流']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
                         backgroundColor: colors.m60Points,
                         borderColor: colors.m60Border,
                     }]
                 },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: { 
-                            title: { display: true, text: '最終電流 (Amps)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        },
-                        y: { 
-                            title: { display: true, text: '強度 (kgf/cm²)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        }
-                    },
-                    plugins: {
-                        legend: { labels: { color: '#cbd5e1' } }
-                    }
-                }
+                options: createScatterOptions('最終電流 (A)', '強度 (kgf/cm²)')
             });
 
-            // --- Chart 2: Trend (Recent Batches) ---
-            // Sort by date/key
-            const sortedData = [...data].sort((a,b) => b.match_key - a.match_key).slice(0, 30).reverse();
-            
+            // --- Chart 2: S60 W/B vs Strength ---
+            new Chart(document.getElementById('s60ScatterChart'), {
+                type: 'scatter',
+                data: {
+                    datasets: [{
+                        label: 'S60 批次',
+                        data: s60Data.map(d => ({ x: parseFloat(d['水膠比']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
+                        backgroundColor: colors.s60Points,
+                        borderColor: colors.s60Border,
+                    }]
+                },
+                options: createScatterOptions('水膠比 (W/B)', '強度 (kgf/cm²)')
+            });
+
+            // --- Chart 3: Timeline Trend ---
+            const sortedData = [...data].sort((a, b) => b.match_key - a.match_key).slice(0, 40).reverse();
             new Chart(document.getElementById('trendChart'), {
                 type: 'line',
                 data: {
-                    labels: sortedData.map(d => d.日期.substring(5)), // MM-DD
+                    labels: sortedData.map(d => d.日期.substring(5)),
                     datasets: [
                         {
-                            label: '強度 (kgf/cm²)',
-                            data: sortedData.map(d => parseFloat(d['平均強度'])),
-                            borderColor: '#38bdf8', // Sky blue
-                            yAxisID: 'y',
+                            label: 'M60 強度',
+                            data: sortedData.map(d => d['母體'] == 'M60' ? parseFloat(d['平均強度']) : null),
+                            borderColor: colors.m60Border,
+                            backgroundColor: colors.m60Border,
+                            segment: { borderDash: [5, 5] }, // 斷點用虛線連 (可選) 或直接斷開
+                            spanGaps: true, // 連接斷點
                             tension: 0.4
                         },
                         {
-                            label: '最終電流 (A)',
-                            data: sortedData.map(d => parseFloat(d['最終電流'])),
-                            borderColor: '#facc15', // Yellow
-                            yAxisID: 'y1',
-                            borderDash: [5, 5],
+                            label: 'S60 強度',
+                            data: sortedData.map(d => d['母體'] == 'S60' ? parseFloat(d['平均強度']) : null),
+                            borderColor: colors.s60Border,
+                            backgroundColor: colors.s60Border,
+                            spanGaps: true,
                             tension: 0.4
                         }
                     ]
@@ -293,45 +304,44 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     scales: {
-                        x: { ticks: { color: '#cbd5e1' }, grid: { display: false } },
-                        y: { 
-                            type: 'linear', display: true, position: 'left',
-                            grid: { color: '#334155' }, ticks: { color: '#38bdf8' }
-                        },
-                        y1: { 
-                            type: 'linear', display: true, position: 'right',
-                            grid: { display: false }, ticks: { color: '#facc15' }
-                        }
+                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
+                        y: { grid: { color: '#334155' }, ticks: { color: '#e2e8f0' } }
                     },
                     plugins: { legend: { labels: { color: '#cbd5e1' } } }
                 }
             });
 
-            // --- Table Population (Top 5 Recent) ---
+            // --- Table ---
             const tbody = document.getElementById('data-table-body');
-            // Sort by date desc
-            const recent = [...data].sort((a,b) => b.match_key - a.match_key).slice(0, 5);
-            
+            const recent = [...data].sort((a, b) => b.match_key - a.match_key).slice(0, 5);
+
             recent.forEach(row => {
+                const isM60 = row['母體'] === 'M60';
+                const keyFactor = isM60 ? `${parseFloat(row['最終電流']).toFixed(1)} A` : `W/B ${parseFloat(row['水膠比']).toFixed(2)}`;
                 const tr = document.createElement('tr');
                 tr.className = "border-b border-slate-700 hover:bg-slate-800 transition-colors";
                 tr.innerHTML = `
-                    <td class="px-4 py-3 font-mono text-slate-300">
-                        ${row.日期}<br><span class="text-xs text-slate-500">${row.match_key}</span>
-                    </td>
-                    <td class="px-4 py-3">
-                        <span class="px-2 py-1 rounded text-xs font-bold ${row['母體']=='M60' ? 'bg-neon-green/20 text-neon-green' : 'bg-neon-purple/20 text-neon-purple'}">
-                            ${row['母體']}
-                        </span>
-                    </td>
-                    <td class="px-4 py-3 font-mono">${parseFloat(row['最終電流']).toFixed(1)}</td>
-                    <td class="px-4 py-3 font-mono">${parseFloat(row['矽灰取代率']).toFixed(1)}%</td>
+                    <td class="px-4 py-3 font-mono text-slate-300">${row.日期}</td>
+                    <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs font-bold ${isM60 ? 'bg-neon-green/20 text-neon-green' : 'bg-neon-purple/20 text-neon-purple'}">${row['母體']}</span></td>
+                    <td class="px-4 py-3 font-mono text-slate-300">${keyFactor}</td>
                     <td class="px-4 py-3 font-mono">${row['坍度(cm)']}</td>
                     <td class="px-4 py-3 text-right font-bold text-white">${parseFloat(row['平均強度']).toFixed(0)}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
+
+        function createScatterOptions(xLabel, yLabel) {
+            return {
+                responsive: true, allowAspectRatio: false, maintainAspectRatio: false,
+                scales: {
+                    x: { title: { display: true, text: xLabel, color: '#94a3b8' }, grid: { color: '#334155' }, ticks: { color: '#cbd5e1' } },
+                    y: { title: { display: true, text: yLabel, color: '#94a3b8' }, grid: { color: '#334155' }, ticks: { color: '#cbd5e1' } }
+                },
+                plugins: { legend: { display: false } }
+            };
+        }
     </script>
 </body>
+
 </html>
