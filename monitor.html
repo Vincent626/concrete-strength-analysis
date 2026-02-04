@@ -973,10 +973,8 @@
                 dynamicTyping: true,
                 complete: function (results) {
                     allData = results.data;
-                    initDashboard(); // Load Main Dashboard
-                    updatePrediction(); // Init AI Tool
-                    updateFeatureChart(); // Init Feature Chart
-                    updateAccuracyChart(); // Init Accuracy Chart
+                    // Initialize with S60
+                    switchTab('S60');
                 }
             });
 
