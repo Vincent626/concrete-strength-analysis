@@ -101,7 +101,7 @@
             <!-- Card 1: Strength Performance -->
             <div
                 class="glass-panel p-6 border-l-4 border-neon-blue relative group hover:-translate-y-1 transition-transform duration-300">
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">平均強度 vs 設計 (510)</h3>
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">平均強度 vs 設計強度</h3>
                 <div class="flex items-baseline gap-2">
                     <span id="kpi-avg-strength" class="text-4xl font-black text-white font-mono">--</span>
                     <span class="text-xs text-slate-500">kgf/cm²</span>
@@ -477,6 +477,8 @@
         let currentPage = 1;
         const rowsPerPage = 10;
         let tableData = [];
+        let allData = [];
+        let currentTab = 'S60';
 
         const CONFIG = {
             S60: {
