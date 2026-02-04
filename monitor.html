@@ -252,32 +252,38 @@
             document.getElementById('kpi-s60-wb').innerText = avg(getVal(s60Data, '水膠比')).toFixed(2);
 
             // --- Chart 1: M60 Current vs Strength ---
-            new Chart(document.getElementById('m60ScatterChart'), {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'M60 批次',
-                        data: m60Data.map(d => ({ x: parseFloat(d['最終電流']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
-                        backgroundColor: colors.m60Points,
-                        borderColor: colors.m60Border,
-                    }]
-                },
-                options: createScatterOptions('最終電流 (A)', '強度 (kgf/cm²)')
-            });
+            const m60Ctx = document.getElementById('m60ScatterChart');
+            if (m60Ctx) {
+                new Chart(m60Ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'M60 批次',
+                            data: m60Data.map(d => ({ x: parseFloat(d['最終電流']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
+                            backgroundColor: colors.m60Points,
+                            borderColor: colors.m60Border,
+                        }]
+                    },
+                    options: createScatterOptions('最終電流 (Amps)', '強度 (kgf/cm²)')
+                });
+            }
 
             // --- Chart 2: S60 W/B vs Strength ---
-            new Chart(document.getElementById('s60ScatterChart'), {
-                type: 'scatter',
-                data: {
-                    datasets: [{
-                        label: 'S60 批次',
-                        data: s60Data.map(d => ({ x: parseFloat(d['水膠比']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
-                        backgroundColor: colors.s60Points,
-                        borderColor: colors.s60Border,
-                    }]
-                },
-                options: createScatterOptions('水膠比 (W/B)', '強度 (kgf/cm²)')
-            });
+            const s60Ctx = document.getElementById('s60ScatterChart');
+            if (s60Ctx) {
+                new Chart(s60Ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [{
+                            label: 'S60 批次',
+                            data: s60Data.map(d => ({ x: parseFloat(d['水膠比']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
+                            backgroundColor: colors.s60Points,
+                            borderColor: colors.s60Border,
+                        }]
+                    },
+                    options: createScatterOptions('水膠比 (W/B)', '強度 (kgf/cm²)')
+                });
+            }
 
             // --- Chart 3: Timeline Trend ---
             const sortedData = [...data].sort((a, b) => b.match_key - a.match_key).slice(0, 40).reverse();
