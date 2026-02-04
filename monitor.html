@@ -166,19 +166,21 @@
                 取樣明細列表 (Sampling List)
             </h2>
             <div class="overflow-x-auto">
-                <table class="w-full text-left border-collapse">
-                    <thead>
-                        <tr class="text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
-                            <th class="p-3 font-semibold">日期/批次</th>
-                            <th class="p-3 font-semibold">類型</th>
-                            <th class="p-3 font-semibold" id="col-key-factor">關鍵因子</th>
-                            <th class="p-3 font-semibold">坍度 (cm)</th>
-                            <th class="p-3 font-semibold text-right">強度 (kgf/cm²)</th>
-                        </tr>
-                    </thead>
-                    <tbody id="table-body" class="text-sm divide-y divide-slate-800/50">
-                        <!-- Rows rendered by JS -->
-                    </tbody>
+                <thead>
+                    <tr class="text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
+                        <th class="p-3 font-semibold">日期/批次</th>
+                        <th class="p-3 font-semibold">配比代號</th>
+                        <th class="p-3 font-semibold" id="col-key-factor">關鍵因子</th>
+                        <th class="p-3 font-semibold">坍度</th>
+                        <th class="p-3 font-semibold text-right">#1</th>
+                        <th class="p-3 font-semibold text-right">#2</th>
+                        <th class="p-3 font-semibold text-right">#3</th>
+                        <th class="p-3 font-semibold text-right">平均 (Avg)</th>
+                    </tr>
+                </thead>
+                <tbody id="table-body" class="text-sm divide-y divide-slate-800/50">
+                    <!-- Rows rendered by JS -->
+                </tbody>
                 </table>
             </div>
 
@@ -199,7 +201,47 @@
 
     <!-- Data Logic -->
 
-    <!-- Feature Correlation Analysis (New Section) -->
+    <!-- Feature Correlation Analysis -->
+    <!-- (Sections skipped) -->
+
+    <script src="model_data.js"></script>
+    <script>
+        // ... (skipped)
+    </script>
+    <script>
+        // ... (skipped)
+
+        // (Inside updateTable)
+
+        // Render
+        sliced.forEach(row => {
+            const tr = document.createElement('tr');
+            tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
+
+            const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
+            const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
+            const x1 = row['試體1強度(X1)'] || '-';
+            const x2 = row['試體2強度(X2)'] || '-';
+            const x3 = row['試體3強度(X3)'] || '-';
+
+            tr.innerHTML = `
+                    <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
+                    <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
+                    <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
+                    <td class="p-3 text-right font-mono text-slate-400">${x1}</td>
+                    <td class="p-3 text-right font-mono text-slate-400">${x2}</td>
+                    <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
+                    <td class="p-3 text-right font-bold text-white">${strength}</td>
+                `;
+            tbody.appendChild(tr);
+        });
+        </div >
+    </div >
+
+    <!-- Data Logic -->
+
+    < !--Feature Correlation Analysis(New Section)-- >
     <div class="glass-panel p-6 mb-8 border-l-4 border-slate-500 animate-fade-in delay-200">
         <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
             <h2 class="text-xl font-bold text-white flex items-center gap-3">
@@ -229,7 +271,7 @@
         </p>
     </div>
 
-    <!-- Model Accuracy Analysis (New Section) -->
+    <!--Model Accuracy Analysis(New Section)-- >
     <div class="glass-panel p-6 mb-8 border-l-4 border-amber-500 animate-fade-in delay-300">
         <h2 class="text-xl font-bold text-white mb-6 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -268,7 +310,7 @@
         </div>
     </div>
 
-    <!-- AI Prediction Tool Section -->
+    <!--AI Prediction Tool Section-- >
     <div id="ai-tool-container"
         class="glass-panel p-6 mb-8 border-l-4 border-neon-blue animate-fade-in relative overflow-hidden">
         <div class="absolute top-0 right-0 p-4 opacity-20 pointer-events-none">
@@ -551,7 +593,7 @@
         }
 
         function updateKpiDisplay() {
-            const data = allData.filter(d => d['母體'] === currentTab && d['平均強度'] > 0);
+            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && d['平均強度'] > 0);
             const conf = CONFIG[currentTab];
             const target = 510;
 
@@ -592,7 +634,7 @@
         }
 
         function updateMainChart() {
-            const data = allData.filter(d => d['母體'] === currentTab);
+            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab));
             const conf = CONFIG[currentTab];
 
             // Reuse existing chart logic but rename function slightly if needed
@@ -774,7 +816,7 @@
             const featureLabel = document.getElementById('feature-select').options[document.getElementById('feature-select').selectedIndex].text;
 
             // Filter Data
-            const dataset = allData.filter(d => d.母體 === currentTab && d.平均強度 > 100);
+            const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
 
             // Prepare Points
             const points = dataset.map(d => ({
@@ -873,7 +915,7 @@
             if (!model) return;
 
             // Filter Valid Data
-            const dataset = allData.filter(d => d.母體 === currentTab && d.平均強度 > 100);
+            const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
 
             let sumSqureRes = 0;
             let sumSquareTot = 0;
@@ -1028,7 +1070,7 @@
 
                 updateKpiDisplay();
                 updateMainChart();
-                updateTable(allData.filter(d => d.母體 === tab), conf);
+                updateTable(allData.filter(d => d.母體 && d.母體.startsWith(tab)), conf);
 
                 // AI Tool Toggle
                 if (tab === 'S60') {
