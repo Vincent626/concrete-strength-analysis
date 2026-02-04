@@ -181,6 +181,19 @@
                     </tbody>
                 </table>
             </div>
+
+            <!-- Pagination Controls -->
+            <div id="pagination-controls" class="flex justify-between items-center mt-4 text-sm text-slate-400">
+                <div id="page-info">Showing 1-10 of --</div>
+                <div class="flex gap-2">
+                    <button onclick="changePage(-1)"
+                        class="px-3 py-1 bg-slate-800 rounded hover:bg-slate-700 disabled:opacity-50"
+                        id="btn-prev">Prev</button>
+                    <button onclick="changePage(1)"
+                        class="px-3 py-1 bg-slate-800 rounded hover:bg-slate-700 disabled:opacity-50"
+                        id="btn-next">Next</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -456,6 +469,11 @@
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
         let mainChart = null;
 
+        // Paginaton Globals
+        let currentPage = 1;
+        const rowsPerPage = 10;
+        let tableData = [];
+
         const CONFIG = {
             S60: {
                 color: '#bf00ff', // Neon Purple
@@ -692,6 +710,14 @@
         }
 
         function updateTable(data, conf) {
+            // Store data globally for pagination (if new data provided)
+            if (data) {
+                tableData = data;
+            } else {
+                data = tableData; // Use stored data if none passed (e.g. changePage)
+                if (!conf) conf = CONFIG[currentTab];
+            }
+
             const tbody = document.getElementById('table-body');
             tbody.innerHTML = '';
 
@@ -705,7 +731,14 @@
             // Sort by Date Desc (Latest first)
             const sorted = [...data].sort((a, b) => String(b.match_key).localeCompare(String(a.match_key)));
 
-            sorted.forEach(row => {
+            // Pagination Logic
+            const total = sorted.length;
+            const start = (currentPage - 1) * rowsPerPage;
+            const end = start + rowsPerPage;
+            const sliced = sorted.slice(start, end);
+
+            // Render
+            sliced.forEach(row => {
                 const tr = document.createElement('tr');
                 tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
 
@@ -720,6 +753,16 @@
                 `;
                 tbody.appendChild(tr);
             });
+
+            // Update Controls
+            document.getElementById('page-info').innerText = `Showing ${Math.min(start + 1, total)}-${Math.min(end, total)} of ${total}`;
+            document.getElementById('btn-prev').disabled = currentPage === 1;
+            document.getElementById('btn-next').disabled = end >= total;
+        }
+
+        function changePage(delta) {
+            currentPage += delta;
+            updateTable(null, null); // Refreshes with stored tableData
         }
 
         // Feature Chart Logic
@@ -969,6 +1012,9 @@
             switchTab = function (tab) {
                 currentTab = tab;
                 const conf = CONFIG[tab];
+
+                // Pagination Reset
+                currentPage = 1;
 
                 // Update UI Buttons
                 document.getElementById('btn-s60').className = tab === 'S60'
