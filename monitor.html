@@ -719,45 +719,46 @@
             }
 
             function updateTable(data, conf) {
-                // Store data globally for pagination (if new data provided)
-                if (data) {
-                    tableData = data;
-                } else {
-                    data = tableData; // Use stored data if none passed (e.g. changePage)
-                    if (!conf) conf = CONFIG[currentTab];
-                }
+                try {
+                    // Store data globally for pagination (if new data provided)
+                    if (data) {
+                        tableData = data;
+                    } else {
+                        data = tableData; // Use stored data if none passed (e.g. changePage)
+                        if (!conf) conf = CONFIG[currentTab];
+                    }
 
-                const tbody = document.getElementById('table-body');
-                tbody.innerHTML = '';
+                    const tbody = document.getElementById('table-body');
+                    tbody.innerHTML = '';
 
-                // Update Header Name and Section Title
-                document.getElementById('col-key-factor').innerText = `關鍵因子 (${conf.factorKey})`;
-                document.getElementById('table-section-title').innerHTML = `
+                    // Update Header Name and Section Title
+                    document.getElementById('col-key-factor').innerText = `關鍵因子 (${conf.factorKey})`;
+                    document.getElementById('table-section-title').innerHTML = `
                 <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
                 ${currentTab} 配比 取樣明細列表 (Sampling List)
             `;
 
-                // Sort by Date Desc (Latest first)
-                const sorted = [...data].sort((a, b) => String(b.match_key).localeCompare(String(a.match_key)));
+                    // Sort by Date Desc (Latest first)
+                    const sorted = [...data].sort((a, b) => String(b.match_key).localeCompare(String(a.match_key)));
 
-                // Pagination Logic
-                const total = sorted.length;
-                const start = (currentPage - 1) * rowsPerPage;
-                const end = start + rowsPerPage;
-                const sliced = sorted.slice(start, end);
+                    // Pagination Logic
+                    const total = sorted.length;
+                    const start = (currentPage - 1) * rowsPerPage;
+                    const end = start + rowsPerPage;
+                    const sliced = sorted.slice(start, end);
 
-                // Render
-                sliced.forEach(row => {
-                    const tr = document.createElement('tr');
-                    tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
+                    // Render
+                    sliced.forEach(row => {
+                        const tr = document.createElement('tr');
+                        tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
 
-                    const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
-                    const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
-                    const x1 = row['試體1強度(X1)'] || '-';
-                    const x2 = row['試體2強度(X2)'] || '-';
-                    const x3 = row['試體3強度(X3)'] || '-';
+                        const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
+                        const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
+                        const x1 = row['試體1強度(X1)'] || '-';
+                        const x2 = row['試體2強度(X2)'] || '-';
+                        const x3 = row['試體3強度(X3)'] || '-';
 
-                    tr.innerHTML = `
+                        tr.innerHTML = `
                     <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
                     <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
                     <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
@@ -767,13 +768,14 @@
                     <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
                     <td class="p-3 text-right font-bold text-white">${strength}</td>
                 `;
-                    tbody.appendChild(tr);
-                });
+                        tbody.appendChild(tr);
+                    });
 
-                // Update Controls
-                document.getElementById('page-info').innerText = `Showing ${Math.min(start + 1, total)}-${Math.min(end, total)} of ${total}`;
-                document.getElementById('btn-prev').disabled = currentPage === 1;
-                document.getElementById('btn-next').disabled = end >= total;
+                    // Update Controls
+                    document.getElementById('page-info').innerText = `Showing ${Math.min(start + 1, total)}-${Math.min(end, total)} of ${total}`;
+                    document.getElementById('btn-prev').disabled = currentPage === 1;
+                    document.getElementById('btn-next').disabled = end >= total;
+                } catch (e) { console.error(e); document.getElementById('page-info').innerText = 'ERROR: ' + e.message; }
             }
 
             function changePage(delta) {
