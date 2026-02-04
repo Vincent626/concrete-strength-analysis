@@ -713,11 +713,11 @@
             document.getElementById('col-key-factor').innerText = `關鍵因子 (${conf.factorKey})`;
             document.getElementById('table-section-title').innerHTML = `
                 <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
-                ${currentTab} 推進管 取樣明細列表 (Sampling List)
+                ${currentTab} 配比 取樣明細列表 (Sampling List)
             `;
 
             // Sort by Date Desc (Latest first)
-            const sorted = [...data].sort((a, b) => b.match_key.localeCompare(a.match_key)).slice(0, 10);
+            const sorted = [...data].sort((a, b) => b.match_key.localeCompare(a.match_key));
 
             sorted.forEach(row => {
                 const tr = document.createElement('tr');
@@ -981,17 +981,8 @@
             // Hook into tab switch to update accuracy charts too
             const oldSwitch = switchTab;
             switchTab = function (tab) {
-                // Call previous wrapped switch (which includes AI tool update)
-                // Note: The previous wrap logic in monitor.html was:
-                // constant originalSwitch = switchTab;
-                // switchTab = function(tab) { originalSwitch(tab); ... updatePrediction(); }
-                // So calling oldSwitch here invokes the whole chain.
-
-                // We need to re-find the function because it was overwritten in global scope
-                // But better pattern: Just override 'switchTab' ONCE cleanly or rely on event listeners.
-                // Given the messy override history, let's just re-implement the chain here safely.
-
                 currentTab = tab;
+                const conf = CONFIG[tab];
 
                 // Update UI Buttons
                 document.getElementById('btn-s60').className = tab === 'S60'
@@ -1004,7 +995,7 @@
 
                 updateKpiDisplay();
                 updateMainChart();
-                updateTable(allData.filter(d => d.母體 === tab), { factorKey: tab === 'S60' ? '水灰比' : '最終電流', factorUnit: tab === 'S60' ? '' : 'A' });
+                updateTable(allData.filter(d => d.母體 === tab), conf);
 
                 // AI Tool Toggle
                 if (tab === 'S60') {
