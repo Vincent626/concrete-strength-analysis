@@ -82,69 +82,81 @@
     <div class="flex justify-center mb-8 gap-4">
         <button id="btn-s60" onclick="switchTab('S60')"
             class="px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">
-            S60 推進管
+            S60 配比
         </button>
         <button id="btn-m60" onclick="switchTab('M60')"
             class="px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">
-            M60 推進管
+            M60 配比
         </button>
     </div>
 
     <!-- Main Content Area -->
     <div id="dashboard-content" class="animate-fade-in">
 
-        <!-- Top Section: KPIs + Chart -->
-        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+        <!-- KPI Cards Grid (New 4-Card Layout) -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
 
-            <!-- Left: KPIs Column -->
-            <div class="lg:col-span-1 flex flex-col gap-4">
-                <!-- Strength KPI -->
-                <div id="kpi-strength-card" class="glass-panel p-6 border-l-4 transition-colors duration-500">
-                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-wider">平均強度 (Avg Strength)</h3>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-strength" class="text-4xl font-bold stat-value text-white">--</span>
-                        <span class="text-sm text-slate-500">kgf/cm²</span>
-                    </div>
+            <!-- Card 1: Strength Performance -->
+            <div
+                class="glass-panel p-6 border-l-4 border-neon-blue relative group hover:-translate-y-1 transition-transform duration-300">
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">平均強度 vs 設計 (510)</h3>
+                <div class="flex items-baseline gap-2">
+                    <span id="kpi-avg-strength" class="text-4xl font-black text-white font-mono">--</span>
+                    <span class="text-xs text-slate-500">kgf/cm²</span>
                 </div>
-
-                <!-- Key Factor KPI -->
-                <div id="kpi-factor-card" class="glass-panel p-6 border-l-4 transition-colors duration-500">
-                    <h3 id="kpi-factor-title" class="text-slate-400 text-sm font-bold uppercase tracking-wider">關鍵因子
-                    </h3>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-factor" class="text-4xl font-bold stat-value">--</span>
-                        <span id="kpi-factor-unit" class="text-sm text-slate-500"></span>
-                    </div>
-                </div>
-
-                <!-- Slump KPI -->
-                <div class="glass-panel p-6 border-l-4 border-slate-600">
-                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-wider">平均坍度 (Avg Slump)</h3>
-                    <div class="mt-2 flex items-baseline gap-2">
-                        <span id="kpi-slump" class="text-4xl font-bold stat-value text-slate-200">--</span>
-                        <span class="text-sm text-slate-500">cm</span>
-                    </div>
-                </div>
+                <div id="kpi-strength-diff" class="mt-2 text-xs font-bold">--</div>
             </div>
 
-            <!-- Right: Regression Chart -->
-            <div class="lg:col-span-2 glass-panel p-6 flex flex-col">
-                <div class="flex justify-between items-center mb-4">
-                    <h2 id="chart-title" class="text-xl font-bold flex items-center gap-2">
-                        <!-- Dynamic Title -->
-                    </h2>
-                    <div id="regression-stats"
-                        class="text-xs font-mono px-2 py-1 bg-slate-800 rounded border border-slate-700 text-slate-400">
-                        <!-- R2 & Slope -->
-                    </div>
+            <!-- Card 2: Sampling Count -->
+            <div
+                class="glass-panel p-6 border-l-4 border-slate-500 relative group hover:-translate-y-1 transition-transform duration-300">
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">有效取樣筆數</h3>
+                <div class="flex items-baseline gap-2">
+                    <span id="kpi-sample-count" class="text-4xl font-black text-white font-mono">--</span>
+                    <span class="text-xs text-slate-500">筆</span>
                 </div>
-                <div class="flex-1 w-full relative min-h-[300px]">
-                    <canvas id="mainChart"></canvas>
-                </div>
-                <p id="chart-desc" class="text-xs text-slate-500 mt-2 text-center">
-                    <!-- Dynamic Desc -->
-                </p>
+                <div class="mt-2 text-xs text-slate-500">最新: <span id="kpi-latest-date">--</span></div>
             </div>
+
+            <!-- Card 3: Top 1 Key Factor -->
+            <div
+                class="glass-panel p-6 border-l-4 border-amber-500 relative group hover:-translate-y-1 transition-transform duration-300">
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">影響強度 Top 1 因子</h3>
+                <div class="flex items-center gap-2 h-10">
+                    <span id="kpi-top-factor" class="text-2xl font-black text-white truncate">--</span>
+                </div>
+                <div id="kpi-factor-trend" class="mt-1 text-xs text-amber-500 font-bold">--</div>
+            </div>
+
+            <!-- Card 4: Prediction Accuracy -->
+            <div
+                class="glass-panel p-6 border-l-4 border-neon-purple relative group hover:-translate-y-1 transition-transform duration-300">
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">AI 預測正確率 (R²)</h3>
+                <div class="flex items-baseline gap-2">
+                    <span id="kpi-accuracy" class="text-4xl font-black text-white font-mono">--</span>
+                    <span class="text-xs text-slate-500">%</span>
+                </div>
+                <div class="mt-2 text-xs text-slate-500">模型: v8 (Linear)</div>
+            </div>
+        </div>
+
+        <!-- Main Chart Section (Moved Below Cards) -->
+        <div class="glass-panel p-6 mb-8 flex flex-col">
+            <div class="flex justify-between items-center mb-4">
+                <h2 id="chart-title" class="text-xl font-bold flex items-center gap-2">
+                    <!-- Dynamic Title -->
+                </h2>
+                <div id="regression-stats"
+                    class="text-xs font-mono px-2 py-1 bg-slate-800 rounded border border-slate-700 text-slate-400">
+                    <!-- R2 & Slope -->
+                </div>
+            </div>
+            <div class="flex-1 w-full relative min-h-[300px]">
+                <canvas id="mainChart"></canvas>
+            </div>
+            <p id="chart-desc" class="text-xs text-slate-500 mt-2 text-center">
+                <!-- Dynamic Desc -->
+            </p>
         </div>
 
         <!-- Bottom Section: Detailed List -->
@@ -534,50 +546,55 @@
             });
         }
 
-        function render() {
+        function updateKpiDisplay() {
+            const data = allData.filter(d => d['母體'] === currentTab && d['平均強度'] > 0);
             const conf = CONFIG[currentTab];
-            const data = allData.filter(d => d['母體'] === currentTab);
+            const target = 510;
 
-            // 1. Update Tabs Visuals
-            ['S60', 'M60'].forEach(t => {
-                const btn = document.getElementById(`btn-${t.toLowerCase()}`);
-                if (t === currentTab) {
-                    btn.className = `px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border shadow-[0_0_15px_${CONFIG[t].color}50] text-white scale-105`;
-                    btn.style.backgroundColor = CONFIG[t].color;
-                    btn.style.borderColor = CONFIG[t].color;
-                } else {
-                    btn.className = 'px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700';
-                    btn.style.backgroundColor = '';
-                    btn.style.borderColor = '';
-                }
-            });
-
-            // 2. Update KPI Cards
+            // 1. Strength KPI
             const avgStrength = data.reduce((a, b) => a + parseFloat(b['平均強度'] || 0), 0) / data.length;
-            const avgFactor = data.reduce((a, b) => a + parseFloat(b[conf.factorKey] || 0), 0) / data.length;
-            const avgSlump = data.reduce((a, b) => a + parseFloat(b['坍度(cm)'] || 0), 0) / data.length; // Note: '坍度(cm)' from CSV
+            const diff = avgStrength - target;
 
-            // Strength Card
-            const kpiStrCard = document.getElementById('kpi-strength-card');
-            kpiStrCard.style.borderColor = conf.color;
-            document.getElementById('kpi-strength').innerText = avgStrength.toFixed(0);
+            document.getElementById('kpi-avg-strength').innerText = avgStrength.toFixed(1);
 
-            // Factor Card
-            const kpiFactorCard = document.getElementById('kpi-factor-card');
-            kpiFactorCard.style.borderColor = conf.color;
-            document.getElementById('kpi-factor-title').innerText = conf.kpiTitle;
-            document.getElementById('kpi-factor').innerText = avgFactor.toFixed(2);
-            document.getElementById('kpi-factor').style.color = conf.color;
-            document.getElementById('kpi-factor-unit').innerText = conf.factorUnit;
+            const diffEl = document.getElementById('kpi-strength-diff');
+            diffEl.innerHTML = diff >= 0
+                ? `<span class="text-neon-blue">▲ +${diff.toFixed(1)}</span> (Target ${target})`
+                : `<span class="text-red-400">▼ ${diff.toFixed(1)}</span> (Target ${target})`;
 
-            // Slump Card
-            document.getElementById('kpi-slump').innerText = avgSlump.toFixed(1);
+            // 2. Sample Count KPI
+            document.getElementById('kpi-sample-count').innerText = data.length;
 
-            // 3. Update Chart (Scatter + Regression)
+            // Find latest date
+            const dates = data.map(d => d['日期']).filter(d => d).sort();
+            const latest = dates.length > 0 ? dates[dates.length - 1] : '--';
+            document.getElementById('kpi-latest-date').innerText = latest;
+
+            // 3. Top Factor KPI
+            // Try to get from Model Data
+            if (typeof MODEL_DATA !== 'undefined' && MODEL_DATA[currentTab]) {
+                const topFeat = MODEL_DATA[currentTab].features[0]; // Already sorted by importance
+                document.getElementById('kpi-top-factor').innerText = topFeat.name;
+
+                const trend = topFeat.coef > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
+                const trendColor = topFeat.coef > 0 ? "text-neon-blue" : "text-amber-500";
+
+                const trendEl = document.getElementById('kpi-factor-trend');
+                trendEl.innerText = trend;
+                trendEl.className = `mt-1 text-xs font-bold ${trendColor}`;
+            } else {
+                document.getElementById('kpi-top-factor').innerText = conf.kpiTitle; // Fallback
+            }
+        }
+
+        function updateMainChart() {
+            const data = allData.filter(d => d['母體'] === currentTab);
+            const conf = CONFIG[currentTab];
+
+            // Reuse existing chart logic but rename function slightly if needed
+            // Actually, let's just inline the chart update or call a helper
+            // The original code called updateChart(data, conf). Let's define updateMainChart to call it.
             updateChart(data, conf);
-
-            // 4. Update Table
-            updateTable(data, conf);
         }
 
         function updateChart(data, conf) {
@@ -871,6 +888,11 @@
             // Update DOM
             document.getElementById('acc-r2').innerText = r2.toFixed(3);
             document.getElementById('acc-mae').innerText = mae.toFixed(1);
+
+            // Update KPI Card 4
+            const r2Pct = (r2 * 100).toFixed(1);
+            document.getElementById('kpi-accuracy').innerText = r2Pct;
+            document.getElementById('kpi-accuracy').style.color = r2Pct > 80 ? '#22c55e' : (r2Pct > 60 ? '#fbbf24' : '#ef4444');
 
             // Chart
             const ctx = document.getElementById('accuracyChart').getContext('2d');
