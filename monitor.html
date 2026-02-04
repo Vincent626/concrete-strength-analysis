@@ -204,74 +204,41 @@
     <!-- Feature Correlation Analysis -->
     <!-- (Sections skipped) -->
 
-    <script src="model_data.js"></script>
-    <script>
-        // ... (skipped)
-    </script>
-    <script>
-        // ... (skipped)
 
-        // (Inside updateTable)
-
-        // Render
-        sliced.forEach(row => {
-            const tr = document.createElement('tr');
-            tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
-
-            const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
-            const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
-            const x1 = row['試體1強度(X1)'] || '-';
-            const x2 = row['試體2強度(X2)'] || '-';
-            const x3 = row['試體3強度(X3)'] || '-';
-
-            tr.innerHTML = `
-                    <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
-                    <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
-                    <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
-                    <td class="p-3 text-right font-mono text-slate-400">${x1}</td>
-                    <td class="p-3 text-right font-mono text-slate-400">${x2}</td>
-                    <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
-                    <td class="p-3 text-right font-bold text-white">${strength}</td>
-                `;
-            tbody.appendChild(tr);
-        });
-        </div >
-    </div >
 
     <!-- Data Logic -->
 
-    < !--Feature Correlation Analysis(New Section)-- >
-    <div class="glass-panel p-6 mb-8 border-l-4 border-slate-500 animate-fade-in delay-200">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-            <h2 class="text-xl font-bold text-white flex items-center gap-3">
-                <span class="w-1 h-6 bg-slate-500 rounded-sm"></span>
-                單一因子關聯分析 (Single Feature Correlation)
-            </h2>
-            <div class="flex items-center gap-3">
-                <label class="text-slate-400 text-sm">選擇分析因子:</label>
-                <select id="feature-select" onchange="updateFeatureChart()"
-                    class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1 outline-none focus:border-neon-blue transition-colors">
-                    <option value="表面水骨材1">扣水率/表面水 (Water Reduction)</option>
-                    <option value="水膠比">水膠比 (W/B Ratio)</option>
-                    <option value="最終電流">最終電流 (Final Current)</option>
-                    <option value="坍度(cm)">坍度 (Slump)</option>
-                    <option value="混凝土溫度(℃)">溫度 (Temperature)</option>
-                    <option value="矽灰取代率">矽灰取代率 (Silica Fume)</option>
-                    <option value="耗用水">耗用水 (Water Usage)</option>
-                </select>
+    < !--Feature Correlation Analysis(New Section)-->
+        <div class="glass-panel p-6 mb-8 border-l-4 border-slate-500 animate-fade-in delay-200">
+            <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
+                <h2 class="text-xl font-bold text-white flex items-center gap-3">
+                    <span class="w-1 h-6 bg-slate-500 rounded-sm"></span>
+                    單一因子關聯分析 (Single Feature Correlation)
+                </h2>
+                <div class="flex items-center gap-3">
+                    <label class="text-slate-400 text-sm">選擇分析因子:</label>
+                    <select id="feature-select" onchange="updateFeatureChart()"
+                        class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1 outline-none focus:border-neon-blue transition-colors">
+                        <option value="表面水骨材1">扣水率/表面水 (Water Reduction)</option>
+                        <option value="水膠比">水膠比 (W/B Ratio)</option>
+                        <option value="最終電流">最終電流 (Final Current)</option>
+                        <option value="坍度(cm)">坍度 (Slump)</option>
+                        <option value="混凝土溫度(℃)">溫度 (Temperature)</option>
+                        <option value="矽灰取代率">矽灰取代率 (Silica Fume)</option>
+                        <option value="耗用水">耗用水 (Water Usage)</option>
+                    </select>
+                </div>
             </div>
+
+            <div class="w-full relative min-h-[350px]">
+                <canvas id="featureChart"></canvas>
+            </div>
+            <p id="feature-desc" class="text-xs text-slate-500 mt-2 text-center">
+                *顯示選定因子與 28 天強度的直接關聯分佈
+            </p>
         </div>
 
-        <div class="w-full relative min-h-[350px]">
-            <canvas id="featureChart"></canvas>
-        </div>
-        <p id="feature-desc" class="text-xs text-slate-500 mt-2 text-center">
-            *顯示選定因子與 28 天強度的直接關聯分佈
-        </p>
-    </div>
-
-    <!--Model Accuracy Analysis(New Section)-- >
+        <!--Model Accuracy Analysis(New Section)-- >
     <div class="glass-panel p-6 mb-8 border-l-4 border-amber-500 animate-fade-in delay-300">
         <h2 class="text-xl font-bold text-white mb-6 flex items-center justify-between">
             <div class="flex items-center gap-3">
@@ -325,772 +292,778 @@
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             <!-- Input Controls -->
-            <div class="space-y-6">
-                <!-- S60 Inputs -->
-                <div id="inputs-s60" class="space-y-5">
-                    <!-- W/B Ratio -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">水膠比 (W/B Ratio)</label>
-                            <span id="val-s60-wb" class="text-neon-blue font-mono font-bold">0.32</span>
-                        </div>
-                        <input type="range" id="input-s60-wb" min="0.28" max="0.36" step="0.01" value="0.32"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue hover:bg-slate-600 transition-colors">
-                        <div class="flex justify-between text-xs text-slate-500 mt-1">
-                            <span>0.28 (濃)</span>
-                            <span>0.36 (稀)</span>
-                        </div>
+        <div class="space-y-6">
+            <!-- S60 Inputs -->
+            <div id="inputs-s60" class="space-y-5">
+                <!-- W/B Ratio -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-slate-300 font-medium">水膠比 (W/B Ratio)</label>
+                        <span id="val-s60-wb" class="text-neon-blue font-mono font-bold">0.32</span>
                     </div>
-
-                    <!-- Slump -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">坍度 (Slump)</label>
-                            <span id="val-s60-slump" class="text-neon-blue font-mono font-bold">4.2 cm</span>
-                        </div>
-                        <input type="range" id="input-s60-slump" min="1.0" max="8.0" step="0.5" value="4.2"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
-                    </div>
-
-                    <!-- Temp -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">混凝土溫度 (Temp)</label>
-                            <span id="val-s60-temp" class="text-neon-blue font-mono font-bold">28 °C</span>
-                        </div>
-                        <input type="range" id="input-s60-temp" min="20" max="35" step="1" value="28"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                    <input type="range" id="input-s60-wb" min="0.28" max="0.36" step="0.01" value="0.32"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue hover:bg-slate-600 transition-colors">
+                    <div class="flex justify-between text-xs text-slate-500 mt-1">
+                        <span>0.28 (濃)</span>
+                        <span>0.36 (稀)</span>
                     </div>
                 </div>
 
-                <!-- M60 Inputs (Hidden by default) -->
-                <div id="inputs-m60" class="space-y-5 hidden">
-                    <!-- Silica Fume -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">矽灰取代率 (Silica Fume)</label>
-                            <span id="val-m60-sf" class="text-neon-green font-mono font-bold">6 %</span>
-                        </div>
-                        <input type="range" id="input-m60-sf" min="0" max="12" step="1" value="6"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                <!-- Slump -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-slate-300 font-medium">坍度 (Slump)</label>
+                        <span id="val-s60-slump" class="text-neon-blue font-mono font-bold">4.2 cm</span>
                     </div>
+                    <input type="range" id="input-s60-slump" min="1.0" max="8.0" step="0.5" value="4.2"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                </div>
 
-                    <!-- Final Current -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">最終電流 (Final Current)</label>
-                            <span id="val-m60-cur" class="text-neon-green font-mono font-bold">78 A</span>
-                        </div>
-                        <input type="range" id="input-m60-cur" min="60" max="100" step="1" value="78"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                <!-- Temp -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-slate-300 font-medium">混凝土溫度 (Temp)</label>
+                        <span id="val-s60-temp" class="text-neon-blue font-mono font-bold">28 °C</span>
                     </div>
-
-                    <!-- Slump -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">坍度 (Slump)</label>
-                            <span id="val-m60-slump" class="text-neon-green font-mono font-bold">4.5 cm</span>
-                        </div>
-                        <input type="range" id="input-m60-slump" min="1.0" max="8.0" step="0.5" value="4.5"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
-                    </div>
+                    <input type="range" id="input-s60-temp" min="20" max="35" step="1" value="28"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
                 </div>
             </div>
 
-            <!-- Output Display -->
-            <div
-                class="flex flex-col justify-center items-center bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-inner">
-                <span class="text-slate-400 text-sm font-bold uppercase tracking-wider mb-2">AI 預測 28 天強度</span>
-                <div class="relative group cursor-help">
-                    <span id="ai-prediction-val"
-                        class="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300">--</span>
-                    <div
-                        class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded text-xs text-slate-300 pointer-events-none">
-                        基於 v8 線性回歸模型
+            <!-- M60 Inputs (Hidden by default) -->
+            <div id="inputs-m60" class="space-y-5 hidden">
+                <!-- Silica Fume -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-slate-300 font-medium">矽灰取代率 (Silica Fume)</label>
+                        <span id="val-m60-sf" class="text-neon-green font-mono font-bold">6 %</span>
                     </div>
-                </div>
-                <span class="text-xl text-slate-500 mt-2 font-bold">kgf/cm²</span>
-
-                <!-- Confidence Interval mockup -->
-                <div class="mt-6 flex items-center gap-2 text-xs text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full">
-                    <i class="fas fa-chart-line"></i>
-                    <span>95% 信賴區間: <span id="ai-conf-interval" class="text-slate-300">--</span></span>
+                    <input type="range" id="input-m60-sf" min="0" max="12" step="1" value="6"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
                 </div>
 
-                <div id="ai-factor-impact" class="mt-4 w-full text-center">
-                    <!-- Dynamic Impact Text -->
+                <!-- Final Current -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-slate-300 font-medium">最終電流 (Final Current)</label>
+                        <span id="val-m60-cur" class="text-neon-green font-mono font-bold">78 A</span>
+                    </div>
+                    <input type="range" id="input-m60-cur" min="60" max="100" step="1" value="78"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                </div>
+
+                <!-- Slump -->
+                <div>
+                    <div class="flex justify-between mb-2">
+                        <label class="text-slate-300 font-medium">坍度 (Slump)</label>
+                        <span id="val-m60-slump" class="text-neon-green font-mono font-bold">4.5 cm</span>
+                    </div>
+                    <input type="range" id="input-m60-slump" min="1.0" max="8.0" step="0.5" value="4.5"
+                        class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
                 </div>
             </div>
         </div>
-    </div>
 
-    <script src="model_data.js"></script>
-    <script>
-        // Prediction Logic
-        function updatePrediction() {
-            if (typeof MODEL_DATA === 'undefined') return;
+        <!-- Output Display -->
+        <div
+            class="flex flex-col justify-center items-center bg-slate-800/50 rounded-2xl p-6 border border-slate-700 shadow-inner">
+            <span class="text-slate-400 text-sm font-bold uppercase tracking-wider mb-2">AI 預測 28 天強度</span>
+            <div class="relative group cursor-help">
+                <span id="ai-prediction-val"
+                    class="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300">--</span>
+                <div
+                    class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded text-xs text-slate-300 pointer-events-none">
+                    基於 v8 線性回歸模型
+                </div>
+            </div>
+            <span class="text-xl text-slate-500 mt-2 font-bold">kgf/cm²</span>
 
-            const model = MODEL_DATA[currentTab];
-            if (!model) return;
+            <!-- Confidence Interval mockup -->
+            <div class="mt-6 flex items-center gap-2 text-xs text-slate-500 bg-slate-900/50 px-3 py-1 rounded-full">
+                <i class="fas fa-chart-line"></i>
+                <span>95% 信賴區間: <span id="ai-conf-interval" class="text-slate-300">--</span></span>
+            </div>
 
-            let score = model.intercept;
+            <div id="ai-factor-impact" class="mt-4 w-full text-center">
+                <!-- Dynamic Impact Text -->
+            </div>
+        </div>
+        </div>
+        </div>
 
-            // Helper to get scaled value
-            const getScaled = (name, val) => {
-                const feat = model.features.find(f => f.name === name);
-                if (!feat) return 0; // Should not happen if name matches
-                return (val - feat.mean) / feat.scale * feat.coef;
+        <script src="model_data.js"></script>
+        <script>
+            // Prediction Logic
+            function updatePrediction() {
+                if (typeof MODEL_DATA === 'undefined') return;
+
+                const model = MODEL_DATA[currentTab];
+                if (!model) return;
+
+                let score = model.intercept;
+
+                // Helper to get scaled value
+                const getScaled = (name, val) => {
+                    const feat = model.features.find(f => f.name === name);
+                    if (!feat) return 0; // Should not happen if name matches
+                    return (val - feat.mean) / feat.scale * feat.coef;
+                };
+
+                // Add contribution of visible sliders
+                if (currentTab === 'S60') {
+                    const wb = parseFloat(document.getElementById('input-s60-wb').value);
+                    const slump = parseFloat(document.getElementById('input-s60-slump').value);
+                    const temp = parseFloat(document.getElementById('input-s60-temp').value);
+
+                    score += getScaled('水膠比', wb);
+                    score += getScaled('坍度(cm)', slump);
+                    score += getScaled('混凝土溫度(℃)', temp);
+
+                    // Update Labels
+                    document.getElementById('val-s60-wb').innerText = wb.toFixed(2);
+                    document.getElementById('val-s60-slump').innerText = slump.toFixed(1) + ' cm';
+                    document.getElementById('val-s60-temp').innerText = temp + ' °C';
+
+                } else {
+                    const sf = parseFloat(document.getElementById('input-m60-sf').value);
+                    const cur = parseFloat(document.getElementById('input-m60-cur').value);
+                    const slump = parseFloat(document.getElementById('input-m60-slump').value);
+
+                    score += getScaled('矽灰取代率', sf);
+                    score += getScaled('最終電流', cur);
+                    score += getScaled('坍度(cm)', slump);
+
+                    // Update Labels
+                    document.getElementById('val-m60-sf').innerText = sf + ' %';
+                    document.getElementById('val-m60-cur').innerText = cur + ' A';
+                    document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
+                }
+
+                // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
+                // Linear Model: Intercept + Sum(Coef * (Input - Mean)/Scale)
+                // If Input = Mean, term is 0. So we don't need to add anything!
+
+                const result = Math.round(score);
+                const el = document.getElementById('ai-prediction-val');
+
+                // Animation
+                // el.style.transform = 'scale(1.1)';
+                // setTimeout(() => el.style.transform = 'scale(1)', 100);
+
+                let colorClass = currentTab === 'S60' ? 'text-neon-purple' : 'text-neon-green';
+                // Force white for better contrast or use neon
+                // el.className = `text-6xl font-black ${colorClass} drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300`;
+                el.innerText = result;
+
+                // Interval (approx RMSE ~45)
+                const margin = 45;
+                document.getElementById('ai-conf-interval').innerText = `${result - margin} ~ ${result + margin}`;
+            }
+
+            // Bind Events
+            ['s60-wb', 's60-slump', 's60-temp', 'm60-sf', 'm60-cur', 'm60-slump'].forEach(id => {
+                const el = document.getElementById(`input-${id}`);
+                if (el) el.addEventListener('input', updatePrediction);
+            });
+
+            // Update on tab switch handled in main script
+
+
+            // Init call
+            setTimeout(updatePrediction, 500); // Delay to ensure model loaded
+        </script>
+        <script>
+
+
+            const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
+            let mainChart = null;
+
+            // Paginaton Globals
+            let currentPage = 1;
+            const rowsPerPage = 10;
+            let tableData = [];
+
+            const CONFIG = {
+                S60: {
+                    color: '#bf00ff', // Neon Purple
+                    bg: 'rgba(191, 0, 255, 0.2)',
+                    factorKey: '水膠比',
+                    factorLabel: '水膠比 (W/B Ratio)',
+                    factorUnit: '',
+                    xLabel: '水膠比 (W/B)',
+                    desc: '*水膠比越低 (越濃) -> 強度越高 (負相關)',
+                    kpiTitle: '平均水膠比',
+                    expectedTrend: 'down' // Lower X = Higher Y
+                },
+                M60: {
+                    color: '#00ff9d', // Neon Green
+                    bg: 'rgba(0, 255, 157, 0.2)',
+                    factorKey: '最終電流',
+                    factorLabel: '最終電流 (Final Current)',
+                    factorUnit: 'Amps',
+                    xLabel: '最終電流 (A)',
+                    desc: '*電流越高 (料越乾) -> 強度越高 (正相關)',
+                    kpiTitle: '平均最終電流',
+                    expectedTrend: 'up' // Higher X = Higher Y
+                }
             };
 
-            // Add contribution of visible sliders
-            if (currentTab === 'S60') {
-                const wb = parseFloat(document.getElementById('input-s60-wb').value);
-                const slump = parseFloat(document.getElementById('input-s60-slump').value);
-                const temp = parseFloat(document.getElementById('input-s60-temp').value);
+            // Linear Regression Calculation: y = mx + b
+            function calculateRegression(points) {
+                const n = points.length;
+                if (n === 0) return null;
 
-                score += getScaled('水膠比', wb);
-                score += getScaled('坍度(cm)', slump);
-                score += getScaled('混凝土溫度(℃)', temp);
+                let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+                points.forEach(p => {
+                    sumX += p.x;
+                    sumY += p.y;
+                    sumXY += p.x * p.y;
+                    sumXX += p.x * p.x;
+                });
 
-                // Update Labels
-                document.getElementById('val-s60-wb').innerText = wb.toFixed(2);
-                document.getElementById('val-s60-slump').innerText = slump.toFixed(1) + ' cm';
-                document.getElementById('val-s60-temp').innerText = temp + ' °C';
+                const denominator = (n * sumXX - sumX * sumX);
+                if (denominator === 0) return { slope: 0, intercept: sumY / n }; // Handle vertical line or all x-values are same
 
-            } else {
-                const sf = parseFloat(document.getElementById('input-m60-sf').value);
-                const cur = parseFloat(document.getElementById('input-m60-cur').value);
-                const slump = parseFloat(document.getElementById('input-m60-slump').value);
+                const slope = (n * sumXY - sumX * sumY) / denominator;
+                const intercept = (sumY - slope * sumX) / n;
 
-                score += getScaled('矽灰取代率', sf);
-                score += getScaled('最終電流', cur);
-                score += getScaled('坍度(cm)', slump);
+                // Simple R2 calculation (optional, keeping it light)
 
-                // Update Labels
-                document.getElementById('val-m60-sf').innerText = sf + ' %';
-                document.getElementById('val-m60-cur').innerText = cur + ' A';
-                document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
+                return { slope, intercept };
             }
 
-            // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
-            // Linear Model: Intercept + Sum(Coef * (Input - Mean)/Scale)
-            // If Input = Mean, term is 0. So we don't need to add anything!
-
-            const result = Math.round(score);
-            const el = document.getElementById('ai-prediction-val');
-
-            // Animation
-            // el.style.transform = 'scale(1.1)';
-            // setTimeout(() => el.style.transform = 'scale(1)', 100);
-
-            let colorClass = currentTab === 'S60' ? 'text-neon-purple' : 'text-neon-green';
-            // Force white for better contrast or use neon
-            // el.className = `text-6xl font-black ${colorClass} drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300`;
-            el.innerText = result;
-
-            // Interval (approx RMSE ~45)
-            const margin = 45;
-            document.getElementById('ai-conf-interval').innerText = `${result - margin} ~ ${result + margin}`;
-        }
-
-        // Bind Events
-        ['s60-wb', 's60-slump', 's60-temp', 'm60-sf', 'm60-cur', 'm60-slump'].forEach(id => {
-            const el = document.getElementById(`input-${id}`);
-            if (el) el.addEventListener('input', updatePrediction);
-        });
-
-        // Update on tab switch handled in main script
-
-
-        // Init call
-        setTimeout(updatePrediction, 500); // Delay to ensure model loaded
-    </script>
-    <script>
-
-
-        const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
-        let mainChart = null;
-
-        // Paginaton Globals
-        let currentPage = 1;
-        const rowsPerPage = 10;
-        let tableData = [];
-
-        const CONFIG = {
-            S60: {
-                color: '#bf00ff', // Neon Purple
-                bg: 'rgba(191, 0, 255, 0.2)',
-                factorKey: '水膠比',
-                factorLabel: '水膠比 (W/B Ratio)',
-                factorUnit: '',
-                xLabel: '水膠比 (W/B)',
-                desc: '*水膠比越低 (越濃) -> 強度越高 (負相關)',
-                kpiTitle: '平均水膠比',
-                expectedTrend: 'down' // Lower X = Higher Y
-            },
-            M60: {
-                color: '#00ff9d', // Neon Green
-                bg: 'rgba(0, 255, 157, 0.2)',
-                factorKey: '最終電流',
-                factorLabel: '最終電流 (Final Current)',
-                factorUnit: 'Amps',
-                xLabel: '最終電流 (A)',
-                desc: '*電流越高 (料越乾) -> 強度越高 (正相關)',
-                kpiTitle: '平均最終電流',
-                expectedTrend: 'up' // Higher X = Higher Y
+            function switchTab(tab) {
+                currentTab = tab;
+                render();
             }
-        };
 
-        // Linear Regression Calculation: y = mx + b
-        function calculateRegression(points) {
-            const n = points.length;
-            if (n === 0) return null;
+            async function init() {
+                const response = await fetch(CSV_URL);
+                const csvText = await response.text();
 
-            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
-            points.forEach(p => {
-                sumX += p.x;
-                sumY += p.y;
-                sumXY += p.x * p.y;
-                sumXX += p.x * p.x;
-            });
+                Papa.parse(csvText, {
+                    header: true,
+                    skipEmptyLines: true,
+                    complete: function (results) {
+                        allData = results.data.filter(d => d.match_key); // Basic filter
 
-            const denominator = (n * sumXX - sumX * sumX);
-            if (denominator === 0) return { slope: 0, intercept: sumY / n }; // Handle vertical line or all x-values are same
+                        // Initial Render
+                        switchTab('S60');
 
-            const slope = (n * sumXY - sumX * sumY) / denominator;
-            const intercept = (sumY - slope * sumX) / n;
+                        const now = new Date();
+                        document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+                    },
+                    error: function (err) {
+                        console.error("CSV Load Error:", err);
+                    }
+                });
+            }
 
-            // Simple R2 calculation (optional, keeping it light)
+            function updateKpiDisplay() {
+                const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && d['平均強度'] > 0);
+                const conf = CONFIG[currentTab];
+                const target = 510;
 
-            return { slope, intercept };
-        }
+                // 1. Strength KPI
+                const avgStrength = data.reduce((a, b) => a + parseFloat(b['平均強度'] || 0), 0) / data.length;
+                const diff = avgStrength - target;
 
-        function switchTab(tab) {
-            currentTab = tab;
-            render();
-        }
+                document.getElementById('kpi-avg-strength').innerText = avgStrength.toFixed(1);
 
-        async function init() {
-            const response = await fetch(CSV_URL);
-            const csvText = await response.text();
+                const diffEl = document.getElementById('kpi-strength-diff');
+                diffEl.innerHTML = diff >= 0
+                    ? `<span class="text-neon-blue">▲ +${diff.toFixed(1)}</span> (Target ${target})`
+                    : `<span class="text-red-400">▼ ${diff.toFixed(1)}</span> (Target ${target})`;
 
-            Papa.parse(csvText, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function (results) {
-                    allData = results.data.filter(d => d.match_key); // Basic filter
+                // 2. Sample Count KPI
+                document.getElementById('kpi-sample-count').innerText = data.length;
 
-                    // Initial Render
-                    switchTab('S60');
+                // Find latest date
+                const dates = data.map(d => d['日期']).filter(d => d).sort();
+                const latest = dates.length > 0 ? dates[dates.length - 1] : '--';
+                document.getElementById('kpi-latest-date').innerText = latest;
 
-                    const now = new Date();
-                    document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-                },
-                error: function (err) {
-                    console.error("CSV Load Error:", err);
+                // 3. Top Factor KPI
+                // Try to get from Model Data
+                if (typeof MODEL_DATA !== 'undefined' && MODEL_DATA[currentTab]) {
+                    const topFeat = MODEL_DATA[currentTab].features[0]; // Already sorted by importance
+                    document.getElementById('kpi-top-factor').innerText = topFeat.name;
+
+                    const trend = topFeat.coef > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
+                    const trendColor = topFeat.coef > 0 ? "text-neon-blue" : "text-amber-500";
+
+                    const trendEl = document.getElementById('kpi-factor-trend');
+                    trendEl.innerText = trend;
+                    trendEl.className = `mt-1 text-xs font-bold ${trendColor}`;
+                } else {
+                    document.getElementById('kpi-top-factor').innerText = conf.kpiTitle; // Fallback
                 }
-            });
-        }
-
-        function updateKpiDisplay() {
-            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && d['平均強度'] > 0);
-            const conf = CONFIG[currentTab];
-            const target = 510;
-
-            // 1. Strength KPI
-            const avgStrength = data.reduce((a, b) => a + parseFloat(b['平均強度'] || 0), 0) / data.length;
-            const diff = avgStrength - target;
-
-            document.getElementById('kpi-avg-strength').innerText = avgStrength.toFixed(1);
-
-            const diffEl = document.getElementById('kpi-strength-diff');
-            diffEl.innerHTML = diff >= 0
-                ? `<span class="text-neon-blue">▲ +${diff.toFixed(1)}</span> (Target ${target})`
-                : `<span class="text-red-400">▼ ${diff.toFixed(1)}</span> (Target ${target})`;
-
-            // 2. Sample Count KPI
-            document.getElementById('kpi-sample-count').innerText = data.length;
-
-            // Find latest date
-            const dates = data.map(d => d['日期']).filter(d => d).sort();
-            const latest = dates.length > 0 ? dates[dates.length - 1] : '--';
-            document.getElementById('kpi-latest-date').innerText = latest;
-
-            // 3. Top Factor KPI
-            // Try to get from Model Data
-            if (typeof MODEL_DATA !== 'undefined' && MODEL_DATA[currentTab]) {
-                const topFeat = MODEL_DATA[currentTab].features[0]; // Already sorted by importance
-                document.getElementById('kpi-top-factor').innerText = topFeat.name;
-
-                const trend = topFeat.coef > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
-                const trendColor = topFeat.coef > 0 ? "text-neon-blue" : "text-amber-500";
-
-                const trendEl = document.getElementById('kpi-factor-trend');
-                trendEl.innerText = trend;
-                trendEl.className = `mt-1 text-xs font-bold ${trendColor}`;
-            } else {
-                document.getElementById('kpi-top-factor').innerText = conf.kpiTitle; // Fallback
-            }
-        }
-
-        function updateMainChart() {
-            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab));
-            const conf = CONFIG[currentTab];
-
-            // Reuse existing chart logic but rename function slightly if needed
-            // Actually, let's just inline the chart update or call a helper
-            // The original code called updateChart(data, conf). Let's define updateMainChart to call it.
-            updateChart(data, conf);
-        }
-
-        function updateChart(data, conf) {
-            const ctx = document.getElementById('mainChart');
-
-            // Prepare Data Points
-            const points = data.map(d => ({
-                x: parseFloat(d[conf.factorKey]),
-                y: parseFloat(d['平均強度']),
-                raw: d
-            })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x > 0);
-
-            // Calculate Regression Line
-            const reg = calculateRegression(points);
-
-            // Generate Line Points (Min X to Max X)
-            let minX = Math.min(...points.map(p => p.x));
-            let maxX = Math.max(...points.map(p => p.x));
-
-            // Add some padding to min/max X for better visualization
-            const xRange = maxX - minX;
-            minX = minX - xRange * 0.1;
-            maxX = maxX + xRange * 0.1;
-
-            const linePoints = reg ? [
-                { x: minX, y: reg.slope * minX + reg.intercept },
-                { x: maxX, y: reg.slope * maxX + reg.intercept }
-            ] : [];
-
-            // Regression Stats Display
-            const rStat = document.getElementById('regression-stats');
-            if (reg) {
-                const slopeDir = reg.slope > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
-                rStat.innerText = `Trend: ${slopeDir} | Slope: ${reg.slope.toFixed(1)}`;
-                rStat.style.borderColor = conf.color;
-                rStat.style.color = conf.color;
-            } else {
-                rStat.innerText = 'No data for regression';
-                rStat.style.borderColor = 'transparent';
-                rStat.style.color = '#slate-400';
             }
 
+            function updateMainChart() {
+                const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab));
+                const conf = CONFIG[currentTab];
 
-            // Update Chart Title & Desc
-            const titleEl = document.getElementById('chart-title');
-            titleEl.innerHTML = `<span class="w-2 h-6 rounded-sm" style="background-color: ${conf.color}"></span> ${conf.factorLabel} vs 強度`;
-            titleEl.style.color = conf.color;
+                // Reuse existing chart logic but rename function slightly if needed
+                // Actually, let's just inline the chart update or call a helper
+                // The original code called updateChart(data, conf). Let's define updateMainChart to call it.
+                updateChart(data, conf);
+            }
 
-            document.getElementById('chart-desc').innerText = conf.desc;
+            function updateChart(data, conf) {
+                const ctx = document.getElementById('mainChart');
 
-            // Destroy old chart
-            if (mainChart) mainChart.destroy();
+                // Prepare Data Points
+                const points = data.map(d => ({
+                    x: parseFloat(d[conf.factorKey]),
+                    y: parseFloat(d['平均強度']),
+                    raw: d
+                })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x > 0);
 
-            mainChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        {
-                            label: 'Batch Data',
-                            data: points,
-                            backgroundColor: conf.color,
-                            borderColor: conf.color,
-                            pointRadius: 4,
-                            pointHoverRadius: 6,
-                            pointStyle: 'rectRot'
-                        },
-                        {
-                            type: 'line',
-                            label: 'Regression Trend',
-                            data: linePoints,
-                            borderColor: '#ffffff',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    plugins: {
-                        legend: { labels: { color: '#94a3b8' } },
-                        tooltip: {
-                            callbacks: {
-                                label: (ctx) => {
-                                    if (ctx.dataset.type === 'line') return '';
-                                    const p = ctx.raw;
-                                    return `${p.raw.match_key}: ${p.y} kgf/cm² (${conf.factorKey}: ${p.x})`;
+                // Calculate Regression Line
+                const reg = calculateRegression(points);
+
+                // Generate Line Points (Min X to Max X)
+                let minX = Math.min(...points.map(p => p.x));
+                let maxX = Math.max(...points.map(p => p.x));
+
+                // Add some padding to min/max X for better visualization
+                const xRange = maxX - minX;
+                minX = minX - xRange * 0.1;
+                maxX = maxX + xRange * 0.1;
+
+                const linePoints = reg ? [
+                    { x: minX, y: reg.slope * minX + reg.intercept },
+                    { x: maxX, y: reg.slope * maxX + reg.intercept }
+                ] : [];
+
+                // Regression Stats Display
+                const rStat = document.getElementById('regression-stats');
+                if (reg) {
+                    const slopeDir = reg.slope > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
+                    rStat.innerText = `Trend: ${slopeDir} | Slope: ${reg.slope.toFixed(1)}`;
+                    rStat.style.borderColor = conf.color;
+                    rStat.style.color = conf.color;
+                } else {
+                    rStat.innerText = 'No data for regression';
+                    rStat.style.borderColor = 'transparent';
+                    rStat.style.color = '#slate-400';
+                }
+
+
+                // Update Chart Title & Desc
+                const titleEl = document.getElementById('chart-title');
+                titleEl.innerHTML = `<span class="w-2 h-6 rounded-sm" style="background-color: ${conf.color}"></span> ${conf.factorLabel} vs 強度`;
+                titleEl.style.color = conf.color;
+
+                document.getElementById('chart-desc').innerText = conf.desc;
+
+                // Destroy old chart
+                if (mainChart) mainChart.destroy();
+
+                mainChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: 'Batch Data',
+                                data: points,
+                                backgroundColor: conf.color,
+                                borderColor: conf.color,
+                                pointRadius: 4,
+                                pointHoverRadius: 6,
+                                pointStyle: 'rectRot'
+                            },
+                            {
+                                type: 'line',
+                                label: 'Regression Trend',
+                                data: linePoints,
+                                borderColor: '#ffffff',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                pointRadius: 0,
+                                fill: false
+                            }
+                        ]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: { labels: { color: '#94a3b8' } },
+                            tooltip: {
+                                callbacks: {
+                                    label: (ctx) => {
+                                        if (ctx.dataset.type === 'line') return '';
+                                        const p = ctx.raw;
+                                        return `${p.raw.match_key}: ${p.y} kgf/cm² (${conf.factorKey}: ${p.x})`;
+                                    }
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        x: {
-                            title: { display: true, text: conf.xLabel, color: '#64748b' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
                         },
-                        y: {
-                            title: { display: true, text: '強度 (Strength)', color: '#64748b' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' },
-                            min: 0 // Optional
+                        scales: {
+                            x: {
+                                title: { display: true, text: conf.xLabel, color: '#64748b' },
+                                grid: { color: '#334155' },
+                                ticks: { color: '#94a3b8' }
+                            },
+                            y: {
+                                title: { display: true, text: '強度 (Strength)', color: '#64748b' },
+                                grid: { color: '#334155' },
+                                ticks: { color: '#94a3b8' },
+                                min: 0 // Optional
+                            }
                         }
                     }
-                }
-            });
-        }
-
-        function updateTable(data, conf) {
-            // Store data globally for pagination (if new data provided)
-            if (data) {
-                tableData = data;
-            } else {
-                data = tableData; // Use stored data if none passed (e.g. changePage)
-                if (!conf) conf = CONFIG[currentTab];
+                });
             }
 
-            const tbody = document.getElementById('table-body');
-            tbody.innerHTML = '';
+            function updateTable(data, conf) {
+                // Store data globally for pagination (if new data provided)
+                if (data) {
+                    tableData = data;
+                } else {
+                    data = tableData; // Use stored data if none passed (e.g. changePage)
+                    if (!conf) conf = CONFIG[currentTab];
+                }
 
-            // Update Header Name and Section Title
-            document.getElementById('col-key-factor').innerText = `關鍵因子 (${conf.factorKey})`;
-            document.getElementById('table-section-title').innerHTML = `
+                const tbody = document.getElementById('table-body');
+                tbody.innerHTML = '';
+
+                // Update Header Name and Section Title
+                document.getElementById('col-key-factor').innerText = `關鍵因子 (${conf.factorKey})`;
+                document.getElementById('table-section-title').innerHTML = `
                 <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
                 ${currentTab} 配比 取樣明細列表 (Sampling List)
             `;
 
-            // Sort by Date Desc (Latest first)
-            const sorted = [...data].sort((a, b) => String(b.match_key).localeCompare(String(a.match_key)));
+                // Sort by Date Desc (Latest first)
+                const sorted = [...data].sort((a, b) => String(b.match_key).localeCompare(String(a.match_key)));
 
-            // Pagination Logic
-            const total = sorted.length;
-            const start = (currentPage - 1) * rowsPerPage;
-            const end = start + rowsPerPage;
-            const sliced = sorted.slice(start, end);
+                // Pagination Logic
+                const total = sorted.length;
+                const start = (currentPage - 1) * rowsPerPage;
+                const end = start + rowsPerPage;
+                const sliced = sorted.slice(start, end);
 
-            // Render
-            sliced.forEach(row => {
-                const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
+                // Render
+                sliced.forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
 
-                const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
-                const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
+                    const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
+                    const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
+                    const x1 = row['試體1強度(X1)'] || '-';
+                    const x2 = row['試體2強度(X2)'] || '-';
+                    const x3 = row['試體3強度(X3)'] || '-';
 
-                tr.innerHTML = `
+                    tr.innerHTML = `
                     <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
                     <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
                     <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
                     <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
+                    <td class="p-3 text-right font-mono text-slate-400">${x1}</td>
+                    <td class="p-3 text-right font-mono text-slate-400">${x2}</td>
+                    <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
                     <td class="p-3 text-right font-bold text-white">${strength}</td>
                 `;
-                tbody.appendChild(tr);
-            });
+                    tbody.appendChild(tr);
+                });
 
-            // Update Controls
-            document.getElementById('page-info').innerText = `Showing ${Math.min(start + 1, total)}-${Math.min(end, total)} of ${total}`;
-            document.getElementById('btn-prev').disabled = currentPage === 1;
-            document.getElementById('btn-next').disabled = end >= total;
-        }
-
-        function changePage(delta) {
-            currentPage += delta;
-            updateTable(null, null); // Refreshes with stored tableData
-        }
-
-        // Feature Chart Logic
-        let featureChart = null;
-
-        function updateFeatureChart() {
-            const featureName = document.getElementById('feature-select').value;
-            const featureLabel = document.getElementById('feature-select').options[document.getElementById('feature-select').selectedIndex].text;
-
-            // Filter Data
-            const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
-
-            // Prepare Points
-            const points = dataset.map(d => ({
-                x: parseFloat(d[featureName]) || 0,
-                y: parseFloat(d.平均強度) || 0
-            })).filter(p => p.x > 0);
-
-            const ctx = document.getElementById('featureChart').getContext('2d');
-
-            if (featureChart) {
-                featureChart.destroy();
+                // Update Controls
+                document.getElementById('page-info').innerText = `Showing ${Math.min(start + 1, total)}-${Math.min(end, total)} of ${total}`;
+                document.getElementById('btn-prev').disabled = currentPage === 1;
+                document.getElementById('btn-next').disabled = end >= total;
             }
 
-            // Simple Linear Regression for Trend Line
-            const regression = calculateRegression(points);
-            const regLine = points.map(p => ({
-                x: p.x,
-                y: regression.slope * p.x + regression.intercept
-            })).sort((a, b) => a.x - b.x);
+            function changePage(delta) {
+                currentPage += delta;
+                updateTable(null, null); // Refreshes with stored tableData
+            }
+
+            // Feature Chart Logic
+            let featureChart = null;
+
+            function updateFeatureChart() {
+                const featureName = document.getElementById('feature-select').value;
+                const featureLabel = document.getElementById('feature-select').options[document.getElementById('feature-select').selectedIndex].text;
+
+                // Filter Data
+                const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
+
+                // Prepare Points
+                const points = dataset.map(d => ({
+                    x: parseFloat(d[featureName]) || 0,
+                    y: parseFloat(d.平均強度) || 0
+                })).filter(p => p.x > 0);
+
+                const ctx = document.getElementById('featureChart').getContext('2d');
+
+                if (featureChart) {
+                    featureChart.destroy();
+                }
+
+                // Simple Linear Regression for Trend Line
+                const regression = calculateRegression(points);
+                const regLine = points.map(p => ({
+                    x: p.x,
+                    y: regression.slope * p.x + regression.intercept
+                })).sort((a, b) => a.x - b.x);
 
 
-            const color = currentTab === 'S60' ? 'rgba(139, 92, 246, 0.6)' : 'rgba(34, 197, 94, 0.6)';
-            const pointColor = currentTab === 'S60' ? '#c4b5fd' : '#86efac';
+                const color = currentTab === 'S60' ? 'rgba(139, 92, 246, 0.6)' : 'rgba(34, 197, 94, 0.6)';
+                const pointColor = currentTab === 'S60' ? '#c4b5fd' : '#86efac';
 
-            featureChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        {
-                            label: `${featureLabel} vs 強度`,
-                            data: points,
-                            backgroundColor: pointColor,
-                            borderColor: color,
-                            borderWidth: 1,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        },
-                        {
-                            label: '趨勢線 (Trend)',
-                            data: [regLine[0], regLine[regLine.length - 1]], // Start and End point
-                            type: 'line',
-                            borderColor: '#ffffff',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            fill: false,
-                            tension: 0
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true,
-                                text: featureLabel,
-                                color: '#94a3b8'
+                featureChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: `${featureLabel} vs 強度`,
+                                data: points,
+                                backgroundColor: pointColor,
+                                borderColor: color,
+                                borderWidth: 1,
+                                pointRadius: 4,
+                                pointHoverRadius: 6
                             },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: '強度 (kgf/cm²)',
-                                color: '#94a3b8'
-                            },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        }
+                            {
+                                label: '趨勢線 (Trend)',
+                                data: [regLine[0], regLine[regLine.length - 1]], // Start and End point
+                                type: 'line',
+                                borderColor: '#ffffff',
+                                borderWidth: 2,
+                                borderDash: [5, 5],
+                                pointRadius: 0,
+                                fill: false,
+                                tension: 0
+                            }
+                        ]
                     },
-                    plugins: {
-                        legend: { labels: { color: '#cbd5e1' } },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return `(${context.parsed.x}, ${context.parsed.y} kgf/cm²)`;
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: {
+                                    display: true,
+                                    text: featureLabel,
+                                    color: '#94a3b8'
+                                },
+                                grid: { color: '#334155' },
+                                ticks: { color: '#cbd5e1' }
+                            },
+                            y: {
+                                title: {
+                                    display: true,
+                                    text: '強度 (kgf/cm²)',
+                                    color: '#94a3b8'
+                                },
+                                grid: { color: '#334155' },
+                                ticks: { color: '#cbd5e1' }
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { color: '#cbd5e1' } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        return `(${context.parsed.x}, ${context.parsed.y} kgf/cm²)`;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        // Accuracy Chart Logic
-        let accuracyChart = null;
+            // Accuracy Chart Logic
+            let accuracyChart = null;
 
-        function updateAccuracyChart() {
-            if (typeof MODEL_DATA === 'undefined') return;
-            const model = MODEL_DATA[currentTab];
-            if (!model) return;
+            function updateAccuracyChart() {
+                if (typeof MODEL_DATA === 'undefined') return;
+                const model = MODEL_DATA[currentTab];
+                if (!model) return;
 
-            // Filter Valid Data
-            const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
+                // Filter Valid Data
+                const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
 
-            let sumSqureRes = 0;
-            let sumSquareTot = 0;
-            let sumAbsErr = 0;
-            let yMean = dataset.reduce((a, b) => a + (parseFloat(b.平均強度) || 0), 0) / dataset.length;
+                let sumSqureRes = 0;
+                let sumSquareTot = 0;
+                let sumAbsErr = 0;
+                let yMean = dataset.reduce((a, b) => a + (parseFloat(b.平均強度) || 0), 0) / dataset.length;
 
-            const predPoints = [];
-            const outliers = [];
+                const predPoints = [];
+                const outliers = [];
 
-            dataset.forEach(d => {
-                const actual = parseFloat(d.平均強度);
+                dataset.forEach(d => {
+                    const actual = parseFloat(d.平均強度);
 
-                // Calculate Prediction
-                let pred = model.intercept;
-                model.features.forEach(feat => {
-                    const val = parseFloat(d[feat.name]) || 0;
-                    if (feat.scale !== 0) {
-                        pred += (val - feat.mean) / feat.scale * feat.coef;
+                    // Calculate Prediction
+                    let pred = model.intercept;
+                    model.features.forEach(feat => {
+                        const val = parseFloat(d[feat.name]) || 0;
+                        if (feat.scale !== 0) {
+                            pred += (val - feat.mean) / feat.scale * feat.coef;
+                        }
+                    });
+
+                    // Metrics
+                    sumSqureRes += Math.pow(actual - pred, 2);
+                    sumSquareTot += Math.pow(actual - yMean, 2);
+                    sumAbsErr += Math.abs(actual - pred);
+
+                    // Check Anomaly (> 15% Error)
+                    const errorPct = Math.abs(actual - pred) / actual;
+                    const point = { x: pred, y: actual, match_key: d.match_key };
+
+                    if (errorPct > 0.15) {
+                        outliers.push(point);
+                    } else {
+                        predPoints.push(point);
                     }
                 });
 
-                // Metrics
-                sumSqureRes += Math.pow(actual - pred, 2);
-                sumSquareTot += Math.pow(actual - yMean, 2);
-                sumAbsErr += Math.abs(actual - pred);
+                // Calc Stats
+                const r2 = 1 - (sumSqureRes / sumSquareTot);
+                const mae = sumAbsErr / dataset.length;
 
-                // Check Anomaly (> 15% Error)
-                const errorPct = Math.abs(actual - pred) / actual;
-                const point = { x: pred, y: actual, match_key: d.match_key };
+                // Update DOM
+                document.getElementById('acc-r2').innerText = r2.toFixed(3);
+                document.getElementById('acc-mae').innerText = mae.toFixed(1);
 
-                if (errorPct > 0.15) {
-                    outliers.push(point);
-                } else {
-                    predPoints.push(point);
-                }
-            });
+                // Update KPI Card 4
+                const r2Pct = (r2 * 100).toFixed(1);
+                document.getElementById('kpi-accuracy').innerText = r2Pct;
+                document.getElementById('kpi-accuracy').style.color = r2Pct > 80 ? '#22c55e' : (r2Pct > 60 ? '#fbbf24' : '#ef4444');
 
-            // Calc Stats
-            const r2 = 1 - (sumSqureRes / sumSquareTot);
-            const mae = sumAbsErr / dataset.length;
+                // Chart
+                const ctx = document.getElementById('accuracyChart').getContext('2d');
+                if (accuracyChart) accuracyChart.destroy();
 
-            // Update DOM
-            document.getElementById('acc-r2').innerText = r2.toFixed(3);
-            document.getElementById('acc-mae').innerText = mae.toFixed(1);
+                // Perfect Line (Min to Max)
+                const minVal = Math.min(...predPoints.map(p => p.x), ...predPoints.map(p => p.y)) - 50;
+                const maxVal = Math.max(...predPoints.map(p => p.x), ...predPoints.map(p => p.y)) + 50;
 
-            // Update KPI Card 4
-            const r2Pct = (r2 * 100).toFixed(1);
-            document.getElementById('kpi-accuracy').innerText = r2Pct;
-            document.getElementById('kpi-accuracy').style.color = r2Pct > 80 ? '#22c55e' : (r2Pct > 60 ? '#fbbf24' : '#ef4444');
-
-            // Chart
-            const ctx = document.getElementById('accuracyChart').getContext('2d');
-            if (accuracyChart) accuracyChart.destroy();
-
-            // Perfect Line (Min to Max)
-            const minVal = Math.min(...predPoints.map(p => p.x), ...predPoints.map(p => p.y)) - 50;
-            const maxVal = Math.max(...predPoints.map(p => p.x), ...predPoints.map(p => p.y)) + 50;
-
-            accuracyChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        {
-                            label: '正常預測 (Normal)',
-                            data: predPoints,
-                            backgroundColor: '#fbbf24', // Amber-400
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        },
-                        {
-                            label: '異常偏差 (Anomaly)',
-                            data: outliers,
-                            backgroundColor: '#ef4444', // Red-500
-                            pointRadius: 5,
-                            pointStyle: 'triangle',
-                            pointHoverRadius: 7
-                        },
-                        {
-                            label: '完美預測線 (Ideal)',
-                            data: [{ x: minVal, y: minVal }, { x: maxVal, y: maxVal }],
-                            type: 'line',
-                            borderColor: '#ffffff',
-                            borderWidth: 1,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            fill: false
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: { display: true, text: 'AI 預測強度 (Predicted)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        },
-                        y: {
-                            title: { display: true, text: '實際強度 (Actual)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        }
+                accuracyChart = new Chart(ctx, {
+                    type: 'scatter',
+                    data: {
+                        datasets: [
+                            {
+                                label: '正常預測 (Normal)',
+                                data: predPoints,
+                                backgroundColor: '#fbbf24', // Amber-400
+                                pointRadius: 4,
+                                pointHoverRadius: 6
+                            },
+                            {
+                                label: '異常偏差 (Anomaly)',
+                                data: outliers,
+                                backgroundColor: '#ef4444', // Red-500
+                                pointRadius: 5,
+                                pointStyle: 'triangle',
+                                pointHoverRadius: 7
+                            },
+                            {
+                                label: '完美預測線 (Ideal)',
+                                data: [{ x: minVal, y: minVal }, { x: maxVal, y: maxVal }],
+                                type: 'line',
+                                borderColor: '#ffffff',
+                                borderWidth: 1,
+                                borderDash: [5, 5],
+                                pointRadius: 0,
+                                fill: false
+                            }
+                        ]
                     },
-                    plugins: {
-                        legend: { labels: { color: '#cbd5e1' } },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    const p = context.raw;
-                                    return `${p.match_key || ''}: Pred ${p.x.toFixed(0)} vs Act ${p.y} kgf/cm²`;
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        scales: {
+                            x: {
+                                type: 'linear',
+                                position: 'bottom',
+                                title: { display: true, text: 'AI 預測強度 (Predicted)', color: '#94a3b8' },
+                                grid: { color: '#334155' },
+                                ticks: { color: '#cbd5e1' }
+                            },
+                            y: {
+                                title: { display: true, text: '實際強度 (Actual)', color: '#94a3b8' },
+                                grid: { color: '#334155' },
+                                ticks: { color: '#cbd5e1' }
+                            }
+                        },
+                        plugins: {
+                            legend: { labels: { color: '#cbd5e1' } },
+                            tooltip: {
+                                callbacks: {
+                                    label: function (context) {
+                                        const p = context.raw;
+                                        return `${p.match_key || ''}: Pred ${p.x.toFixed(0)} vs Act ${p.y} kgf/cm²`;
+                                    }
                                 }
                             }
                         }
                     }
-                }
-            });
-        }
+                });
+            }
 
-        // Initialize Everything
-        function initApp() {
-            Papa.parse(CSV_URL, {
-                download: true,
-                header: true,
-                dynamicTyping: true,
-                complete: function (results) {
-                    allData = results.data;
-                    // Initialize with S60
-                    switchTab('S60');
-                }
-            });
+            // Initialize Everything
+            function initApp() {
+                Papa.parse(CSV_URL, {
+                    download: true,
+                    header: true,
+                    dynamicTyping: true,
+                    complete: function (results) {
+                        allData = results.data;
+                        // Initialize with S60
+                        switchTab('S60');
+                    }
+                });
 
-            // Hook into tab switch to update accuracy charts too
-            const oldSwitch = switchTab;
-            switchTab = function (tab) {
-                currentTab = tab;
-                const conf = CONFIG[tab];
+                // Hook into tab switch to update accuracy charts too
+                const oldSwitch = switchTab;
+                switchTab = function (tab) {
+                    currentTab = tab;
+                    const conf = CONFIG[tab];
 
-                // Pagination Reset
-                currentPage = 1;
+                    // Pagination Reset
+                    currentPage = 1;
 
-                // Update UI Buttons
-                document.getElementById('btn-s60').className = tab === 'S60'
-                    ? "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 bg-neon-purple text-white shadow-[0_0_20px_rgba(168,85,247,0.5)] transform scale-105"
-                    : "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white";
+                    // Update UI Buttons
+                    document.getElementById('btn-s60').className = tab === 'S60'
+                        ? "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 bg-neon-purple text-white shadow-[0_0_20px_rgba(168,85,247,0.5)] transform scale-105"
+                        : "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white";
 
-                document.getElementById('btn-m60').className = tab === 'M60'
-                    ? "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 bg-neon-green text-black shadow-[0_0_20px_rgba(34,197,94,0.5)] transform scale-105"
-                    : "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white";
+                    document.getElementById('btn-m60').className = tab === 'M60'
+                        ? "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 bg-neon-green text-black shadow-[0_0_20px_rgba(34,197,94,0.5)] transform scale-105"
+                        : "px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white";
 
-                updateKpiDisplay();
-                updateMainChart();
-                updateTable(allData.filter(d => d.母體 && d.母體.startsWith(tab)), conf);
+                    updateKpiDisplay();
+                    updateMainChart();
+                    updateTable(allData.filter(d => d.母體 && d.母體.startsWith(tab)), conf);
 
-                // AI Tool Toggle
-                if (tab === 'S60') {
-                    document.getElementById('inputs-s60').classList.remove('hidden');
-                    document.getElementById('inputs-m60').classList.add('hidden');
-                    document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-purple animate-fade-in relative overflow-hidden";
-                } else {
-                    document.getElementById('inputs-s60').classList.add('hidden');
-                    document.getElementById('inputs-m60').classList.remove('hidden');
-                    document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-green animate-fade-in relative overflow-hidden";
-                }
+                    // AI Tool Toggle
+                    if (tab === 'S60') {
+                        document.getElementById('inputs-s60').classList.remove('hidden');
+                        document.getElementById('inputs-m60').classList.add('hidden');
+                        document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-purple animate-fade-in relative overflow-hidden";
+                    } else {
+                        document.getElementById('inputs-s60').classList.add('hidden');
+                        document.getElementById('inputs-m60').classList.remove('hidden');
+                        document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-green animate-fade-in relative overflow-hidden";
+                    }
 
-                updatePrediction();
-                updateFeatureChart();
-                updateAccuracyChart();
-            };
-        }
+                    updatePrediction();
+                    updateFeatureChart();
+                    updateAccuracyChart();
+                };
+            }
 
-        window.onload = initApp;
-    </script>
+            window.onload = initApp;
+        </script>
 </body>
 
 </html>
