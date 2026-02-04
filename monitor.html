@@ -703,7 +703,7 @@
             `;
 
             // Sort by Date Desc (Latest first)
-            const sorted = [...data].sort((a, b) => b.match_key.localeCompare(a.match_key));
+            const sorted = [...data].sort((a, b) => String(b.match_key).localeCompare(String(a.match_key)));
 
             sorted.forEach(row => {
                 const tr = document.createElement('tr');
