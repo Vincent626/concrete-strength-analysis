@@ -444,23 +444,8 @@
             if (el) el.addEventListener('input', updatePrediction);
         });
 
-        // Update on tab switch
-        const originalSwitch = switchTab;
-        switchTab = function (tab) {
-            originalSwitch(tab);
+        // Update on tab switch handled in main script
 
-            // Toggle AI inputs
-            if (tab === 'S60') {
-                document.getElementById('inputs-s60').classList.remove('hidden');
-                document.getElementById('inputs-m60').classList.add('hidden');
-                document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-purple animate-fade-in relative overflow-hidden";
-            } else {
-                document.getElementById('inputs-s60').classList.add('hidden');
-                document.getElementById('inputs-m60').classList.remove('hidden');
-                document.getElementById('ai-tool-container').className = "glass-panel p-6 mb-8 border-l-4 border-neon-green animate-fade-in relative overflow-hidden";
-            }
-            updatePrediction();
-        };
 
         // Init call
         setTimeout(updatePrediction, 500); // Delay to ensure model loaded
@@ -469,6 +454,7 @@
 
 
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
+        let mainChart = null;
 
         const CONFIG = {
             S60: {
