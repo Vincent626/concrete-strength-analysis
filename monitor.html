@@ -78,281 +78,367 @@
         </div>
     </header>
 
-    <!-- Main Dashboard Split Layout -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-
-        <!-- === LEFT COLUMN: M60 ZONE (Process & Current) === -->
-        <div class="flex flex-col gap-4">
-            <!-- Zone Header -->
-            <div class="flex items-center gap-2 pb-2 border-b border-neon-green/30">
-                <span class="w-3 h-3 rounded-full bg-neon-green shadow-[0_0_10px_rgba(0,255,157,0.5)]"></span>
-                <h2 class="text-xl font-bold text-white">M60 推進管監控區</h2>
-                <span
-                    class="ml-auto text-xs font-mono text-neon-green border border-neon-green/30 px-2 py-0.5 rounded">製程主導
-                    (Process-Driven)</span>
-            </div>
-
-            <!-- M60 KPI ROW -->
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass-panel p-4 border-l-2 border-neon-green relative overflow-hidden">
-                    <h3 class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">M60 平均強度</h3>
-                    <div class="mt-1 flex items-baseline gap-1">
-                        <span id="kpi-m60-strength" class="text-2xl font-bold stat-value text-white">--</span>
-                        <span class="text-[10px] text-slate-500">kgf/cm²</span>
-                    </div>
-                </div>
-                <div class="glass-panel p-4 border-l-2 border-neon-green relative overflow-hidden">
-                    <h3 class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">M60 最終電流 (關鍵)</h3>
-                    <div class="mt-1 flex items-baseline gap-1">
-                        <span id="kpi-m60-current" class="text-2xl font-bold stat-value text-neon-green">--</span>
-                        <span class="text-[10px] text-slate-500">Amps</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- M60 CHART -->
-            <div class="glass-panel p-4 flex-1 min-h-[320px] flex flex-col">
-                <h3 class="text-slate-300 text-sm font-semibold mb-2 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-neon-green" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M13 10V3L4 14h7v7l9-11h-7z" />
-                    </svg>
-                    電流強度關聯圖 (Current vs Strength)
-                </h3>
-                <div class="flex-1 w-full relative">
-                    <canvas id="m60ScatterChart"></canvas>
-                </div>
-                <div class="mt-2 text-[10px] text-slate-500 text-center">
-                    *正相關顯著：電流越高(料乾) 強度越高
-                </div>
-            </div>
-        </div>
-
-        <!-- === RIGHT COLUMN: S60 ZONE (Recipe & W/B) === -->
-        <div class="flex flex-col gap-4">
-            <!-- Zone Header -->
-            <div class="flex items-center gap-2 pb-2 border-b border-neon-purple/30">
-                <span class="w-3 h-3 rounded-full bg-neon-purple shadow-[0_0_10px_rgba(191,0,255,0.5)]"></span>
-                <h2 class="text-xl font-bold text-white">S60 一般管監控區</h2>
-                <span
-                    class="ml-auto text-xs font-mono text-neon-purple border border-neon-purple/30 px-2 py-0.5 rounded">配方主導
-                    (Recipe-Driven)</span>
-            </div>
-
-            <!-- S60 KPI ROW -->
-            <div class="grid grid-cols-2 gap-4">
-                <div class="glass-panel p-4 border-l-2 border-neon-purple relative overflow-hidden">
-                    <h3 class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">S60 平均強度</h3>
-                    <div class="mt-1 flex items-baseline gap-1">
-                        <span id="kpi-s60-strength" class="text-2xl font-bold stat-value text-white">--</span>
-                        <span class="text-[10px] text-slate-500">kgf/cm²</span>
-                    </div>
-                </div>
-                <div class="glass-panel p-4 border-l-2 border-neon-purple relative overflow-hidden">
-                    <h3 class="text-slate-400 text-[10px] font-bold uppercase tracking-wider">S60 平均水膠比 (關鍵)</h3>
-                    <div class="mt-1 flex items-baseline gap-1">
-                        <span id="kpi-s60-wb" class="text-2xl font-bold stat-value text-neon-purple">--</span>
-                        <span class="text-[10px] text-slate-500">W/B</span>
-                    </div>
-                </div>
-            </div>
-
-            <!-- S60 CHART -->
-            <div class="glass-panel p-4 flex-1 min-h-[320px] flex flex-col">
-                <h3 class="text-slate-300 text-sm font-semibold mb-2 flex items-center gap-2">
-                    <svg class="w-4 h-4 text-neon-purple" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                            d="M19.428 15.428a2 2 0 00-1.022-.547l-2.384-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z" />
-                    </svg>
-                    水膠強度關聯圖 (W/B vs Strength)
-                </h3>
-                <div class="flex-1 w-full relative">
-                    <canvas id="s60ScatterChart"></canvas>
-                </div>
-                <div class="mt-2 text-[10px] text-slate-500 text-center">
-                    *負相關預期：水膠比越低(越濃) 強度越高
-                </div>
-            </div>
-        </div>
-
+    <!-- Navigation Tabs -->
+    <div class="flex justify-center mb-8 gap-4">
+        <button id="btn-s60" onclick="switchTab('S60')"
+            class="px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">
+            S60 一般管
+        </button>
+        <button id="btn-m60" onclick="switchTab('M60')"
+            class="px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white">
+            M60 推進管
+        </button>
     </div>
 
-    <!-- Timeline Trend (Full Width) -->
-    <div class="glass-panel p-6 mb-8">
-        <h2 class="text-lg font-semibold mb-4 text-neon-blue flex items-center gap-2">
-            <span class="w-2 h-6 bg-neon-blue rounded-sm"></span>
-            全產線強度趨勢監控 (Timeline)
-        </h2>
-        <div class="h-[300px] w-full">
-            <canvas id="trendChart"></canvas>
+    <!-- Main Content Area -->
+    <div id="dashboard-content" class="animate-fade-in">
+
+        <!-- Top Section: KPIs + Chart -->
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+
+            <!-- Left: KPIs Column -->
+            <div class="lg:col-span-1 flex flex-col gap-4">
+                <!-- Strength KPI -->
+                <div id="kpi-strength-card" class="glass-panel p-6 border-l-4 transition-colors duration-500">
+                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-wider">平均強度 (Avg Strength)</h3>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-strength" class="text-4xl font-bold stat-value text-white">--</span>
+                        <span class="text-sm text-slate-500">kgf/cm²</span>
+                    </div>
+                </div>
+
+                <!-- Key Factor KPI -->
+                <div id="kpi-factor-card" class="glass-panel p-6 border-l-4 transition-colors duration-500">
+                    <h3 id="kpi-factor-title" class="text-slate-400 text-sm font-bold uppercase tracking-wider">關鍵因子
+                    </h3>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-factor" class="text-4xl font-bold stat-value">--</span>
+                        <span id="kpi-factor-unit" class="text-sm text-slate-500"></span>
+                    </div>
+                </div>
+
+                <!-- Slump KPI -->
+                <div class="glass-panel p-6 border-l-4 border-slate-600">
+                    <h3 class="text-slate-400 text-sm font-bold uppercase tracking-wider">平均坍度 (Avg Slump)</h3>
+                    <div class="mt-2 flex items-baseline gap-2">
+                        <span id="kpi-slump" class="text-4xl font-bold stat-value text-slate-200">--</span>
+                        <span class="text-sm text-slate-500">cm</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: Regression Chart -->
+            <div class="lg:col-span-2 glass-panel p-6 flex flex-col">
+                <div class="flex justify-between items-center mb-4">
+                    <h2 id="chart-title" class="text-xl font-bold flex items-center gap-2">
+                        <!-- Dynamic Title -->
+                    </h2>
+                    <div id="regression-stats"
+                        class="text-xs font-mono px-2 py-1 bg-slate-800 rounded border border-slate-700 text-slate-400">
+                        <!-- R2 & Slope -->
+                    </div>
+                </div>
+                <div class="flex-1 w-full relative min-h-[300px]">
+                    <canvas id="mainChart"></canvas>
+                </div>
+                <p id="chart-desc" class="text-xs text-slate-500 mt-2 text-center">
+                    <!-- Dynamic Desc -->
+                </p>
+            </div>
+        </div>
+
+        <!-- Bottom Section: Detailed List -->
+        <div class="glass-panel p-6">
+            <h2 class="text-lg font-semibold mb-4 text-slate-300 flex items-center gap-2">
+                <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
+                最新批次明細列表 (Latest Batches)
+            </h2>
+            <div class="overflow-x-auto">
+                <table class="w-full text-left border-collapse">
+                    <thead>
+                        <tr class="text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
+                            <th class="p-3 font-semibold">日期/批次</th>
+                            <th class="p-3 font-semibold">類型</th>
+                            <th class="p-3 font-semibold" id="col-key-factor">關鍵因子</th>
+                            <th class="p-3 font-semibold">坍度 (cm)</th>
+                            <th class="p-3 font-semibold text-right">強度 (kgf/cm²)</th>
+                        </tr>
+                    </thead>
+                    <tbody id="table-body" class="text-sm divide-y divide-slate-800/50">
+                        <!-- Rows rendered by JS -->
+                    </tbody>
+                </table>
+            </div>
         </div>
     </div>
 
-    <!-- Data Table Preview -->
-    <div class="glass-panel p-6">
-        <h2 class="text-lg font-semibold mb-4 text-slate-300">最新批次數據</h2>
-        <div class="overflow-x-auto">
-            <table class="w-full text-sm text-left text-slate-400">
-                <thead class="text-xs text-slate-200 uppercase bg-slate-800/50">
-                    <tr>
-                        <th class="px-4 py-3 rounded-l-lg">日期/批次</th>
-                        <th class="px-4 py-3">類型</th>
-                        <th class="px-4 py-3">關鍵因子</th>
-                        <th class="px-4 py-3">坍度 (cm)</th>
-                        <th class="px-4 py-3 text-right rounded-r-lg">強度 (kgf/cm²)</th>
-                    </tr>
-                </thead>
-                <tbody id="data-table-body">
-                    <!-- JS will populate this -->
-                </tbody>
-            </table>
-        </div>
-    </div>
-
+    <!-- Data Logic -->
     <script>
-        // Data URL
+        let allData = [];
+        let currentTab = 'S60'; // Default
+        let mainChart = null;
+
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
 
-        // Color Palette
-        const colors = {
-            m60Points: 'rgba(0, 255, 157, 0.6)',
-            m60Border: '#00ff9d',
-            s60Points: 'rgba(191, 0, 255, 0.6)',
-            s60Border: '#bf00ff',
+        const CONFIG = {
+            S60: {
+                color: '#bf00ff', // Neon Purple
+                bg: 'rgba(191, 0, 255, 0.2)',
+                factorKey: '水膠比',
+                factorLabel: '水膠比 (W/B Ratio)',
+                factorUnit: '',
+                xLabel: '水膠比 (W/B)',
+                desc: '*水膠比越低 (越濃) -> 強度越高 (負相關)',
+                kpiTitle: '平均水膠比',
+                expectedTrend: 'down' // Lower X = Higher Y
+            },
+            M60: {
+                color: '#00ff9d', // Neon Green
+                bg: 'rgba(0, 255, 157, 0.2)',
+                factorKey: '最終電流',
+                factorLabel: '最終電流 (Final Current)',
+                factorUnit: 'Amps',
+                xLabel: '最終電流 (A)',
+                desc: '*電流越高 (料越乾) -> 強度越高 (正相關)',
+                kpiTitle: '平均最終電流',
+                expectedTrend: 'up' // Higher X = Higher Y
+            }
         };
 
-        // Main Logic
-        Papa.parse(CSV_URL, {
-            download: true,
-            header: true,
-            complete: function (results) {
-                const data = results.data.filter(row => row.match_key);
-                processData(data);
+        // Linear Regression Calculation: y = mx + b
+        function calculateRegression(points) {
+            const n = points.length;
+            if (n === 0) return null;
 
-                const now = new Date();
-                document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-            },
-            error: function (err) {
-                console.error("CSV Load Error:", err);
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0;
+            points.forEach(p => {
+                sumX += p.x;
+                sumY += p.y;
+                sumXY += p.x * p.y;
+                sumXX += p.x * p.x;
+            });
+
+            const denominator = (n * sumXX - sumX * sumX);
+            if (denominator === 0) return { slope: 0, intercept: sumY / n }; // Handle vertical line or all x-values are same
+
+            const slope = (n * sumXY - sumX * sumY) / denominator;
+            const intercept = (sumY - slope * sumX) / n;
+
+            // Simple R2 calculation (optional, keeping it light)
+
+            return { slope, intercept };
+        }
+
+        function switchTab(tab) {
+            currentTab = tab;
+            render();
+        }
+
+        async function init() {
+            const response = await fetch(CSV_URL);
+            const csvText = await response.text();
+
+            Papa.parse(csvText, {
+                header: true,
+                skipEmptyLines: true,
+                complete: function (results) {
+                    allData = results.data.filter(d => d.match_key); // Basic filter
+
+                    // Initial Render
+                    switchTab('S60');
+
+                    const now = new Date();
+                    document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+                },
+                error: function (err) {
+                    console.error("CSV Load Error:", err);
+                }
+            });
+        }
+
+        function render() {
+            const conf = CONFIG[currentTab];
+            const data = allData.filter(d => d['母體'] === currentTab);
+
+            // 1. Update Tabs Visuals
+            ['S60', 'M60'].forEach(t => {
+                const btn = document.getElementById(`btn-${t.toLowerCase()}`);
+                if (t === currentTab) {
+                    btn.className = `px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border shadow-[0_0_15px_${CONFIG[t].color}50] text-white scale-105`;
+                    btn.style.backgroundColor = CONFIG[t].color;
+                    btn.style.borderColor = CONFIG[t].color;
+                } else {
+                    btn.className = 'px-8 py-3 rounded-full text-lg font-bold transition-all duration-300 border border-slate-700 bg-slate-800 text-slate-400 hover:text-white hover:bg-slate-700';
+                    btn.style.backgroundColor = '';
+                    btn.style.borderColor = '';
+                }
+            });
+
+            // 2. Update KPI Cards
+            const avgStrength = data.reduce((a, b) => a + parseFloat(b['平均強度'] || 0), 0) / data.length;
+            const avgFactor = data.reduce((a, b) => a + parseFloat(b[conf.factorKey] || 0), 0) / data.length;
+            const avgSlump = data.reduce((a, b) => a + parseFloat(b['坍度(cm)'] || 0), 0) / data.length; // Note: '坍度(cm)' from CSV
+
+            // Strength Card
+            const kpiStrCard = document.getElementById('kpi-strength-card');
+            kpiStrCard.style.borderColor = conf.color;
+            document.getElementById('kpi-strength').innerText = avgStrength.toFixed(0);
+
+            // Factor Card
+            const kpiFactorCard = document.getElementById('kpi-factor-card');
+            kpiFactorCard.style.borderColor = conf.color;
+            document.getElementById('kpi-factor-title').innerText = conf.kpiTitle;
+            document.getElementById('kpi-factor').innerText = avgFactor.toFixed(2);
+            document.getElementById('kpi-factor').style.color = conf.color;
+            document.getElementById('kpi-factor-unit').innerText = conf.factorUnit;
+
+            // Slump Card
+            document.getElementById('kpi-slump').innerText = avgSlump.toFixed(1);
+
+            // 3. Update Chart (Scatter + Regression)
+            updateChart(data, conf);
+
+            // 4. Update Table
+            updateTable(data, conf);
+        }
+
+        function updateChart(data, conf) {
+            const ctx = document.getElementById('mainChart');
+
+            // Prepare Data Points
+            const points = data.map(d => ({
+                x: parseFloat(d[conf.factorKey]),
+                y: parseFloat(d['平均強度']),
+                raw: d
+            })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x > 0);
+
+            // Calculate Regression Line
+            const reg = calculateRegression(points);
+
+            // Generate Line Points (Min X to Max X)
+            let minX = Math.min(...points.map(p => p.x));
+            let maxX = Math.max(...points.map(p => p.x));
+
+            // Add some padding to min/max X for better visualization
+            const xRange = maxX - minX;
+            minX = minX - xRange * 0.1;
+            maxX = maxX + xRange * 0.1;
+
+            const linePoints = reg ? [
+                { x: minX, y: reg.slope * minX + reg.intercept },
+                { x: maxX, y: reg.slope * maxX + reg.intercept }
+            ] : [];
+
+            // Regression Stats Display
+            const rStat = document.getElementById('regression-stats');
+            if (reg) {
+                const slopeDir = reg.slope > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
+                rStat.innerText = `Trend: ${slopeDir} | Slope: ${reg.slope.toFixed(1)}`;
+                rStat.style.borderColor = conf.color;
+                rStat.style.color = conf.color;
+            } else {
+                rStat.innerText = 'No data for regression';
+                rStat.style.borderColor = 'transparent';
+                rStat.style.color = '#slate-400';
             }
-        });
 
-        function processData(data) {
-            const s60Data = data.filter(d => d['母體'] === 'S60');
-            const m60Data = data.filter(d => d['母體'] === 'M60');
 
-            const avg = arr => arr.length ? arr.reduce((a, b) => a + b, 0) / arr.length : 0;
-            const getVal = (arr, key) => arr.map(d => parseFloat(d[key]) || 0).filter(v => v > 0);
+            // Update Chart Title & Desc
+            const titleEl = document.getElementById('chart-title');
+            titleEl.innerHTML = `<span class="w-2 h-6 rounded-sm" style="background-color: ${conf.color}"></span> ${conf.factorLabel} vs 強度`;
+            titleEl.style.color = conf.color;
 
-            // --- KPI Updates ---
-            document.getElementById('kpi-m60-strength').innerText = avg(getVal(m60Data, '平均強度')).toFixed(0);
-            document.getElementById('kpi-m60-current').innerText = avg(getVal(m60Data, '最終電流')).toFixed(1);
+            document.getElementById('chart-desc').innerText = conf.desc;
 
-            document.getElementById('kpi-s60-strength').innerText = avg(getVal(s60Data, '平均強度')).toFixed(0);
-            document.getElementById('kpi-s60-wb').innerText = avg(getVal(s60Data, '水膠比')).toFixed(2);
+            // Destroy old chart
+            if (mainChart) mainChart.destroy();
 
-            // --- Chart 1: M60 Current vs Strength ---
-            const m60Ctx = document.getElementById('m60ScatterChart');
-            if (m60Ctx) {
-                new Chart(m60Ctx, {
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            label: 'M60 批次',
-                            data: m60Data.map(d => ({ x: parseFloat(d['最終電流']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
-                            backgroundColor: colors.m60Points,
-                            borderColor: colors.m60Border,
-                        }]
-                    },
-                    options: createScatterOptions('最終電流 (Amps)', '強度 (kgf/cm²)')
-                });
-            }
-
-            // --- Chart 2: S60 W/B vs Strength ---
-            const s60Ctx = document.getElementById('s60ScatterChart');
-            if (s60Ctx) {
-                new Chart(s60Ctx, {
-                    type: 'scatter',
-                    data: {
-                        datasets: [{
-                            label: 'S60 批次',
-                            data: s60Data.map(d => ({ x: parseFloat(d['水膠比']), y: parseFloat(d['平均強度']) })).filter(p => p.x > 0 && p.y > 0),
-                            backgroundColor: colors.s60Points,
-                            borderColor: colors.s60Border,
-                        }]
-                    },
-                    options: createScatterOptions('水膠比 (W/B)', '強度 (kgf/cm²)')
-                });
-            }
-
-            // --- Chart 3: Timeline Trend ---
-            const sortedData = [...data].sort((a, b) => b.match_key - a.match_key).slice(0, 40).reverse();
-            new Chart(document.getElementById('trendChart'), {
-                type: 'line',
+            mainChart = new Chart(ctx, {
+                type: 'scatter',
                 data: {
-                    labels: sortedData.map(d => d.日期.substring(5)),
                     datasets: [
                         {
-                            label: 'M60 強度',
-                            data: sortedData.map(d => d['母體'] == 'M60' ? parseFloat(d['平均強度']) : null),
-                            borderColor: colors.m60Border,
-                            backgroundColor: colors.m60Border,
-                            segment: { borderDash: [5, 5] }, // 斷點用虛線連 (可選) 或直接斷開
-                            spanGaps: true, // 連接斷點
-                            tension: 0.4
+                            label: 'Batch Data',
+                            data: points,
+                            backgroundColor: conf.color,
+                            borderColor: conf.color,
+                            pointRadius: 4,
+                            pointHoverRadius: 6,
+                            pointStyle: 'rectRot'
                         },
                         {
-                            label: 'S60 強度',
-                            data: sortedData.map(d => d['母體'] == 'S60' ? parseFloat(d['平均強度']) : null),
-                            borderColor: colors.s60Border,
-                            backgroundColor: colors.s60Border,
-                            spanGaps: true,
-                            tension: 0.4
+                            type: 'line',
+                            label: 'Regression Trend',
+                            data: linePoints,
+                            borderColor: '#ffffff',
+                            borderWidth: 2,
+                            borderDash: [5, 5],
+                            pointRadius: 0,
+                            fill: false
                         }
                     ]
                 },
                 options: {
                     responsive: true,
                     maintainAspectRatio: false,
-                    interaction: { mode: 'index', intersect: false },
-                    scales: {
-                        x: { ticks: { color: '#94a3b8' }, grid: { display: false } },
-                        y: { grid: { color: '#334155' }, ticks: { color: '#e2e8f0' } }
+                    plugins: {
+                        legend: { labels: { color: '#94a3b8' } },
+                        tooltip: {
+                            callbacks: {
+                                label: (ctx) => {
+                                    if (ctx.dataset.type === 'line') return '';
+                                    const p = ctx.raw;
+                                    return `${p.raw.match_key}: ${p.y} kgf/cm² (${conf.factorKey}: ${p.x})`;
+                                }
+                            }
+                        }
                     },
-                    plugins: { legend: { labels: { color: '#cbd5e1' } } }
+                    scales: {
+                        x: {
+                            title: { display: true, text: conf.xLabel, color: '#64748b' },
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' }
+                        },
+                        y: {
+                            title: { display: true, text: '強度 (Strength)', color: '#64748b' },
+                            grid: { color: '#334155' },
+                            ticks: { color: '#94a3b8' },
+                            min: 0 // Optional
+                        }
+                    }
                 }
             });
+        }
 
-            // --- Table ---
-            const tbody = document.getElementById('data-table-body');
-            const recent = [...data].sort((a, b) => b.match_key - a.match_key).slice(0, 5);
+        function updateTable(data, conf) {
+            const tbody = document.getElementById('table-body');
+            tbody.innerHTML = '';
 
-            recent.forEach(row => {
-                const isM60 = row['母體'] === 'M60';
-                const keyFactor = isM60 ? `${parseFloat(row['最終電流']).toFixed(1)} A` : `W/B ${parseFloat(row['水膠比']).toFixed(2)}`;
+            // Update Header Name
+            document.getElementById('col-key-factor').innerText = `關鍵因子 (${conf.factorKey})`;
+
+            // Sort by Date Desc (Latest first)
+            const sorted = [...data].sort((a, b) => b.match_key.localeCompare(a.match_key)).slice(0, 10);
+
+            sorted.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.className = "border-b border-slate-700 hover:bg-slate-800 transition-colors";
+                tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
+
+                const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
+
                 tr.innerHTML = `
-                    <td class="px-4 py-3 font-mono text-slate-300">${row.日期}</td>
-                    <td class="px-4 py-3"><span class="px-2 py-1 rounded text-xs font-bold ${isM60 ? 'bg-neon-green/20 text-neon-green' : 'bg-neon-purple/20 text-neon-purple'}">${row['母體']}</span></td>
-                    <td class="px-4 py-3 font-mono text-slate-300">${keyFactor}</td>
-                    <td class="px-4 py-3 font-mono">${row['坍度(cm)']}</td>
-                    <td class="px-4 py-3 text-right font-bold text-white">${parseFloat(row['平均強度']).toFixed(0)}</td>
+                    <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
+                    <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
+                    <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
+                    <td class="p-3 text-right font-bold text-white">${row['平均強度']}</td>
                 `;
                 tbody.appendChild(tr);
             });
         }
 
-        function createScatterOptions(xLabel, yLabel) {
-            return {
-                responsive: true, allowAspectRatio: false, maintainAspectRatio: false,
-                scales: {
-                    x: { title: { display: true, text: xLabel, color: '#94a3b8' }, grid: { color: '#334155' }, ticks: { color: '#cbd5e1' } },
-                    y: { title: { display: true, text: yLabel, color: '#94a3b8' }, grid: { color: '#334155' }, ticks: { color: '#cbd5e1' } }
-                },
-                plugins: { legend: { display: false } }
-            };
-        }
+        // Start App
+        init();
     </script>
 </body>
 
