@@ -488,7 +488,10 @@
                 xLabel: '水膠比 (W/B)',
                 desc: '*水膠比越低 (越濃) -> 強度越高 (負相關)',
                 kpiTitle: '平均水膠比',
-                expectedTrend: 'down' // Lower X = Higher Y
+                desc: '*水膠比越低 (越濃) -> 強度越高 (負相關)',
+                kpiTitle: '平均水膠比',
+                expectedTrend: 'down', // Lower X = Higher Y
+                designStrength: 510 // Target Strength (Configurable)
             },
             M60: {
                 color: '#00ff9d', // Neon Green
@@ -499,7 +502,9 @@
                 xLabel: '最終電流 (A)',
                 desc: '*電流越高 (料越乾) -> 強度越高 (正相關)',
                 kpiTitle: '平均最終電流',
-                expectedTrend: 'up' // Higher X = Higher Y
+                kpiTitle: '平均最終電流',
+                expectedTrend: 'up', // Higher X = Higher Y
+                designStrength: 510 // Target Strength (Configurable)
             }
         };
 
@@ -557,7 +562,7 @@
         function updateKpiDisplay() {
             const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && d['平均強度'] > 0);
             const conf = CONFIG[currentTab];
-            const target = 510;
+            const target = conf.designStrength || 510;
 
             // 1. Strength KPI
             const avgStrength = data.reduce((a, b) => a + parseFloat(b['平均強度'] || 0), 0) / data.length;
