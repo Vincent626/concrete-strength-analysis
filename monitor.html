@@ -130,15 +130,16 @@
                 <div id="kpi-factor-trend" class="mt-1 text-xs text-amber-500 font-bold">--</div>
             </div>
 
-            <!-- Card 4: Prediction Accuracy -->
+            <!-- Card 4: Prediction Accuracy (Gauge) -->
             <div
                 class="glass-panel p-6 border-l-4 border-neon-purple relative group hover:-translate-y-1 transition-transform duration-300">
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">AI 預測正確率 (R²)</h3>
-                <div class="flex items-baseline gap-2">
-                    <span id="kpi-accuracy" class="text-4xl font-black text-white font-mono">--</span>
-                    <span class="text-xs text-slate-500">%</span>
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">AI 模型解釋力 (R²)</h3>
+                <div class="flex items-center justify-center" style="height: 100px;">
+                    <canvas id="kpi-gauge" width="160" height="100"></canvas>
                 </div>
-                <div class="mt-2 text-xs text-slate-500">模型: v8 (Linear)</div>
+                <div id="kpi-accuracy" class="hidden">--</div>
+                <div id="kpi-gauge-label" class="text-center text-xs text-slate-400 mt-1">--</div>
+                <div class="text-center text-[10px] text-slate-600 mt-1" title="R² 代表 AI 模型能解釋多少比例的強度變化。數值越接近 1 代表預測越準確。">💡 越靠近右邊（綠色）= 預測越準</div>
             </div>
         </div>
 
@@ -233,24 +234,107 @@
         </p>
     </div>
 
+    <!-- Feature Cross Analysis (交叉比對分析) -->
+    <div class="glass-panel p-6 mb-8 border-l-4 border-emerald-500 animate-fade-in delay-250">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+            <h2 class="text-xl font-bold text-white flex items-center gap-3">
+                <span class="w-1 h-6 bg-emerald-500 rounded-sm"></span>
+                特徵交叉比對分析 (Cross Feature Analysis)
+            </h2>
+            <div class="flex flex-wrap items-center gap-3">
+                <div class="flex items-center gap-2">
+                    <label class="text-slate-400 text-sm whitespace-nowrap">主因子:</label>
+                    <select id="cross-x-select" onchange="updateCrossAnalysis()"
+                        class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1.5 outline-none focus:border-emerald-500 transition-colors text-sm">
+                    </select>
+                </div>
+                <div class="flex items-center gap-2">
+                    <label class="text-slate-400 text-sm whitespace-nowrap">交叉比對:</label>
+                    <select id="cross-group-select" onchange="updateCrossAnalysis()"
+                        class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1.5 outline-none focus:border-emerald-500 transition-colors text-sm">
+                        <option value="">（不分組）</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <!-- Auto Conclusion -->
+        <div id="cross-conclusion" class="mb-4 p-4 bg-slate-800/60 rounded-lg border border-slate-700">
+            <div class="flex items-start gap-3">
+                <span class="text-2xl">💡</span>
+                <div>
+                    <div class="text-sm font-bold text-emerald-400 mb-1">分析結論</div>
+                    <div id="cross-conclusion-text" class="text-slate-200 text-sm leading-relaxed">
+                        請選擇因子開始分析...
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chart -->
+        <div class="w-full relative min-h-[350px] mb-4">
+            <canvas id="crossChart"></canvas>
+        </div>
+
+        <!-- Summary Table -->
+        <div class="overflow-x-auto">
+            <table id="cross-summary-table" class="w-full text-sm border-collapse">
+                <thead>
+                    <tr class="text-slate-400 text-xs uppercase tracking-wider border-b border-slate-700">
+                        <th class="p-2 text-left font-semibold">分組</th>
+                        <th class="p-2 text-center font-semibold">筆數</th>
+                        <th class="p-2 text-right font-semibold">平均強度</th>
+                        <th class="p-2 text-right font-semibold">標準差(σ)</th>
+                        <th class="p-2 text-right font-semibold">最低</th>
+                        <th class="p-2 text-right font-semibold">最高</th>
+                    </tr>
+                </thead>
+                <tbody id="cross-summary-body">
+                </tbody>
+            </table>
+        </div>
+
+        <p class="text-xs text-slate-500 mt-3 text-center">
+            *資料依數值排序後均分為三組（低/中/高），每組約佔總樣本數的 1/3
+        </p>
+    </div>
+
     <!-- Model Accuracy Analysis (New Section) -->
     <div class="glass-panel p-6 mb-8 border-l-4 border-amber-500 animate-fade-in delay-300">
-        <h2 class="text-xl font-bold text-white mb-6 flex items-center justify-between">
-            <div class="flex items-center gap-3">
-                <span class="w-1 h-6 bg-amber-500 rounded-sm"></span>
-                模型準確度驗證 (Model Accuracy: Predicted vs Actual)
-            </div>
-            <div class="flex gap-4 text-sm font-mono">
-                <div class="bg-slate-800 px-3 py-1 rounded border border-slate-700">
-                    <span class="text-slate-400">R²:</span>
-                    <span id="acc-r2" class="text-white font-bold">--</span>
-                </div>
-                <div class="bg-slate-800 px-3 py-1 rounded border border-slate-700">
-                    <span class="text-slate-400">MAE:</span>
-                    <span id="acc-mae" class="text-white font-bold">--</span>
-                </div>
-            </div>
+        <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-3">
+            <span class="w-1 h-6 bg-amber-500 rounded-sm"></span>
+            模型準確度驗證 (Model Accuracy)
         </h2>
+
+        <!-- R² Explanation + Gauge Row -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+            <!-- Gauge -->
+            <div class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center border border-slate-700">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">R² 模型解釋力</div>
+                <canvas id="acc-gauge" width="200" height="110"></canvas>
+                <div id="acc-r2" class="text-lg font-bold text-white font-mono mt-1">--</div>
+                <div id="acc-gauge-label" class="text-xs text-slate-400">--</div>
+            </div>
+
+            <!-- MAE -->
+            <div class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center justify-center border border-slate-700">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">MAE 平均誤差</div>
+                <div class="text-3xl font-black text-white font-mono"><span id="acc-mae">--</span></div>
+                <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
+                <div class="text-[10px] text-slate-500 mt-2">每次預測平均偏差多少</div>
+            </div>
+
+            <!-- R² Explanation -->
+            <div class="bg-slate-800/60 rounded-lg p-4 border border-slate-700">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-3">💡 R² 是什麼？</div>
+                <div class="text-sm text-slate-300 leading-relaxed space-y-2">
+                    <p><b class="text-white">白話說：</b>R² 代表 AI 模型能「解釋」多少比例的強度變化。</p>
+                    <p>🔴 <b>0~0.3</b> = 模型還在學習，預測參考性低</p>
+                    <p>🟡 <b>0.3~0.6</b> = 模型已掌握部分規律</p>
+                    <p>🟢 <b>0.6~1.0</b> = 模型預測力強，可做決策參考</p>
+                </div>
+            </div>
+        </div>
 
         <div class="w-full relative min-h-[400px]">
             <canvas id="accuracyChart"></canvas>
@@ -886,8 +970,466 @@
             });
         }
 
+        // ============================================================
+        // Cross Feature Analysis Logic (特徵交叉比對)
+        // ============================================================
+        let crossChart = null;
+
+        const CROSS_FEATURES = [
+            { key: '坍度(cm)', label: '坍度' },
+            { key: '混凝土溫度(℃)', label: '混凝土溫度' },
+            { key: '耗用骨材1', label: '砂（細骨材）' },
+            { key: '耗用骨材2', label: '3分石（粗骨材小）' },
+            { key: '耗用骨材3', label: '6分石（粗骨材大）' },
+            { key: '耗用水', label: '拌合水' },
+            { key: '耗用泥料1', label: 'II型水泥' },
+            { key: '耗用泥料2', label: '矽灰' },
+            { key: '耗用泥料4', label: '爐石' },
+            { key: '表面水骨材1', label: '扣水率/表面水' },
+            { key: '膠結料總量', label: '膠結料總量' },
+            { key: '水灰比', label: '水灰比' },
+            { key: '水膠比', label: '水膠比' },
+            { key: '砂石比', label: '砂石比' },
+            { key: '矽灰取代率', label: '矽灰取代率' },
+            { key: '爐石取代率', label: '爐石取代率' },
+            { key: '漿體比例', label: '漿體比例' },
+            { key: '粗細骨材比', label: '粗細骨材比' },
+            { key: '平均電流', label: '平均電流' },
+            { key: '最大電流', label: '最大電流' },
+            { key: '電流標準差', label: '電流標準差' },
+            { key: '最終電流', label: '最終電流' },
+        ];
+
+        function getCrossLabel(key) {
+            const f = CROSS_FEATURES.find(f => f.key === key);
+            return f ? f.label : key;
+        }
+
+        function initCrossSelects() {
+            const xSel = document.getElementById('cross-x-select');
+            const gSel = document.getElementById('cross-group-select');
+            xSel.innerHTML = '';
+            gSel.innerHTML = '<option value="">（不分組）</option>';
+
+            CROSS_FEATURES.forEach(f => {
+                xSel.innerHTML += `<option value="${f.key}">${f.label}</option>`;
+                gSel.innerHTML += `<option value="${f.key}">${f.label}</option>`;
+            });
+        }
+
+        // 等頻分箱：把數據分成 n 組（依數值排序）
+        function tercileSplit(values, n = 3) {
+            const sorted = [...values].sort((a, b) => a - b);
+            const thresholds = [];
+            for (let i = 1; i < n; i++) {
+                const idx = Math.floor(sorted.length * i / n);
+                thresholds.push(sorted[idx]);
+            }
+            return thresholds;
+        }
+
+        function getGroupLabel(val, thresholds, featureLabel) {
+            if (thresholds.length === 1) {
+                return val <= thresholds[0] ? `${featureLabel} 低` : `${featureLabel} 高`;
+            }
+            if (val < thresholds[0]) return `${featureLabel} 低`;
+            if (val < thresholds[1]) return `${featureLabel} 中`;
+            return `${featureLabel} 高`;
+        }
+
+        function calcGroupStats(items) {
+            const strengths = items.map(d => parseFloat(d['平均強度'])).filter(v => !isNaN(v));
+            if (strengths.length === 0) return { count: 0, mean: 0, std: 0, min: 0, max: 0 };
+            const mean = strengths.reduce((a, b) => a + b, 0) / strengths.length;
+            const variance = strengths.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / strengths.length;
+            return {
+                count: strengths.length,
+                mean: mean,
+                std: Math.sqrt(variance),
+                min: Math.min(...strengths),
+                max: Math.max(...strengths)
+            };
+        }
+
+        function updateCrossAnalysis() {
+            const xKey = document.getElementById('cross-x-select').value;
+            const gKey = document.getElementById('cross-group-select').value;
+            if (!xKey) return;
+
+            const xLabel = getCrossLabel(xKey);
+            const gLabel = gKey ? getCrossLabel(gKey) : '';
+
+            // Filter data for current tab
+            const dataset = allData.filter(d =>
+                d.母體 && d.母體.startsWith(currentTab) &&
+                parseFloat(d['平均強度']) > 100 &&
+                d[xKey] !== undefined && d[xKey] !== '' && !isNaN(parseFloat(d[xKey]))
+            );
+
+            if (dataset.length < 6) {
+                document.getElementById('cross-conclusion-text').innerText = '資料筆數不足，無法進行分組分析。';
+                return;
+            }
+
+            // Get X values and compute tercile thresholds
+            const xValues = dataset.map(d => parseFloat(d[xKey]));
+            const xThresholds = tercileSplit(xValues, 3);
+
+            // Group labels for X axis
+            const xGroupNames = [`${xLabel} 低`, `${xLabel} 中`, `${xLabel} 高`];
+
+            if (!gKey) {
+                // =========== Single Feature Mode ===========
+                const groups = { };
+                xGroupNames.forEach(g => groups[g] = []);
+
+                dataset.forEach(d => {
+                    const val = parseFloat(d[xKey]);
+                    const label = getGroupLabel(val, xThresholds, xLabel);
+                    if (groups[label]) groups[label].push(d);
+                });
+
+                const stats = xGroupNames.map(g => ({ name: g, ...calcGroupStats(groups[g]) }));
+
+                // Draw chart
+                drawCrossChart(stats, null, xLabel);
+                // Conclusion
+                generateConclusion(stats, xLabel, null);
+                // Table
+                renderCrossTable(stats);
+
+            } else {
+                // =========== Cross Comparison Mode ===========
+                const validDataset = dataset.filter(d =>
+                    d[gKey] !== undefined && d[gKey] !== '' && !isNaN(parseFloat(d[gKey]))
+                );
+
+                const gValues = validDataset.map(d => parseFloat(d[gKey]));
+                const gMedian = [...gValues].sort((a, b) => a - b)[Math.floor(gValues.length / 2)];
+
+                // Cross groups: X (3 levels) x G (2 levels)
+                const crossGroups = {};
+                const gSubLabels = [`${gLabel} 低`, `${gLabel} 高`];
+
+                xGroupNames.forEach(xg => {
+                    gSubLabels.forEach(gg => {
+                        crossGroups[`${xg} / ${gg}`] = [];
+                    });
+                });
+
+                validDataset.forEach(d => {
+                    const xVal = parseFloat(d[xKey]);
+                    const gVal = parseFloat(d[gKey]);
+                    const xGroup = getGroupLabel(xVal, xThresholds, xLabel);
+                    const gGroup = gVal <= gMedian ? `${gLabel} 低` : `${gLabel} 高`;
+                    const key = `${xGroup} / ${gGroup}`;
+                    if (crossGroups[key]) crossGroups[key].push(d);
+                });
+
+                const stats = Object.keys(crossGroups).map(k => ({
+                    name: k,
+                    ...calcGroupStats(crossGroups[k])
+                }));
+
+                // Draw grouped chart
+                drawCrossChart(null, { xGroupNames, gSubLabels, crossGroups }, xLabel, gLabel);
+                // Conclusion
+                generateCrossConclusion(stats, xLabel, gLabel);
+                // Table
+                renderCrossTable(stats);
+            }
+        }
+
+        function drawCrossChart(singleStats, crossData, xLabel, gLabel) {
+            const ctx = document.getElementById('crossChart').getContext('2d');
+            if (crossChart) crossChart.destroy();
+
+            const barColors = {
+                single: ['#6ee7b7', '#34d399', '#10b981'],
+                low: ['rgba(96, 165, 250, 0.7)', 'rgba(96, 165, 250, 0.7)', 'rgba(96, 165, 250, 0.7)'],
+                high: ['rgba(251, 191, 36, 0.7)', 'rgba(251, 191, 36, 0.7)', 'rgba(251, 191, 36, 0.7)']
+            };
+
+            let datasets, labels;
+
+            if (singleStats) {
+                // Single feature mode
+                labels = singleStats.map(s => s.name);
+                datasets = [{
+                    label: '平均強度 (kgf/cm²)',
+                    data: singleStats.map(s => s.mean.toFixed(1)),
+                    backgroundColor: barColors.single,
+                    borderColor: barColors.single.map(c => c),
+                    borderWidth: 1,
+                    borderRadius: 6,
+                    errorBars: singleStats.map(s => s.std)
+                }];
+            } else {
+                // Cross mode
+                labels = crossData.xGroupNames;
+                datasets = crossData.gSubLabels.map((gSub, idx) => {
+                    const color = idx === 0 ? barColors.low : barColors.high;
+                    return {
+                        label: gSub,
+                        data: crossData.xGroupNames.map(xg => {
+                            const key = `${xg} / ${gSub}`;
+                            const items = crossData.crossGroups[key] || [];
+                            const stats = calcGroupStats(items);
+                            return stats.mean.toFixed(1);
+                        }),
+                        backgroundColor: color,
+                        borderColor: color,
+                        borderWidth: 1,
+                        borderRadius: 6
+                    };
+                });
+            }
+
+            crossChart = new Chart(ctx, {
+                type: 'bar',
+                data: { labels, datasets },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: !singleStats,
+                            labels: { color: '#cbd5e1', font: { size: 12 } }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `${context.dataset.label}: ${context.parsed.y} kgf/cm²`;
+                                }
+                            }
+                        },
+                        annotation: undefined
+                    },
+                    scales: {
+                        x: {
+                            grid: { color: '#334155' },
+                            ticks: { color: '#cbd5e1', font: { size: 12 } }
+                        },
+                        y: {
+                            title: { display: true, text: '平均強度 (kgf/cm²)', color: '#94a3b8' },
+                            grid: { color: '#334155' },
+                            ticks: { color: '#cbd5e1' },
+                            suggestedMin: 400,
+                        }
+                    }
+                },
+                plugins: [{
+                    // Draw design strength line at 510
+                    id: 'designLine',
+                    afterDraw(chart) {
+                        const yScale = chart.scales.y;
+                        const yPos = yScale.getPixelForValue(510);
+                        if (yPos) {
+                            const ctx = chart.ctx;
+                            ctx.save();
+                            ctx.strokeStyle = '#ef4444';
+                            ctx.lineWidth = 1.5;
+                            ctx.setLineDash([6, 4]);
+                            ctx.beginPath();
+                            ctx.moveTo(chart.chartArea.left, yPos);
+                            ctx.lineTo(chart.chartArea.right, yPos);
+                            ctx.stroke();
+                            ctx.fillStyle = '#ef4444';
+                            ctx.font = '11px Inter, sans-serif';
+                            ctx.fillText('設計強度 510', chart.chartArea.right - 80, yPos - 6);
+                            ctx.restore();
+                        }
+                    }
+                }]
+            });
+        }
+
+        function generateConclusion(stats, xLabel) {
+            const sorted = [...stats].sort((a, b) => b.mean - a.mean);
+            const best = sorted[0];
+            const worst = sorted[sorted.length - 1];
+            const diff = (best.mean - worst.mean).toFixed(1);
+
+            let trend = '';
+            // Determine if it's ascending or descending
+            if (stats[0].mean > stats[2].mean) {
+                trend = `<b>${xLabel}越低</b>，強度<b>越高</b>`;
+            } else if (stats[0].mean < stats[2].mean) {
+                trend = `<b>${xLabel}越高</b>，強度<b>越高</b>`;
+            } else {
+                trend = `${xLabel}的高低對強度<b>影響不明顯</b>`;
+            }
+
+            const text = `${trend}。` +
+                `「${best.name}」組平均強度最高 (<b>${best.mean.toFixed(0)} kgf/cm²</b>)，` +
+                `比「${worst.name}」組高出 <b>${diff} kgf/cm²</b>。` +
+                `<span class="text-slate-400">（共 ${stats.reduce((a, b) => a + b.count, 0)} 筆資料）</span>`;
+
+            document.getElementById('cross-conclusion-text').innerHTML = text;
+        }
+
+        function generateCrossConclusion(stats, xLabel, gLabel) {
+            const validStats = stats.filter(s => s.count > 0);
+            if (validStats.length === 0) {
+                document.getElementById('cross-conclusion-text').innerText = '資料不足，無法產生結論。';
+                return;
+            }
+
+            const sorted = [...validStats].sort((a, b) => b.mean - a.mean);
+            const best = sorted[0];
+            const worst = sorted[sorted.length - 1];
+            const diff = (best.mean - worst.mean).toFixed(1);
+
+            const text = `交叉比對結果：「<b>${best.name}</b>」組合的平均強度最佳 (<b>${best.mean.toFixed(0)} kgf/cm²</b>)，` +
+                `「<b>${worst.name}</b>」組合最低 (<b>${worst.mean.toFixed(0)} kgf/cm²</b>)，` +
+                `兩者相差 <b>${diff} kgf/cm²</b>。` +
+                `<span class="text-slate-400">（共 ${validStats.reduce((a, b) => a + b.count, 0)} 筆資料）</span>`;
+
+            document.getElementById('cross-conclusion-text').innerHTML = text;
+        }
+
+        function renderCrossTable(stats) {
+            const tbody = document.getElementById('cross-summary-body');
+            tbody.innerHTML = '';
+
+            // Find best group for highlighting
+            const maxMean = Math.max(...stats.map(s => s.mean));
+
+            stats.forEach(s => {
+                if (s.count === 0) return;
+                const isBest = s.mean === maxMean;
+                const rowClass = isBest ? 'bg-emerald-500/10' : '';
+                const badge = isBest ? ' <span class="text-emerald-400 text-xs ml-1">★ 最佳</span>' : '';
+
+                tbody.innerHTML += `
+                    <tr class="${rowClass} border-b border-slate-800/50">
+                        <td class="p-2 text-slate-200 font-medium">${s.name}${badge}</td>
+                        <td class="p-2 text-center text-slate-400">${s.count}</td>
+                        <td class="p-2 text-right font-bold ${isBest ? 'text-emerald-400' : 'text-white'}">${s.mean.toFixed(1)}</td>
+                        <td class="p-2 text-right text-slate-400">±${s.std.toFixed(1)}</td>
+                        <td class="p-2 text-right text-slate-500">${s.min.toFixed(0)}</td>
+                        <td class="p-2 text-right text-slate-500">${s.max.toFixed(0)}</td>
+                    </tr>
+                `;
+            });
+        }
+
         // Accuracy Chart Logic
         let accuracyChart = null;
+
+        /**
+         * 半圓形指針儀表板 (Gauge)
+         * @param {string} canvasId - Canvas 元素 ID
+         * @param {number} value - R² 值 (0~1)
+         * @param {object} opts - 選項 { showValue: bool, size: 'small'|'large' }
+         */
+        function drawGauge(canvasId, value, opts = {}) {
+            const canvas = document.getElementById(canvasId);
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            const W = canvas.width;
+            const H = canvas.height;
+            ctx.clearRect(0, 0, W, H);
+
+            const cx = W / 2;
+            const cy = H - 10;
+            const radius = Math.min(cx - 10, cy - 10);
+            const lineWidth = opts.size === 'small' ? 14 : 18;
+
+            // Clamp value
+            const v = Math.max(0, Math.min(1, value));
+
+            // Draw arc segments: Red (0-0.3), Yellow (0.3-0.6), Green (0.6-1.0)
+            const segments = [
+                { start: 0, end: 0.3, color: '#ef4444' },    // Red
+                { start: 0.3, end: 0.6, color: '#fbbf24' },  // Yellow
+                { start: 0.6, end: 1.0, color: '#22c55e' },  // Green
+            ];
+
+            segments.forEach(seg => {
+                const startAngle = Math.PI + (seg.start * Math.PI);
+                const endAngle = Math.PI + (seg.end * Math.PI);
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.strokeStyle = seg.color;
+                ctx.lineWidth = lineWidth;
+                ctx.lineCap = 'butt';
+                ctx.stroke();
+            });
+
+            // Dark track background (subtle)
+            ctx.beginPath();
+            ctx.arc(cx, cy, radius, Math.PI, 2 * Math.PI);
+            ctx.strokeStyle = 'rgba(255,255,255,0.05)';
+            ctx.lineWidth = lineWidth + 4;
+            ctx.stroke();
+
+            // Re-draw colored segments on top
+            segments.forEach(seg => {
+                const startAngle = Math.PI + (seg.start * Math.PI);
+                const endAngle = Math.PI + (seg.end * Math.PI);
+                ctx.beginPath();
+                ctx.arc(cx, cy, radius, startAngle, endAngle);
+                ctx.strokeStyle = seg.color;
+                ctx.lineWidth = lineWidth;
+                ctx.lineCap = 'butt';
+                ctx.stroke();
+            });
+
+            // Draw needle
+            const needleAngle = Math.PI + (v * Math.PI);
+            const needleLen = radius - lineWidth / 2 - 4;
+            const nx = cx + needleLen * Math.cos(needleAngle);
+            const ny = cy + needleLen * Math.sin(needleAngle);
+
+            // Needle line
+            ctx.beginPath();
+            ctx.moveTo(cx, cy);
+            ctx.lineTo(nx, ny);
+            ctx.strokeStyle = '#e2e8f0';
+            ctx.lineWidth = 2.5;
+            ctx.lineCap = 'round';
+            ctx.stroke();
+
+            // Needle center dot
+            ctx.beginPath();
+            ctx.arc(cx, cy, 5, 0, 2 * Math.PI);
+            ctx.fillStyle = '#94a3b8';
+            ctx.fill();
+            ctx.beginPath();
+            ctx.arc(cx, cy, 3, 0, 2 * Math.PI);
+            ctx.fillStyle = '#e2e8f0';
+            ctx.fill();
+
+            // Value text (inside gauge)
+            if (opts.showValue !== false) {
+                ctx.font = `bold ${opts.size === 'small' ? '16' : '20'}px "JetBrains Mono", monospace`;
+                ctx.fillStyle = '#ffffff';
+                ctx.textAlign = 'center';
+                ctx.textBaseline = 'bottom';
+                ctx.fillText(value.toFixed(3), cx, cy - 8);
+            }
+
+            // Scale labels
+            ctx.font = `${opts.size === 'small' ? '9' : '11'}px Inter, sans-serif`;
+            ctx.fillStyle = '#64748b';
+            ctx.textAlign = 'left';
+            ctx.textBaseline = 'top';
+            ctx.fillText('0', cx - radius - 5, cy + 2);
+            ctx.textAlign = 'right';
+            ctx.fillText('1', cx + radius + 5, cy + 2);
+            ctx.textAlign = 'center';
+            ctx.fillText('0.5', cx, cy - radius - lineWidth / 2 - 10);
+        }
+
+        function getR2Label(r2) {
+            if (r2 < 0.15) return '模型尚在學習階段';
+            if (r2 < 0.3) return '模型開始捕捉規律';
+            if (r2 < 0.45) return '模型已掌握部分規律';
+            if (r2 < 0.6) return '模型具備不錯的預測力';
+            if (r2 < 0.8) return '模型預測力佳';
+            return '模型預測力極強';
+        }
 
         function updateAccuracyChart() {
             if (typeof MODEL_DATA === 'undefined') return;
@@ -937,14 +1479,16 @@
             const r2 = 1 - (sumSqureRes / sumSquareTot);
             const mae = sumAbsErr / dataset.length;
 
-            // Update DOM
+            // Update DOM - Accuracy section gauge
             document.getElementById('acc-r2').innerText = r2.toFixed(3);
             document.getElementById('acc-mae').innerText = mae.toFixed(1);
+            drawGauge('acc-gauge', r2, { size: 'large', showValue: false });
+            document.getElementById('acc-gauge-label').innerText = getR2Label(r2);
 
-            // Update KPI Card 4
-            const r2Pct = (r2 * 100).toFixed(1);
-            document.getElementById('kpi-accuracy').innerText = r2Pct;
-            document.getElementById('kpi-accuracy').style.color = r2Pct > 80 ? '#22c55e' : (r2Pct > 60 ? '#fbbf24' : '#ef4444');
+            // Update KPI Card 4 - Small gauge
+            document.getElementById('kpi-accuracy').innerText = r2.toFixed(3);
+            drawGauge('kpi-gauge', r2, { size: 'small', showValue: true });
+            document.getElementById('kpi-gauge-label').innerText = getR2Label(r2);
 
             // Chart
             const ctx = document.getElementById('accuracyChart').getContext('2d');
@@ -1118,6 +1662,7 @@
 
         // Initialize Everything
         function initApp() {
+            initCrossSelects();
             Papa.parse(CSV_URL, {
                 download: true,
                 header: true,
@@ -1164,6 +1709,7 @@
 
                 updatePrediction();
                 updateFeatureChart();
+                updateCrossAnalysis();
                 updateAccuracyChart();
             };
         }
