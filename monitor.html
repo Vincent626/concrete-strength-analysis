@@ -167,22 +167,40 @@
             </div>
 
             <!-- Correlation Stats Row -->
-            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">相關係數 (R)</div>
-                    <div id="corr-r" class="text-lg font-black text-white font-mono">--</div>
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                        相關係數 (R) <i class="fas fa-info-circle text-slate-500 cursor-help" title="衡量兩個變數一起變動的關聯程度。"></i>
+                    </div>
+                    <div id="corr-r" class="text-xl font-black text-white font-mono">--</div>
+                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                        完全沒關係是 0<br>數字越接近 ±1 關係越強
+                    </div>
                 </div>
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">決定係數 (R²)</div>
-                    <div id="corr-r2" class="text-lg font-black text-white font-mono">--</div>
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                        決定係數 (R²) <i class="fas fa-info-circle text-slate-500 cursor-help" title="由 R 的平方計算而來，表示 Y 的變化有多少能被 X 解釋。"></i>
+                    </div>
+                    <div id="corr-r2" class="text-xl font-black text-white font-mono">--</div>
+                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                        越高代表 X 對 Y 的<br>解釋與預測能力越好
+                    </div>
                 </div>
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">趨勢斜率</div>
-                    <div id="corr-slope" class="text-lg font-black text-white font-mono">--</div>
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                        趨勢斜率 <i class="fas fa-info-circle text-slate-500 cursor-help" title="線性回歸直線的斜率。"></i>
+                    </div>
+                    <div id="corr-slope" class="text-xl font-black text-white font-mono">--</div>
+                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                        當 X 變更 1 個單位時<br>Y 平均會變動的數值
+                    </div>
                 </div>
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
-                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">樣本數</div>
-                    <div id="corr-n" class="text-lg font-black text-white font-mono">--</div>
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center">
+                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">樣本數量</div>
+                    <div id="corr-n" class="text-xl font-black text-white font-mono">--</div>
+                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                        參與此次比對的<br>有效紀錄總筆數
+                    </div>
                 </div>
             </div>
 
