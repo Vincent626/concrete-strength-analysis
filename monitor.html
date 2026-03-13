@@ -47,6 +47,7 @@
         body {
             background-color: #0f172a;
             color: #e2e8f0;
+            transition: background-color 0.3s, color 0.3s;
         }
 
         .glass-panel {
@@ -54,15 +55,53 @@
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
             border-radius: 12px;
+            transition: all 0.3s;
         }
 
         .stat-value {
             font-family: 'JetBrains Mono', monospace;
         }
+
+        /* Light Theme Overrides */
+        body.light-theme {
+            background: #f8fafc;
+            color: #334155;
+        }
+        body.light-theme.bg-gradient-to-br {
+            background-image: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
+        }
+        body.light-theme .glass-panel {
+            background: rgba(255, 255, 255, 0.85);
+            border-color: rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+        }
+        body.light-theme .bg-slate-900 { background-color: #f1f5f9; }
+        body.light-theme .bg-slate-800,
+        body.light-theme select.bg-slate-800,
+        body.light-theme input.bg-slate-800 { 
+            background-color: #ffffff; 
+            border-color: #e2e8f0; 
+            color: #1e293b; 
+        }
+        body.light-theme button.bg-slate-800 {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+            color: #475569;
+        }
+        body.light-theme .bg-slate-800\/60 { background-color: rgba(241, 245, 249, 0.6); border-color: #e2e8f0; }
+        body.light-theme .border-slate-800, body.light-theme .border-slate-800\/50 { border-color: #e2e8f0; }
+        body.light-theme .border-slate-700 { border-color: #cbd5e1; }
+        body.light-theme .text-slate-500 { color: #64748b; }
+        body.light-theme .text-slate-400 { color: #475569; }
+        body.light-theme .text-slate-300 { color: #334155; }
+        body.light-theme .text-slate-200, body.light-theme .text-white { color: #0f172a; }
+        body.light-theme .text-white.bg-clip-text { color: transparent; } /* Keep gradients */
+        body.light-theme .divide-slate-800\/50 > :not([hidden]) ~ :not([hidden]) { border-color: #e2e8f0; }
+        body.light-theme tr:hover { background-color: rgba(241, 245, 249, 0.8); }
     </style>
 </head>
 
-<body class="min-h-screen p-4 md:p-8 bg-gradient-to-br from-slate-950 to-slate-900">
+<body class="min-h-screen p-4 md:p-8 bg-gradient-to-br from-slate-950 to-slate-900 transition-colors duration-300">
 
     <!-- Header -->
     <header class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
@@ -72,11 +111,15 @@
             </h1>
             <p class="text-slate-400 text-sm mt-1">S60 / M60 推進管即時監控儀表板 (v8)</p>
         </div>
-        <div
-            class="flex items-center gap-2 text-xs text-slate-500 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
-            <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span>
-            System Online
-            <span id="last-updated" class="ml-2 pl-2 border-l border-slate-700">Waiting for data...</span>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleTheme()" id="theme-btn" class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-400 hover:text-white transition-colors" title="切換主題">
+                <i class="fas fa-sun"></i>
+            </button>
+            <div class="flex items-center gap-2 text-xs text-slate-500 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+                <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span>
+                System Online
+                <span id="last-updated" class="ml-2 pl-2 border-l border-slate-700">Waiting for data...</span>
+            </div>
         </div>
     </header>
 
@@ -267,35 +310,7 @@
         </div>
     </div>
 
-    <!-- Feature Correlation Analysis (New Section) -->
-    <div class="glass-panel p-6 mb-8 border-l-4 border-slate-500 animate-fade-in delay-200">
-        <div class="flex flex-col md:flex-row justify-between items-center mb-6 gap-4">
-            <h2 class="text-xl font-bold text-white flex items-center gap-3">
-                <span class="w-1 h-6 bg-slate-500 rounded-sm"></span>
-                單一因子關聯分析 (Single Feature Correlation)
-            </h2>
-            <div class="flex items-center gap-3">
-                <label class="text-slate-400 text-sm">選擇分析因子:</label>
-                <select id="feature-select" onchange="updateFeatureChart()"
-                    class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1 outline-none focus:border-neon-blue transition-colors">
-                    <option value="表面水骨材1">扣水率/表面水 (Water Reduction)</option>
-                    <option value="水膠比">水膠比 (W/B Ratio)</option>
-                    <option value="最終電流">最終電流 (Final Current)</option>
-                    <option value="坍度(cm)">坍度 (Slump)</option>
-                    <option value="混凝土溫度(℃)">溫度 (Temperature)</option>
-                    <option value="矽灰取代率">矽灰取代率 (Silica Fume)</option>
-                    <option value="耗用水">耗用水 (Water Usage)</option>
-                </select>
-            </div>
-        </div>
 
-        <div class="w-full relative min-h-[350px]">
-            <canvas id="featureChart"></canvas>
-        </div>
-        <p id="feature-desc" class="text-xs text-slate-500 mt-2 text-center">
-            *顯示選定因子與 28 天強度的直接關聯分佈
-        </p>
-    </div>
 
     <!-- Feature Cross Analysis (交叉比對分析) -->
     <div class="glass-panel p-6 mb-8 border-l-4 border-emerald-500 animate-fade-in delay-250">
@@ -617,6 +632,34 @@
     <script>
 
 
+                function getChartTheme() {
+            const isLight = document.body.classList.contains('light-theme');
+            return {
+                text: isLight ? '#475569' : '#94a3b8',
+                title: isLight ? '#64748b' : '#64748b',
+                grid: isLight ? '#e2e8f0' : '#334155',
+                tooltipBg: isLight ? 'rgba(255, 255, 255, 0.9)' : 'rgba(15, 23, 42, 0.9)',
+                tooltipText: isLight ? '#0f172a' : '#e2e8f0',
+                tooltipBorder: isLight ? 'rgba(0, 0, 0, 0.1)' : 'rgba(148, 163, 184, 0.1)'
+            };
+        }
+
+        function toggleTheme() {
+            document.body.classList.toggle('light-theme');
+            const btnIcon = document.querySelector('#theme-btn i');
+            if(document.body.classList.contains('light-theme')) {
+                btnIcon.classList.remove('fa-sun');
+                btnIcon.classList.add('fa-moon');
+            } else {
+                btnIcon.classList.remove('fa-moon');
+                btnIcon.classList.add('fa-sun');
+            }
+            // Re-render charts
+            const cTab = typeof currentTab !== 'undefined' ? currentTab : 'S60';
+            if (typeof switchTab === 'function') {
+                switchTab(cTab);
+            }
+        }
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
         let mainChart = null;
 
@@ -942,7 +985,7 @@
                     responsive: true,
                     maintainAspectRatio: false,
                     plugins: {
-                        legend: { labels: { color: '#94a3b8' } },
+                        legend: { labels: { color: getChartTheme().text } },
                         tooltip: {
                             callbacks: {
                                 label: (ctx) => {
@@ -956,14 +999,14 @@
                     },
                     scales: {
                         x: {
-                            title: { display: true, text: xLabel, color: '#64748b' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
+                            title: { display: true, text: xLabel, color: getChartTheme().title },
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text }
                         },
                         y: {
-                            title: { display: true, text: yLabel, color: '#64748b' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
+                            title: { display: true, text: yLabel, color: getChartTheme().title },
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text }
                         }
                     }
                 }
@@ -1039,103 +1082,6 @@
             updateTable(null, null); // Refreshes with stored tableData
         }
 
-        // Feature Chart Logic
-        let featureChart = null;
-
-        function updateFeatureChart() {
-            const featureName = document.getElementById('feature-select').value;
-            const featureLabel = document.getElementById('feature-select').options[document.getElementById('feature-select').selectedIndex].text;
-
-            // Filter Data
-            const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
-
-            // Prepare Points
-            const points = dataset.map(d => ({
-                x: parseFloat(d[featureName]) || 0,
-                y: parseFloat(d.平均強度) || 0
-            })).filter(p => p.x > 0);
-
-            const ctx = document.getElementById('featureChart').getContext('2d');
-
-            if (featureChart) {
-                featureChart.destroy();
-            }
-
-            // Simple Linear Regression for Trend Line
-            const regression = calculateRegression(points);
-            const regLine = points.map(p => ({
-                x: p.x,
-                y: regression.slope * p.x + regression.intercept
-            })).sort((a, b) => a.x - b.x);
-
-
-            const color = currentTab === 'S60' ? 'rgba(139, 92, 246, 0.6)' : 'rgba(34, 197, 94, 0.6)';
-            const pointColor = currentTab === 'S60' ? '#c4b5fd' : '#86efac';
-
-            featureChart = new Chart(ctx, {
-                type: 'scatter',
-                data: {
-                    datasets: [
-                        {
-                            label: `${featureLabel} vs 強度`,
-                            data: points,
-                            backgroundColor: pointColor,
-                            borderColor: color,
-                            borderWidth: 1,
-                            pointRadius: 4,
-                            pointHoverRadius: 6
-                        },
-                        {
-                            label: '趨勢線 (Trend)',
-                            data: [regLine[0], regLine[regLine.length - 1]], // Start and End point
-                            type: 'line',
-                            borderColor: '#ffffff',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
-                            pointRadius: 0,
-                            fill: false,
-                            tension: 0
-                        }
-                    ]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            type: 'linear',
-                            position: 'bottom',
-                            title: {
-                                display: true,
-                                text: featureLabel,
-                                color: '#94a3b8'
-                            },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        },
-                        y: {
-                            title: {
-                                display: true,
-                                text: '強度 (kgf/cm²)',
-                                color: '#94a3b8'
-                            },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
-                        }
-                    },
-                    plugins: {
-                        legend: { labels: { color: '#cbd5e1' } },
-                        tooltip: {
-                            callbacks: {
-                                label: function (context) {
-                                    return `(${context.parsed.x}, ${context.parsed.y} kgf/cm²)`;
-                                }
-                            }
-                        }
-                    }
-                }
-            });
-        }
 
         // ============================================================
         // Cross Feature Analysis Logic (特徵交叉比對)
@@ -1374,13 +1320,13 @@
                     },
                     scales: {
                         x: {
-                            grid: { color: '#334155' },
+                            grid: { color: getChartTheme().grid },
                             ticks: { color: '#cbd5e1', font: { size: 12 } }
                         },
                         y: {
                             title: { display: true, text: '平均強度 (kgf/cm²)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' },
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text },
                             suggestedMin: 400,
                         }
                     }
@@ -1704,17 +1650,17 @@
                             type: 'linear',
                             position: 'bottom',
                             title: { display: true, text: 'AI 預測強度 (Predicted)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text }
                         },
                         y: {
                             title: { display: true, text: '實際強度 (Actual)', color: '#94a3b8' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#cbd5e1' }
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text }
                         }
                     },
                     plugins: {
-                        legend: { labels: { color: '#cbd5e1' } },
+                        legend: { labels: { color: getChartTheme().text } },
                         tooltip: {
                             callbacks: {
                                 label: function (context) {
@@ -1791,25 +1737,25 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
-                        legend: { labels: { color: '#94a3b8' } },
+                        legend: { labels: { color: getChartTheme().text } },
                         tooltip: {
-                            backgroundColor: 'rgba(15, 23, 42, 0.9)',
-                            titleColor: '#e2e8f0',
-                            bodyColor: '#e2e8f0',
-                            borderColor: 'rgba(148, 163, 184, 0.1)',
+                            backgroundColor: getChartTheme().tooltipBg,
+                            titleColor: getChartTheme().tooltipText,
+                            bodyColor: getChartTheme().tooltipText,
+                            borderColor: getChartTheme().tooltipBorder,
                             borderWidth: 1
                         }
                     },
                     scales: {
                         x: {
-                            title: { display: true, text: '時間 (sec)', color: '#64748b' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
+                            title: { display: true, text: '時間 (sec)', color: getChartTheme().title },
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text }
                         },
                         y: {
-                            title: { display: true, text: '電流 (A)', color: '#64748b' },
-                            grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' }
+                            title: { display: true, text: '電流 (A)', color: getChartTheme().title },
+                            grid: { color: getChartTheme().grid },
+                            ticks: { color: getChartTheme().text }
                         }
                     }
                 }
@@ -1876,7 +1822,7 @@
                 }
 
                 updatePrediction();
-                updateFeatureChart();
+
                 updateCrossAnalysis();
                 updateAccuracyChart();
             };
