@@ -704,7 +704,7 @@
                 x: parseFloat(d[conf.factorKey]),
                 y: parseFloat(d['平均強度']),
                 raw: d
-            })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x > 0);
+            })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x > 0 && p.y > 0);
 
             // Calculate Regression Line
             const reg = calculateRegression(points);
