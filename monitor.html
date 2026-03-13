@@ -143,22 +143,67 @@
             </div>
         </div>
 
-        <!-- Main Chart Section (Moved Below Cards) -->
-        <div class="glass-panel p-6 mb-8 flex flex-col">
-            <div class="flex justify-between items-center mb-4">
-                <h2 id="chart-title" class="text-xl font-bold flex items-center gap-2">
-                    <!-- Dynamic Title -->
+        <!-- Main Chart Section: 雙變數相關性分析 -->
+        <div class="glass-panel p-6 mb-8 flex flex-col border-l-4 border-neon-blue">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <h2 id="chart-title" class="text-xl font-bold text-white flex items-center gap-3">
+                    <span class="w-1 h-6 bg-neon-blue rounded-sm"></span>
+                    雙變數相關性分析 (Correlation Analysis)
                 </h2>
-                <div id="regression-stats"
-                    class="text-xs font-mono px-2 py-1 bg-slate-800 rounded border border-slate-700 text-slate-400">
-                    <!-- R2 & Slope -->
+                <div class="flex flex-wrap items-center gap-3">
+                    <div class="flex items-center gap-2">
+                        <label class="text-slate-400 text-sm whitespace-nowrap">X 軸:</label>
+                        <select id="corr-x-select" onchange="updateMainChart()"
+                            class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1.5 outline-none focus:border-neon-blue transition-colors text-sm">
+                        </select>
+                    </div>
+                    <div class="flex items-center gap-2">
+                        <label class="text-slate-400 text-sm whitespace-nowrap">Y 軸:</label>
+                        <select id="corr-y-select" onchange="updateMainChart()"
+                            class="bg-slate-800 border border-slate-700 text-white rounded px-3 py-1.5 outline-none focus:border-neon-blue transition-colors text-sm">
+                        </select>
+                    </div>
                 </div>
             </div>
-            <div class="flex-1 w-full relative min-h-[300px]">
+
+            <!-- Correlation Stats Row -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-3 mb-4">
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">相關係數 (R)</div>
+                    <div id="corr-r" class="text-lg font-black text-white font-mono">--</div>
+                </div>
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">決定係數 (R²)</div>
+                    <div id="corr-r2" class="text-lg font-black text-white font-mono">--</div>
+                </div>
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">趨勢斜率</div>
+                    <div id="corr-slope" class="text-lg font-black text-white font-mono">--</div>
+                </div>
+                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 text-center">
+                    <div class="text-[10px] text-slate-500 uppercase tracking-wider mb-1">樣本數</div>
+                    <div id="corr-n" class="text-lg font-black text-white font-mono">--</div>
+                </div>
+            </div>
+
+            <!-- Auto Conclusion -->
+            <div id="corr-conclusion" class="mb-4 p-4 bg-slate-800/60 rounded-lg border border-slate-700">
+                <div class="flex items-start gap-3">
+                    <span class="text-2xl">📊</span>
+                    <div>
+                        <div class="text-sm font-bold text-neon-blue mb-1">相關性結論</div>
+                        <div id="corr-conclusion-text" class="text-slate-200 text-sm leading-relaxed">
+                            請選擇因子開始分析...
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="flex-1 w-full relative min-h-[350px]">
                 <canvas id="mainChart"></canvas>
             </div>
             <p id="chart-desc" class="text-xs text-slate-500 mt-2 text-center">
-                <!-- Dynamic Desc -->
+                *散佈圖顯示兩變數間的分佈關係，虛線為回歸趨勢線
             </p>
         </div>
 
@@ -686,87 +731,190 @@
             }
         }
 
-        function updateMainChart() {
-            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab));
-            const conf = CONFIG[currentTab];
+        // Correlation Feature list (same as CROSS_FEATURES + 平均強度)
+        const CORR_FEATURES = [
+            { key: '平均強度', label: '平均強度 (28天)' },
+            { key: '坍度(cm)', label: '坍度' },
+            { key: '混凝土溫度(℃)', label: '混凝土溫度' },
+            { key: '水膠比', label: '水膠比' },
+            { key: '水灰比', label: '水灰比' },
+            { key: '表面水骨材1', label: '扣水率/表面水' },
+            { key: '耗用水', label: '拌合水' },
+            { key: '膠結料總量', label: '膠結料總量' },
+            { key: '矽灰取代率', label: '矽灰取代率' },
+            { key: '爐石取代率', label: '爐石取代率' },
+            { key: '砂石比', label: '砂石比' },
+            { key: '漿體比例', label: '漿體比例' },
+            { key: '粗細骨材比', label: '粗細骨材比' },
+            { key: '耗用骨材1', label: '砂（細骨材）' },
+            { key: '耗用骨材2', label: '3分石（粗骨材小）' },
+            { key: '耗用骨材3', label: '6分石（粗骨材大）' },
+            { key: '耗用泥料1', label: 'II型水泥' },
+            { key: '耗用泥料2', label: '矽灰' },
+            { key: '耗用泥料4', label: '爐石' },
+            { key: '平均電流', label: '平均電流' },
+            { key: '最大電流', label: '最大電流' },
+            { key: '電流標準差', label: '電流標準差' },
+            { key: '最終電流', label: '最終電流' },
+        ];
 
-            // Reuse existing chart logic but rename function slightly if needed
-            // Actually, let's just inline the chart update or call a helper
-            // The original code called updateChart(data, conf). Let's define updateMainChart to call it.
-            updateChart(data, conf);
+        function getCorrLabel(key) {
+            const f = CORR_FEATURES.find(f => f.key === key);
+            return f ? f.label : key;
         }
 
-        function updateChart(data, conf) {
-            const ctx = document.getElementById('mainChart');
+        function initCorrSelects() {
+            const xSel = document.getElementById('corr-x-select');
+            const ySel = document.getElementById('corr-y-select');
+            xSel.innerHTML = '';
+            ySel.innerHTML = '';
 
-            // Prepare Data Points
-            const points = data.map(d => ({
-                x: parseFloat(d[conf.factorKey]),
-                y: parseFloat(d['平均強度']),
+            CORR_FEATURES.forEach(f => {
+                xSel.innerHTML += `<option value="${f.key}">${f.label}</option>`;
+                ySel.innerHTML += `<option value="${f.key}">${f.label}</option>`;
+            });
+
+            // Default: X = 水膠比, Y = 平均強度
+            xSel.value = '水膠比';
+            ySel.value = '平均強度';
+        }
+
+        function calculateCorrelation(points) {
+            const n = points.length;
+            if (n < 3) return { r: 0, r2: 0, slope: 0, intercept: 0 };
+
+            let sumX = 0, sumY = 0, sumXY = 0, sumXX = 0, sumYY = 0;
+            points.forEach(p => {
+                sumX += p.x;
+                sumY += p.y;
+                sumXY += p.x * p.y;
+                sumXX += p.x * p.x;
+                sumYY += p.y * p.y;
+            });
+
+            const denomX = n * sumXX - sumX * sumX;
+            const denomY = n * sumYY - sumY * sumY;
+
+            const slope = denomX !== 0 ? (n * sumXY - sumX * sumY) / denomX : 0;
+            const intercept = (sumY - slope * sumX) / n;
+
+            // Pearson R
+            const denom = Math.sqrt(denomX * denomY);
+            const r = denom !== 0 ? (n * sumXY - sumX * sumY) / denom : 0;
+            const r2 = r * r;
+
+            return { r, r2, slope, intercept };
+        }
+
+        function getCorrelationLevel(r) {
+            const absR = Math.abs(r);
+            if (absR >= 0.8) return { level: '強相關', color: '#22c55e', emoji: '🟢' };
+            if (absR >= 0.5) return { level: '中度相關', color: '#fbbf24', emoji: '🟡' };
+            if (absR >= 0.3) return { level: '弱相關', color: '#f97316', emoji: '🟠' };
+            return { level: '幾乎無相關', color: '#ef4444', emoji: '🔴' };
+        }
+
+        function updateMainChart() {
+            const xKey = document.getElementById('corr-x-select').value;
+            const yKey = document.getElementById('corr-y-select').value;
+            if (!xKey || !yKey) return;
+
+            const xLabel = getCorrLabel(xKey);
+            const yLabel = getCorrLabel(yKey);
+
+            // Filter data for current tab with valid values
+            const dataset = allData.filter(d =>
+                d.母體 && d.母體.startsWith(currentTab) &&
+                d[xKey] !== undefined && d[xKey] !== '' && !isNaN(parseFloat(d[xKey])) &&
+                d[yKey] !== undefined && d[yKey] !== '' && !isNaN(parseFloat(d[yKey]))
+            );
+
+            const points = dataset.map(d => ({
+                x: parseFloat(d[xKey]),
+                y: parseFloat(d[yKey]),
                 raw: d
-            })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x > 0 && p.y > 0);
+            })).filter(p => !isNaN(p.x) && !isNaN(p.y) && p.x !== 0 && p.y !== 0);
 
-            // Calculate Regression Line
-            const reg = calculateRegression(points);
-
-            // Generate Line Points (Min X to Max X)
-            let minX = Math.min(...points.map(p => p.x));
-            let maxX = Math.max(...points.map(p => p.x));
-
-            // Add some padding to min/max X for better visualization
-            const xRange = maxX - minX;
-            minX = minX - xRange * 0.1;
-            maxX = maxX + xRange * 0.1;
-
-            const linePoints = reg ? [
-                { x: minX, y: reg.slope * minX + reg.intercept },
-                { x: maxX, y: reg.slope * maxX + reg.intercept }
-            ] : [];
-
-            // Regression Stats Display
-            const rStat = document.getElementById('regression-stats');
-            if (reg) {
-                const slopeDir = reg.slope > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
-                rStat.innerText = `Trend: ${slopeDir} | Slope: ${reg.slope.toFixed(1)}`;
-                rStat.style.borderColor = conf.color;
-                rStat.style.color = conf.color;
-            } else {
-                rStat.innerText = 'No data for regression';
-                rStat.style.borderColor = 'transparent';
-                rStat.style.color = '#slate-400';
+            if (points.length < 3) {
+                document.getElementById('corr-conclusion-text').innerText = '資料筆數不足，無法進行相關性分析。';
+                document.getElementById('corr-r').innerText = '--';
+                document.getElementById('corr-r2').innerText = '--';
+                document.getElementById('corr-slope').innerText = '--';
+                document.getElementById('corr-n').innerText = points.length;
+                return;
             }
 
+            // Calculate correlation stats
+            const stats = calculateCorrelation(points);
+            const corrLevel = getCorrelationLevel(stats.r);
 
-            // Update Chart Title & Desc
-            const titleEl = document.getElementById('chart-title');
-            titleEl.innerHTML = `<span class="w-2 h-6 rounded-sm" style="background-color: ${conf.color}"></span> ${conf.factorLabel} vs 強度`;
-            titleEl.style.color = conf.color;
+            // Update stat cards
+            const rEl = document.getElementById('corr-r');
+            rEl.innerText = stats.r.toFixed(3);
+            rEl.style.color = corrLevel.color;
 
-            document.getElementById('chart-desc').innerText = conf.desc;
+            const r2El = document.getElementById('corr-r2');
+            r2El.innerText = stats.r2.toFixed(3);
+            r2El.style.color = corrLevel.color;
+
+            document.getElementById('corr-slope').innerText = stats.slope.toFixed(4);
+            document.getElementById('corr-n').innerText = points.length;
+
+            // Auto-conclusion
+            const direction = stats.r > 0 ? '正相關' : '負相關';
+            const dirDesc = stats.r > 0
+                ? `<b>${xLabel}越高</b>，<b>${yLabel}越高</b>`
+                : `<b>${xLabel}越高</b>，<b>${yLabel}反而越低</b>`;
+
+            const conclusionText =
+                `${corrLevel.emoji} 兩者呈<b style="color:${corrLevel.color}">${corrLevel.level}（${direction}）</b>，` +
+                `R = <b>${stats.r.toFixed(3)}</b>，R² = <b>${stats.r2.toFixed(3)}</b>。` +
+                `趨勢解讀：${dirDesc}。` +
+                `<span class="text-slate-400">（共 ${points.length} 筆有效資料）</span>`;
+
+            document.getElementById('corr-conclusion-text').innerHTML = conclusionText;
+
+            // Regression line
+            let minX = Math.min(...points.map(p => p.x));
+            let maxX = Math.max(...points.map(p => p.x));
+            const xRange = maxX - minX;
+            minX -= xRange * 0.1;
+            maxX += xRange * 0.1;
+
+            const linePoints = [
+                { x: minX, y: stats.slope * minX + stats.intercept },
+                { x: maxX, y: stats.slope * maxX + stats.intercept }
+            ];
+
+            const conf = CONFIG[currentTab];
+            const pointColor = currentTab === 'S60' ? '#c084fc' : '#4ade80';
+            const borderColor = currentTab === 'S60' ? 'rgba(192, 132, 252, 0.6)' : 'rgba(74, 222, 128, 0.6)';
 
             // Destroy old chart
             if (mainChart) mainChart.destroy();
 
+            const ctx = document.getElementById('mainChart');
             mainChart = new Chart(ctx, {
                 type: 'scatter',
                 data: {
                     datasets: [
                         {
-                            label: 'Batch Data',
+                            label: `${xLabel} vs ${yLabel}`,
                             data: points,
-                            backgroundColor: conf.color,
-                            borderColor: conf.color,
+                            backgroundColor: pointColor,
+                            borderColor: borderColor,
+                            borderWidth: 1,
                             pointRadius: 4,
                             pointHoverRadius: 6,
-                            pointStyle: 'rectRot'
+                            pointStyle: 'circle'
                         },
                         {
                             type: 'line',
-                            label: 'Regression Trend',
+                            label: `趨勢線 (R=${stats.r.toFixed(2)})`,
                             data: linePoints,
-                            borderColor: '#ffffff',
-                            borderWidth: 2,
-                            borderDash: [5, 5],
+                            borderColor: corrLevel.color,
+                            borderWidth: 2.5,
+                            borderDash: [6, 3],
                             pointRadius: 0,
                             fill: false
                         }
@@ -782,22 +930,22 @@
                                 label: (ctx) => {
                                     if (ctx.dataset.type === 'line') return '';
                                     const p = ctx.raw;
-                                    return `${p.raw.match_key}: ${p.y} kgf/cm² (${conf.factorKey}: ${p.x})`;
+                                    const key = p.raw ? p.raw.match_key : '';
+                                    return `${key}: ${xLabel}=${p.x} / ${yLabel}=${p.y}`;
                                 }
                             }
                         }
                     },
                     scales: {
                         x: {
-                            title: { display: true, text: conf.xLabel, color: '#64748b' },
+                            title: { display: true, text: xLabel, color: '#64748b' },
                             grid: { color: '#334155' },
                             ticks: { color: '#94a3b8' }
                         },
                         y: {
-                            title: { display: true, text: '強度 (Strength)', color: '#64748b' },
+                            title: { display: true, text: yLabel, color: '#64748b' },
                             grid: { color: '#334155' },
-                            ticks: { color: '#94a3b8' },
-                            min: 0 // Optional
+                            ticks: { color: '#94a3b8' }
                         }
                     }
                 }
@@ -1664,6 +1812,7 @@
         // Initialize Everything
         function initApp() {
             initCrossSelects();
+            initCorrSelects();
             Papa.parse(CSV_URL, {
                 download: true,
                 header: true,
