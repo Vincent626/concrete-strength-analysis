@@ -234,7 +234,7 @@
                         趨勢斜率 <i class="fas fa-info-circle text-slate-500 cursor-help" title="線性回歸直線的斜率。"></i>
                     </div>
                     <div id="corr-slope" class="text-xl font-black text-white font-mono">--</div>
-                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                    <div id="corr-slope-desc" class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
                         當 X 變更 1 個單位時<br>Y 平均會變動的數值
                     </div>
                 </div>
@@ -918,7 +918,14 @@
             r2El.innerText = stats.r2.toFixed(3);
             r2El.style.color = corrLevel.color;
 
-            document.getElementById('corr-slope').innerText = stats.slope.toFixed(4);
+                        // Adjust slope display for small fractional metrics
+            const smallFractionKeys = ['水膠比', '水灰比', '表面水骨材1', '矽灰取代率', '爐石取代率', '砂石比', '漿體比例', '粗細骨材比'];
+            const isFraction = smallFractionKeys.includes(xKey);
+            const step = isFraction ? 0.01 : 1;
+            const displaySlope = stats.slope * step;
+
+            document.getElementById('corr-slope').innerText = displaySlope.toFixed(2);
+            document.getElementById('corr-slope-desc').innerHTML = '當 X 變更 ' + step + ' 個單位時<br>Y 平均會變動的數值';
             document.getElementById('corr-n').innerText = points.length;
 
             // Auto-conclusion
