@@ -1695,7 +1695,7 @@
 
                 updateKpiDisplay();
                 updateMainChart();
-                updateTable(allData.filter(d => d.母體 && d.母體.startsWith(tab)), conf);
+                updateTable(allData.filter(d => d.母體 && d.母體.startsWith(tab) && d['平均強度'] > 0), conf);
 
                 // AI Tool Toggle
                 if (tab === 'S60') {
