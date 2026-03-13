@@ -842,10 +842,11 @@
                 const x1 = row['試體1強度(X1)'] || '-';
                 const x2 = row['試體2強度(X2)'] || '-';
                 const x3 = row['試體3強度(X3)'] || '-';
+                const displayDate = row['日期'] || row['日期及時間'] || '--';
 
                 tr.innerHTML = `
-                    <td class="p-3 font-mono text-slate-300">${row['日期']} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['母體']}</span></td>
+                    <td class="p-3 font-mono text-slate-300">${displayDate} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['配比 '] || row['配比'] || row['母體']}</span></td>
                     <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
                     <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
                     <td class="p-3 text-right font-mono text-slate-400">${x1}</td>
