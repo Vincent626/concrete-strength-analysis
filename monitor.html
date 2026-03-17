@@ -44,6 +44,10 @@
         }
     </script>
     <style>
+        html {
+            font-size: 17px;
+        }
+
         body {
             background-color: #0f172a;
             color: #e2e8f0;
@@ -67,37 +71,78 @@
             background: #f8fafc;
             color: #334155;
         }
+
         body.light-theme.bg-gradient-to-br {
             background-image: linear-gradient(to bottom right, #f8fafc, #f1f5f9);
         }
+
         body.light-theme .glass-panel {
             background: rgba(255, 255, 255, 0.85);
             border-color: rgba(0, 0, 0, 0.1);
             box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
         }
-        body.light-theme .bg-slate-900 { background-color: #f1f5f9; }
+
+        body.light-theme .bg-slate-900 {
+            background-color: #f1f5f9;
+        }
+
         body.light-theme .bg-slate-800,
         body.light-theme select.bg-slate-800,
-        body.light-theme input.bg-slate-800 { 
-            background-color: #ffffff; 
-            border-color: #e2e8f0; 
-            color: #1e293b; 
+        body.light-theme input.bg-slate-800 {
+            background-color: #ffffff;
+            border-color: #e2e8f0;
+            color: #1e293b;
         }
+
         body.light-theme button.bg-slate-800 {
             background-color: #ffffff;
             border-color: #e2e8f0;
             color: #475569;
         }
-        body.light-theme .bg-slate-800\/60 { background-color: rgba(241, 245, 249, 0.6); border-color: #e2e8f0; }
-        body.light-theme .border-slate-800, body.light-theme .border-slate-800\/50 { border-color: #e2e8f0; }
-        body.light-theme .border-slate-700 { border-color: #cbd5e1; }
-        body.light-theme .text-slate-500 { color: #64748b; }
-        body.light-theme .text-slate-400 { color: #475569; }
-        body.light-theme .text-slate-300 { color: #334155; }
-        body.light-theme .text-slate-200, body.light-theme .text-white { color: #0f172a; }
-        body.light-theme .text-white.bg-clip-text { color: transparent; } /* Keep gradients */
-        body.light-theme .divide-slate-800\/50 > :not([hidden]) ~ :not([hidden]) { border-color: #e2e8f0; }
-        body.light-theme tr:hover { background-color: rgba(241, 245, 249, 0.8); }
+
+        body.light-theme .bg-slate-800\/60 {
+            background-color: rgba(241, 245, 249, 0.6);
+            border-color: #e2e8f0;
+        }
+
+        body.light-theme .border-slate-800,
+        body.light-theme .border-slate-800\/50 {
+            border-color: #e2e8f0;
+        }
+
+        body.light-theme .border-slate-700 {
+            border-color: #cbd5e1;
+        }
+
+        body.light-theme .text-slate-500 {
+            color: #64748b;
+        }
+
+        body.light-theme .text-slate-400 {
+            color: #475569;
+        }
+
+        body.light-theme .text-slate-300 {
+            color: #334155;
+        }
+
+        body.light-theme .text-slate-200,
+        body.light-theme .text-white {
+            color: #0f172a;
+        }
+
+        body.light-theme .text-white.bg-clip-text {
+            color: transparent;
+        }
+
+        /* Keep gradients */
+        body.light-theme .divide-slate-800\/50> :not([hidden])~ :not([hidden]) {
+            border-color: #e2e8f0;
+        }
+
+        body.light-theme tr:hover {
+            background-color: rgba(241, 245, 249, 0.8);
+        }
     </style>
 </head>
 
@@ -109,13 +154,29 @@
             <h1 class="text-3xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-neon-blue to-neon-green">
                 Concrete Strength Monitor
             </h1>
-            <p class="text-slate-400 text-sm mt-1">S60 / M60 推進管即時監控儀表板 (v8)</p>
+            <p class="text-slate-400 text-sm mt-1">S60 (小型離心管) / M60 (中型離心管) 即時監控儀表板 (v8)</p>
         </div>
         <div class="flex items-center gap-3">
-            <button onclick="toggleTheme()" id="theme-btn" class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-400 hover:text-white transition-colors" title="切換主題">
+            <!-- Font Size Controls -->
+            <div class="flex items-center gap-1 bg-slate-900 rounded-full border border-slate-800 px-1.5 py-0.5"
+                title="字體大小調整">
+                <button onclick="changeFontSize('decrease')"
+                    class="font-btn flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-700 transition-colors text-xs font-bold"
+                    title="縮小字體">A-</button>
+                <button onclick="changeFontSize('medium')" id="btn-font-medium"
+                    class="font-btn flex items-center justify-center w-7 h-7 rounded-full text-white bg-slate-700 transition-colors text-sm font-bold"
+                    title="預設字體">A</button>
+                <button onclick="changeFontSize('increase')"
+                    class="font-btn flex items-center justify-center w-7 h-7 rounded-full text-slate-400 hover:text-white hover:bg-slate-700 transition-colors text-base font-bold"
+                    title="放大字體">A+</button>
+            </div>
+            <button onclick="toggleTheme()" id="theme-btn"
+                class="flex items-center justify-center w-8 h-8 rounded-full bg-slate-800 border border-slate-700 text-slate-400 hover:text-white transition-colors"
+                title="切換主題">
                 <i class="fas fa-sun"></i>
             </button>
-            <div class="flex items-center gap-2 text-xs text-slate-500 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
+            <div
+                class="flex items-center gap-2 text-xs text-slate-500 bg-slate-900 px-3 py-1.5 rounded-full border border-slate-800">
                 <span class="w-2 h-2 rounded-full bg-neon-green animate-pulse"></span>
                 System Online
                 <span id="last-updated" class="ml-2 pl-2 border-l border-slate-700">Waiting for data...</span>
@@ -150,6 +211,8 @@
                     <span class="text-xs text-slate-500">kgf/cm²</span>
                 </div>
                 <div id="kpi-strength-diff" class="mt-2 text-xs font-bold">--</div>
+                <div id="kpi-strength-std" class="mt-1 text-xs text-slate-400">σ = <span id="kpi-std-val"
+                        class="font-mono font-bold">--</span></div>
             </div>
 
             <!-- Card 2: Sampling Count -->
@@ -163,14 +226,15 @@
                 <div class="mt-2 text-xs text-slate-500">最新: <span id="kpi-latest-date">--</span></div>
             </div>
 
-            <!-- Card 3: Top 1 Key Factor -->
+            <!-- Card 3: 強度標準差 -->
             <div
                 class="glass-panel p-6 border-l-4 border-amber-500 relative group hover:-translate-y-1 transition-transform duration-300">
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">影響強度 Top 1 因子</h3>
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">強度標準差 (σ)</h3>
                 <div class="flex items-center gap-2 h-10">
-                    <span id="kpi-top-factor" class="text-2xl font-black text-white truncate">--</span>
+                    <span id="kpi-strength-sigma" class="text-2xl font-black text-white truncate">--</span>
+                    <span class="text-sm text-slate-500">kgf/cm²</span>
                 </div>
-                <div id="kpi-factor-trend" class="mt-1 text-xs text-amber-500 font-bold">--</div>
+                <div id="kpi-sigma-level" class="mt-1 text-xs text-amber-500 font-bold">--</div>
             </div>
 
             <!-- Card 4: Prediction Accuracy (Gauge) -->
@@ -182,7 +246,8 @@
                 </div>
                 <div id="kpi-accuracy" class="hidden">--</div>
                 <div id="kpi-gauge-label" class="text-center text-xs text-slate-400 mt-1">--</div>
-                <div class="text-center text-[10px] text-slate-600 mt-1" title="R² 代表 AI 模型能解釋多少比例的強度變化。數值越接近 1 代表預測越準確。">💡 越靠近右邊（綠色）= 預測越準</div>
+                <div class="text-center text-[11px] text-slate-600 mt-1"
+                    title="R² 代表 AI 模型能解釋多少比例的強度變化。數值越接近 1 代表預測越準確。">💡 越靠近右邊（綠色）= 預測越準</div>
             </div>
         </div>
 
@@ -209,39 +274,56 @@
                 </div>
             </div>
 
+            <!-- Explanation Block -->
+            <div class="mb-4 bg-slate-800/60 rounded-lg p-4 border border-slate-700 border-l-4 border-l-slate-400">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">💡 這是什麼？該怎麼看？</div>
+                <div class="text-sm text-slate-300 leading-relaxed">
+                    <p><b class="text-white">白話說：</b>這個區塊幫您找出「這兩個條件之間有沒有關聯性？」您可以選擇 X 軸和 Y
+                        軸要比較哪兩個數據，下方的散佈圖與趨勢線將直接告訴您它們是互相幫忙（正相關）、互相抵消（負相關），還是毫無瓜葛。</p>
+                </div>
+            </div>
+
             <!-- Correlation Stats Row -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-4">
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <div
+                    class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
+                    <div
+                        class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
                         相關係數 (R) <i class="fas fa-info-circle text-slate-500 cursor-help" title="衡量兩個變數一起變動的關聯程度。"></i>
                     </div>
                     <div id="corr-r" class="text-xl font-black text-white font-mono">--</div>
-                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                    <div class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
                         完全沒關係是 0<br>數字越接近 ±1 關係越強
                     </div>
                 </div>
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                        決定係數 (R²) <i class="fas fa-info-circle text-slate-500 cursor-help" title="由 R 的平方計算而來，表示 Y 的變化有多少能被 X 解釋。"></i>
+                <div
+                    class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
+                    <div
+                        class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                        決定係數 (R²) <i class="fas fa-info-circle text-slate-500 cursor-help"
+                            title="由 R 的平方計算而來，表示 Y 的變化有多少能被 X 解釋。"></i>
                     </div>
                     <div id="corr-r2" class="text-xl font-black text-white font-mono">--</div>
-                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                    <div class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
                         越高代表 X 對 Y 的<br>解釋與預測能力越好
                     </div>
                 </div>
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
+                <div
+                    class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
+                    <div
+                        class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
                         趨勢斜率 <i class="fas fa-info-circle text-slate-500 cursor-help" title="線性回歸直線的斜率。"></i>
                     </div>
                     <div id="corr-slope" class="text-xl font-black text-white font-mono">--</div>
-                    <div id="corr-slope-desc" class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                    <div id="corr-slope-desc" class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
                         當 X 變更 1 個單位時<br>Y 平均會變動的數值
                     </div>
                 </div>
-                <div class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center">
-                    <div class="text-[10px] text-slate-400 font-bold uppercase tracking-wider mb-1">樣本數量</div>
+                <div
+                    class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1">樣本數量</div>
                     <div id="corr-n" class="text-xl font-black text-white font-mono">--</div>
-                    <div class="text-[10px] text-slate-500 mt-1 leading-tight text-center">
+                    <div class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
                         參與此次比對的<br>有效紀錄總筆數
                     </div>
                 </div>
@@ -281,12 +363,13 @@
                             <th class="p-3 font-semibold">日期/批次</th>
                             <th class="p-3 font-semibold">配比代號</th>
                             <th class="p-3 font-semibold" id="col-key-factor">關鍵因子</th>
-                            <th class="p-3 font-semibold">坍度</th>
-                            <th class="p-3 font-semibold text-right">#1</th>
-                            <th class="p-3 font-semibold text-right">#2</th>
-                            <th class="p-3 font-semibold text-right">#3</th>
-                            <th class="p-3 font-semibold text-right">平均 (Avg)</th>
-                            <th class="p-3 font-semibold text-center">電流值曲線</th>
+                            <th class="p-3 font-semibold">坍度(cm)</th>
+                            <th class="p-3 font-semibold text-right">試體1強度</th>
+                            <th class="p-3 font-semibold text-right">試體2強度</th>
+                            <th class="p-3 font-semibold text-right">試體3強度</th>
+                            <th class="p-3 font-semibold text-right">平均強度 (Avg)</th>
+                            <th class="p-3 font-semibold text-center">強度標準差</th>
+                            <th class="p-3 font-semibold text-center">拌合電流值曲線</th>
                         </tr>
                     </thead>
                     <tbody id="table-body" class="text-sm divide-y divide-slate-800/50">
@@ -333,6 +416,16 @@
                         <option value="">（不分組）</option>
                     </select>
                 </div>
+            </div>
+        </div>
+
+        <!-- Explanation Block -->
+        <div class="mb-4 bg-slate-800/60 rounded-lg p-4 border border-slate-700 border-l-4 border-l-emerald-400">
+            <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">💡 這是什麼？該怎麼看？</div>
+            <div class="text-sm text-slate-300 leading-relaxed">
+                <p><b
+                        class="text-white">白話說：</b>這個分析幫助我們了解「當某個條件改變時，強度會怎麼變化」。您可以選擇一個主因子（例如坍度），系統會把所有生產資料自動分為大、中、小三組，讓您一眼看出哪一組的強度表現最好。您還可以加入「交叉比對」的條件，觀察更複雜的現象。
+                </p>
             </div>
         </div>
 
@@ -385,7 +478,7 @@
         </h2>
 
         <!-- R² Explanation + Gauge Row -->
-        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <!-- Gauge -->
             <div class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center border border-slate-700">
                 <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">R² 模型解釋力</div>
@@ -395,11 +488,21 @@
             </div>
 
             <!-- MAE -->
-            <div class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center justify-center border border-slate-700">
+            <div
+                class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center justify-center border border-slate-700">
                 <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">MAE 平均誤差</div>
                 <div class="text-3xl font-black text-white font-mono"><span id="acc-mae">--</span></div>
                 <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
-                <div class="text-[10px] text-slate-500 mt-2">每次預測平均偏差多少</div>
+                <div class="text-[11px] text-slate-500 mt-2">每次預測平均偏差多少</div>
+            </div>
+
+            <!-- Residual Std Dev -->
+            <div
+                class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center justify-center border border-slate-700">
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">σ(殘差) 誤差穩定度</div>
+                <div class="text-3xl font-black text-white font-mono"><span id="acc-residual-std">--</span></div>
+                <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
+                <div class="text-[11px] text-slate-500 mt-2">預測誤差的離散程度</div>
             </div>
 
             <!-- R² Explanation -->
@@ -411,6 +514,15 @@
                     <p>🟡 <b>0.3~0.6</b> = 模型已掌握部分規律</p>
                     <p>🟢 <b>0.6~1.0</b> = 模型預測力強，可做決策參考</p>
                 </div>
+            </div>
+        </div>
+
+        <!-- Explanation Block -->
+        <div class="mb-4 bg-slate-800/60 rounded-lg p-4 border border-slate-700 border-l-4 border-l-amber-400">
+            <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">💡 這是什麼？該怎麼看？</div>
+            <div class="text-sm text-slate-300 leading-relaxed">
+                <p><b class="text-white">白話說：</b>下方散佈圖用來驗證「AI 預測的強度」和「實際試壓的強度」差多少。每個點代表一批混凝土，<b>點越靠近白色虛線（45度線）=
+                        預測越準</b>。金色圓點是正常批次，紅色三角形是偏差超過 15% 的異常批次。如果大部分點都貼著虛線走，代表 AI 模型已經學得很好。</p>
             </div>
         </div>
 
@@ -445,17 +557,34 @@
             <span class="w-1 h-6 bg-neon-blue rounded-sm"></span>
             AI 強度預測工具 (AI Strength Predictor)
             <span class="text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-400 font-mono">Model v8</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-amber-900/50 text-amber-400 font-mono">📚 學術驗證</span>
         </h2>
+
+        <!-- Explanation Block -->
+        <div
+            class="mb-6 bg-slate-800/60 rounded-lg p-4 border border-slate-700 border-l-4 border-l-neon-blue relative z-10 transition-colors">
+            <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">💡 這是什麼？該怎麼用？</div>
+            <div class="text-sm text-slate-300 leading-relaxed space-y-2">
+                <p><b class="text-white">白話說：</b>這是一個「混凝土強度模擬器」。您可以試著左右滑動下方的製造參數（如水膠比、坍度等），AI
+                    會根據過去龐大的歷史經驗，立即為您運算出這批混凝土達到 28 天時可能的強度是多少。</p>
+                <p class="text-xs text-slate-400 mt-1">例如：出料前想調整一下水膠比？拉拉看拉桿，右方數字就會即時跟著跳動，讓您可以直覺掌握預期效果，作為生產決策的輔助參考！</p>
+                <p class="text-xs text-amber-400/80 mt-2">📚 <b>學術基礎：</b>下方參數條件是依據國際混凝土強度預測研究（NIH/PMC、MDPI、ResearchGate 等）所公認的關鍵影響因子設計。S60 與 M60 共用<b>水膠比、坍度、混凝土溫度</b>三項核心因子；M60 額外納入學術研究證實的<b>矽灰取代率</b>與本研究創新發現的<b>拌合電流</b>指標。</p>
+            </div>
+        </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-8 relative z-10">
             <!-- Input Controls -->
             <div class="space-y-6">
                 <!-- S60 Inputs -->
                 <div id="inputs-s60" class="space-y-5">
+                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-neon-blue rounded-full"></span>
+                        共通因子 (Common Factors)
+                    </div>
                     <!-- W/B Ratio -->
                     <div>
                         <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">水膠比 (W/B Ratio)</label>
+                            <label class="text-slate-300 font-medium">水膠比 (W/B Ratio) <span class="text-amber-400 text-xs">📖</span></label>
                             <span id="val-s60-wb" class="text-neon-blue font-mono font-bold">0.32</span>
                         </div>
                         <input type="range" id="input-s60-wb" min="0.28" max="0.36" step="0.01" value="0.32"
@@ -464,59 +593,102 @@
                             <span>0.28 (濃)</span>
                             <span>0.36 (稀)</span>
                         </div>
+                        <div class="text-[10px] text-slate-600 mt-1">Abrams 水灰比定律 — 公認 #1 影響因子</div>
                     </div>
 
                     <!-- Slump -->
                     <div>
                         <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">坍度 (Slump)</label>
+                            <label class="text-slate-300 font-medium">坍度 (Slump) <span class="text-amber-400 text-xs">📖</span></label>
                             <span id="val-s60-slump" class="text-neon-blue font-mono font-bold">4.2 cm</span>
                         </div>
                         <input type="range" id="input-s60-slump" min="1.0" max="8.0" step="0.5" value="4.2"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="text-[10px] text-slate-600 mt-1">施工性核心指標，反映水膠比與工作性</div>
                     </div>
 
                     <!-- Temp -->
                     <div>
                         <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">混凝土溫度 (Temp)</label>
+                            <label class="text-slate-300 font-medium">混凝土溫度 (Temp) <span class="text-amber-400 text-xs">📖</span></label>
                             <span id="val-s60-temp" class="text-neon-blue font-mono font-bold">28 °C</span>
                         </div>
                         <input type="range" id="input-s60-temp" min="20" max="35" step="1" value="28"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="text-[10px] text-slate-600 mt-1">影響水化反應速率與後期強度發展</div>
                     </div>
                 </div>
 
                 <!-- M60 Inputs (Hidden by default) -->
                 <div id="inputs-m60" class="space-y-5 hidden">
-                    <!-- Silica Fume -->
+                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 flex items-center gap-2">
+                        <span class="w-2 h-2 bg-neon-green rounded-full"></span>
+                        共通因子 (Common Factors)
+                    </div>
+                    <!-- W/B Ratio (共通) -->
                     <div>
                         <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">矽灰取代率 (Silica Fume)</label>
-                            <span id="val-m60-sf" class="text-neon-green font-mono font-bold">6 %</span>
+                            <label class="text-slate-300 font-medium">水膠比 (W/B Ratio) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-wb" class="text-neon-green font-mono font-bold">0.31</span>
                         </div>
-                        <input type="range" id="input-m60-sf" min="0" max="12" step="1" value="6"
+                        <input type="range" id="input-m60-wb" min="0.25" max="0.38" step="0.01" value="0.31"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>0.25 (濃)</span>
+                            <span>0.38 (稀)</span>
+                        </div>
+                        <div class="text-[10px] text-slate-600 mt-1">Abrams 水灰比定律 — 公認 #1 影響因子</div>
                     </div>
 
-                    <!-- Final Current -->
+                    <!-- Slump (共通) -->
                     <div>
                         <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">最終電流 (Final Current)</label>
-                            <span id="val-m60-cur" class="text-neon-green font-mono font-bold">78 A</span>
-                        </div>
-                        <input type="range" id="input-m60-cur" min="60" max="100" step="1" value="78"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
-                    </div>
-
-                    <!-- Slump -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">坍度 (Slump)</label>
+                            <label class="text-slate-300 font-medium">坍度 (Slump) <span class="text-amber-400 text-xs">📖</span></label>
                             <span id="val-m60-slump" class="text-neon-green font-mono font-bold">4.5 cm</span>
                         </div>
                         <input type="range" id="input-m60-slump" min="1.0" max="8.0" step="0.5" value="4.5"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="text-[10px] text-slate-600 mt-1">施工性核心指標，反映水膠比與工作性</div>
+                    </div>
+
+                    <!-- Temp (共通) -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">混凝土溫度 (Temp) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-temp" class="text-neon-green font-mono font-bold">26 °C</span>
+                        </div>
+                        <input type="range" id="input-m60-temp" min="18" max="35" step="1" value="26"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="text-[10px] text-slate-600 mt-1">影響水化反應速率與後期強度發展</div>
+                    </div>
+
+                    <div class="border-t border-slate-700/50 pt-4 mt-4">
+                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-amber-400 rounded-full"></span>
+                            M60 專屬因子 (M60-Specific Factors)
+                        </div>
+                    </div>
+
+                    <!-- Silica Fume (M60專屬) -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">矽灰取代率 (Silica Fume) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-sf" class="text-neon-green font-mono font-bold">6 %</span>
+                        </div>
+                        <input type="range" id="input-m60-sf" min="0" max="12" step="1" value="6"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="text-[10px] text-slate-600 mt-1">NIH 研究：5~25% 可增強 6~30% (PMC, 2024)</div>
+                    </div>
+
+                    <!-- Final Current (M60專屬) -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">最終電流 (Final Current) <span class="text-emerald-400 text-xs">🔬</span></label>
+                            <span id="val-m60-cur" class="text-neon-green font-mono font-bold">78 A</span>
+                        </div>
+                        <input type="range" id="input-m60-cur" min="60" max="100" step="1" value="78"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="text-[10px] text-slate-600 mt-1">流變代理變數 (Rheology Proxy) — 本研究創新特徵 ⭐</div>
                     </div>
                 </div>
             </div>
@@ -546,6 +718,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Academic References -->
+        <details class="mt-6 relative z-10">
+            <summary class="text-xs text-slate-500 cursor-pointer hover:text-slate-300 transition-colors font-bold uppercase tracking-wider">
+                📚 學術參考來源 (Academic References)
+            </summary>
+            <div class="mt-3 bg-slate-900/60 rounded-lg p-4 border border-slate-800 text-xs text-slate-400 space-y-2 leading-relaxed">
+                <p class="text-slate-300 font-bold mb-2">特徵選擇依據：</p>
+                <table class="w-full text-left">
+                    <thead>
+                        <tr class="border-b border-slate-700">
+                            <th class="pb-2 text-slate-300">因子</th>
+                            <th class="pb-2 text-slate-300">學術依據</th>
+                            <th class="pb-2 text-slate-300">來源</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-slate-800">
+                        <tr><td class="py-1.5">水膠比 (W/B)</td><td>公認 #1 強度因子，↑0.05 可致強度↓27%</td><td>Abrams (1918); SHAP Analysis, PMC</td></tr>
+                        <tr><td class="py-1.5">坍度 (Slump)</td><td>施工性與品質控制核心指標</td><td>MDPI Sustainability; ResearchGate</td></tr>
+                        <tr><td class="py-1.5">混凝土溫度</td><td>影響水化速率，低溫利於後期強度</td><td>IJSRED; ACI Guidelines</td></tr>
+                        <tr><td class="py-1.5">矽灰取代率</td><td>5~25% 可增強 6~30%</td><td>NIH/PMC (2024); Lund Univ.</td></tr>
+                        <tr><td class="py-1.5">拌合電流 ⭐</td><td>流變代理變數 (Rheology Proxy)</td><td>Encyclopedia.pub; NIST Rheology; 本研究</td></tr>
+                    </tbody>
+                </table>
+                <p class="mt-3 text-slate-500 italic">📖 = 國際學術公認因子 | 🔬 = 本研究創新特徵</p>
+                <p class="text-slate-600 mt-1">註：模型底層使用 25 個完整特徵訓練（Lasso/Ridge/ElasticNet + LOOCV），此處展示的為經學術驗證的關鍵可調參數。</p>
+            </div>
+        </details>
     </div>
 
     <script src="model_data.js"></script>
@@ -568,6 +768,7 @@
 
             // Add contribution of visible sliders
             if (currentTab === 'S60') {
+                // 共通因子: 水膠比 + 坍度 + 混凝土溫度
                 const wb = parseFloat(document.getElementById('input-s60-wb').value);
                 const slump = parseFloat(document.getElementById('input-s60-slump').value);
                 const temp = parseFloat(document.getElementById('input-s60-temp').value);
@@ -582,18 +783,26 @@
                 document.getElementById('val-s60-temp').innerText = temp + ' °C';
 
             } else {
+                // 共通因子: 水膠比 + 坍度 + 混凝土溫度
+                const wb = parseFloat(document.getElementById('input-m60-wb').value);
+                const slump = parseFloat(document.getElementById('input-m60-slump').value);
+                const temp = parseFloat(document.getElementById('input-m60-temp').value);
+                // M60 專屬因子: 矽灰取代率 + 最終電流
                 const sf = parseFloat(document.getElementById('input-m60-sf').value);
                 const cur = parseFloat(document.getElementById('input-m60-cur').value);
-                const slump = parseFloat(document.getElementById('input-m60-slump').value);
 
+                score += getScaled('水膠比', wb);
+                score += getScaled('坍度(cm)', slump);
+                score += getScaled('混凝土溫度(℃)', temp);
                 score += getScaled('矽灰取代率', sf);
                 score += getScaled('最終電流', cur);
-                score += getScaled('坍度(cm)', slump);
 
                 // Update Labels
+                document.getElementById('val-m60-wb').innerText = wb.toFixed(2);
+                document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
+                document.getElementById('val-m60-temp').innerText = temp + ' °C';
                 document.getElementById('val-m60-sf').innerText = sf + ' %';
                 document.getElementById('val-m60-cur').innerText = cur + ' A';
-                document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
             }
 
             // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
@@ -612,13 +821,30 @@
             // el.className = `text-6xl font-black ${colorClass} drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300`;
             el.innerText = result;
 
-            // Interval (approx RMSE ~45)
-            const margin = 45;
+            // Dynamic confidence interval using historical residual σ
+            let margin = 45; // fallback
+            if (typeof MODEL_DATA !== 'undefined' && MODEL_DATA[currentTab]) {
+                const mdl = MODEL_DATA[currentTab];
+                const tabData = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && parseFloat(d['平均強度']) > 100);
+                if (tabData.length > 5) {
+                    const residuals = tabData.map(d => {
+                        let p = mdl.intercept;
+                        mdl.features.forEach(f => {
+                            const v = parseFloat(d[f.name]) || 0;
+                            if (f.scale !== 0) p += (v - f.mean) / f.scale * f.coef;
+                        });
+                        return parseFloat(d['平均強度']) - p;
+                    });
+                    const rMean = residuals.reduce((a, b) => a + b, 0) / residuals.length;
+                    const rVar = residuals.reduce((a, b) => a + Math.pow(b - rMean, 2), 0) / residuals.length;
+                    margin = Math.round(1.96 * Math.sqrt(rVar));
+                }
+            }
             document.getElementById('ai-conf-interval').innerText = `${result - margin} ~ ${result + margin}`;
         }
 
         // Bind Events
-        ['s60-wb', 's60-slump', 's60-temp', 'm60-sf', 'm60-cur', 'm60-slump'].forEach(id => {
+        ['s60-wb', 's60-slump', 's60-temp', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur'].forEach(id => {
             const el = document.getElementById(`input-${id}`);
             if (el) el.addEventListener('input', updatePrediction);
         });
@@ -632,7 +858,7 @@
     <script>
 
 
-                function getChartTheme() {
+        function getChartTheme() {
             const isLight = document.body.classList.contains('light-theme');
             return {
                 text: isLight ? '#475569' : '#94a3b8',
@@ -647,7 +873,7 @@
         function toggleTheme() {
             document.body.classList.toggle('light-theme');
             const btnIcon = document.querySelector('#theme-btn i');
-            if(document.body.classList.contains('light-theme')) {
+            if (document.body.classList.contains('light-theme')) {
                 btnIcon.classList.remove('fa-sun');
                 btnIcon.classList.add('fa-moon');
             } else {
@@ -659,6 +885,33 @@
             if (typeof switchTab === 'function') {
                 switchTab(cTab);
             }
+        }
+
+        let currentFontSize = 17;
+        function changeFontSize(action) {
+            if (action === 'small') currentFontSize = 14;
+            else if (action === 'medium') currentFontSize = 16;
+            else if (action === 'large') currentFontSize = 18;
+            else if (action === 'increase') currentFontSize = Math.min(24, currentFontSize + 1);
+            else if (action === 'decrease') currentFontSize = Math.max(12, currentFontSize - 1);
+
+            document.documentElement.style.fontSize = currentFontSize + 'px';
+
+            // 更新按鈕狀態
+            document.querySelectorAll('.font-btn').forEach(btn => {
+                btn.classList.remove('text-white', 'bg-slate-700');
+                btn.classList.add('text-slate-400');
+            });
+            const activeBtn = document.getElementById(`btn-font-${action}`);
+            if (activeBtn) {
+                activeBtn.classList.remove('text-slate-400');
+                activeBtn.classList.add('text-white', 'bg-slate-700');
+            }
+
+            // 重新渲染圖表以適應新字體大小
+            if (typeof mainChart !== 'undefined' && mainChart) mainChart.resize();
+            if (typeof crossChart !== 'undefined' && crossChart) crossChart.resize();
+            if (typeof accuracyChart !== 'undefined' && accuracyChart) accuracyChart.resize();
         }
         const CSV_URL = 'S60_M60_dataset_v8_shared.csv';
         let mainChart = null;
@@ -729,27 +982,6 @@
             render();
         }
 
-        async function init() {
-            const response = await fetch(CSV_URL);
-            const csvText = await response.text();
-
-            Papa.parse(csvText, {
-                header: true,
-                skipEmptyLines: true,
-                complete: function (results) {
-                    allData = results.data.filter(d => d.match_key); // Basic filter
-
-                    // Initial Render
-                    switchTab('S60');
-
-                    const now = new Date();
-                    document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
-                },
-                error: function (err) {
-                    console.error("CSV Load Error:", err);
-                }
-            });
-        }
 
         function updateKpiDisplay() {
             const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && d['平均強度'] > 0);
@@ -760,12 +992,30 @@
             const avgStrength = data.reduce((a, b) => a + parseFloat(b['平均強度'] || 0), 0) / data.length;
             const diff = avgStrength - target;
 
+            // Calculate Standard Deviation
+            const strengthValues = data.map(d => parseFloat(d['平均強度']));
+            const strengthVariance = strengthValues.reduce((a, b) => a + Math.pow(b - avgStrength, 2), 0) / strengthValues.length;
+            const strengthStd = Math.sqrt(strengthVariance);
+
             document.getElementById('kpi-avg-strength').innerText = avgStrength.toFixed(1);
 
             const diffEl = document.getElementById('kpi-strength-diff');
             diffEl.innerHTML = diff >= 0
                 ? `<span class="text-neon-blue">▲ +${diff.toFixed(1)}</span> (Target ${target})`
                 : `<span class="text-red-400">▼ ${diff.toFixed(1)}</span> (Target ${target})`;
+
+            // σ stability display
+            const stdContainer = document.getElementById('kpi-strength-std');
+            if (strengthStd <= 30) {
+                stdContainer.className = 'mt-1 text-xs text-emerald-400';
+                stdContainer.innerHTML = '🟢 σ = <span class="font-mono font-bold">' + strengthStd.toFixed(1) + '</span> 穩定';
+            } else if (strengthStd <= 50) {
+                stdContainer.className = 'mt-1 text-xs text-amber-400';
+                stdContainer.innerHTML = '🟡 σ = <span class="font-mono font-bold">' + strengthStd.toFixed(1) + '</span> 尚可';
+            } else {
+                stdContainer.className = 'mt-1 text-xs text-red-400';
+                stdContainer.innerHTML = '🔴 σ = <span class="font-mono font-bold">' + strengthStd.toFixed(1) + '</span> 需關注';
+            }
 
             // 2. Sample Count KPI
             document.getElementById('kpi-sample-count').innerText = data.length;
@@ -775,20 +1025,20 @@
             const latest = dates.length > 0 ? dates[dates.length - 1] : '--';
             document.getElementById('kpi-latest-date').innerText = latest;
 
-            // 3. Top Factor KPI
-            // Try to get from Model Data
-            if (typeof MODEL_DATA !== 'undefined' && MODEL_DATA[currentTab]) {
-                const topFeat = MODEL_DATA[currentTab].features[0]; // Already sorted by importance
-                document.getElementById('kpi-top-factor').innerText = topFeat.name;
+            // 3. 強度標準差 KPI
+            const sigmaEl = document.getElementById('kpi-strength-sigma');
+            const sigmaLevelEl = document.getElementById('kpi-sigma-level');
+            sigmaEl.innerText = strengthStd.toFixed(1);
 
-                const trend = topFeat.coef > 0 ? "正相關 (Positive)" : "負相關 (Negative)";
-                const trendColor = topFeat.coef > 0 ? "text-neon-blue" : "text-amber-500";
-
-                const trendEl = document.getElementById('kpi-factor-trend');
-                trendEl.innerText = trend;
-                trendEl.className = `mt-1 text-xs font-bold ${trendColor}`;
+            if (strengthStd <= 30) {
+                sigmaLevelEl.className = 'mt-1 text-xs font-bold text-emerald-400';
+                sigmaLevelEl.innerHTML = '🟢 穩定 — 品質控制良好';
+            } else if (strengthStd <= 50) {
+                sigmaLevelEl.className = 'mt-1 text-xs font-bold text-amber-400';
+                sigmaLevelEl.innerHTML = '🟡 尚可 — 注意變異趨勢';
             } else {
-                document.getElementById('kpi-top-factor').innerText = conf.kpiTitle; // Fallback
+                sigmaLevelEl.className = 'mt-1 text-xs font-bold text-red-400';
+                sigmaLevelEl.innerHTML = '🔴 偏高 — 需排查原因';
             }
         }
 
@@ -918,7 +1168,7 @@
             r2El.innerText = stats.r2.toFixed(3);
             r2El.style.color = corrLevel.color;
 
-                        // Adjust slope display for small fractional metrics
+            // Adjust slope display for small fractional metrics
             const smallFractionKeys = ['水膠比', '水灰比', '表面水骨材1', '矽灰取代率', '爐石取代率', '砂石比', '漿體比例', '粗細骨材比'];
             const isFraction = smallFractionKeys.includes(xKey);
             const step = isFraction ? 0.01 : 1;
@@ -1051,7 +1301,8 @@
             // Render
             sliced.forEach(row => {
                 const tr = document.createElement('tr');
-                tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0";
+                tr.className = "hover:bg-slate-800/50 transition-colors border-b border-slate-800/50 last:border-0 cursor-pointer group";
+                tr.setAttribute('onclick', `toggleDetails('${row.match_key}')`);
 
                 const val = parseFloat(row[conf.factorKey] || 0).toFixed(2);
                 const strength = parseFloat(row['平均強度'] || 0).toFixed(1);
@@ -1060,22 +1311,100 @@
                 const x3 = row['試體3強度(X3)'] || '-';
                 const displayDate = row['日期'] || row['日期及時間'] || '--';
 
+                // Calculate intra-batch σ
+                const specimens = [x1, x2, x3].map(v => parseFloat(v)).filter(v => !isNaN(v));
+                let intraStd = '--';
+                let intraStdColor = 'text-slate-500';
+                if (specimens.length >= 2) {
+                    const sMean = specimens.reduce((a, b) => a + b, 0) / specimens.length;
+                    const sVar = specimens.reduce((a, b) => a + Math.pow(b - sMean, 2), 0) / specimens.length;
+                    const sStd = Math.sqrt(sVar);
+                    intraStd = sStd.toFixed(1);
+                    intraStdColor = sStd <= 20 ? 'text-emerald-400' : sStd <= 40 ? 'text-amber-400' : 'text-red-400';
+                }
+
                 tr.innerHTML = `
-                    <td class="p-3 font-mono text-slate-300">${displayDate} <span class="text-slate-500 text-xs text-xs ml-1">${row.match_key}</span></td>
-                    <td class="p-3"><span class="px-2 py-0.5 rounded textxs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['配比 '] || row['配比'] || row['母體']}</span></td>
+                    <td class="p-3 font-mono text-slate-300">
+                        <i class="fas fa-chevron-right text-[10px] text-slate-500 mr-2 transition-transform duration-200 group-hover:text-neon-blue" id="icon-${row.match_key}"></i>
+                        ${displayDate} <span class="text-slate-500 text-xs ml-1">${row.match_key}</span>
+                    </td>
+                    <td class="p-3"><span class="px-2 py-0.5 rounded text-xs font-bold ${currentTab === 'M60' ? 'bg-neon-green/10 text-neon-green' : 'bg-neon-purple/10 text-neon-purple'}">${row['配比 '] || row['配比'] || row['母體']}</span></td>
                     <td class="p-3 font-mono text-white">${val} ${conf.factorUnit}</td>
                     <td class="p-3 text-slate-400">${row['坍度(cm)'] || '--'}</td>
                     <td class="p-3 text-right font-mono text-slate-400">${x1}</td>
                     <td class="p-3 text-right font-mono text-slate-400">${x2}</td>
                     <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
                     <td class="p-3 text-right font-bold text-white">${strength}</td>
+                    <td class="p-3 text-center font-mono ${intraStdColor}">${intraStd}</td>
                     <td class="p-3 text-center">
-                        <button onclick="showCurve('${row.match_key}')" class="text-neon-blue hover:text-white transition-colors p-2 rounded hover:bg-slate-700">
+                        <button onclick="event.stopPropagation(); showCurve('${row.match_key}')" class="text-neon-blue hover:text-white transition-colors p-2 rounded hover:bg-slate-700">
                             <i class="fas fa-wave-square"></i>
                         </button>
                     </td>
                 `;
                 tbody.appendChild(tr);
+
+                // Detail Row (配比明細)
+                const detailTr = document.createElement('tr');
+                detailTr.id = `detail-${row.match_key}`;
+                detailTr.className = "hidden bg-slate-900/60 border-b border-slate-800/50 shadow-inner";
+                
+                // Extract recipe values
+                const water = row['耗用水'] || '--';
+                const cement = row['耗用泥料1'] || '--';
+                const sf = row['耗用泥料2'] || '--';
+                const slag = row['耗用泥料4'] || '--';
+                const sand = row['耗用骨材1'] || '--';
+                const stone3 = row['耗用骨材2'] || '--';
+                const stone6 = row['耗用骨材3'] || '--';
+                const wb = parseFloat(row['水膠比'] || 0).toFixed(2);
+                
+                detailTr.innerHTML = `
+                    <td colspan="10" class="p-4 pl-8">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 text-xs animate-fade-in">
+                            <!-- 膠結材料 -->
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 border-l-2 border-l-neon-purple">
+                                <div class="text-slate-400 mb-2 font-bold flex items-center gap-2"><i class="fas fa-cubes"></i> 膠結材料 (Binder)</div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between"><span class="text-slate-500">水泥:</span> <span class="text-white font-mono">${cement} kg</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">爐石粉:</span> <span class="text-white font-mono">${slag} kg</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">矽灰:</span> <span class="${sf !== '--' && sf > 0 ? 'text-neon-green font-bold' : 'text-slate-300'} font-mono">${sf} kg</span></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 骨材 -->
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 border-l-2 border-l-amber-500">
+                                <div class="text-slate-400 mb-2 font-bold flex items-center gap-2"><i class="fas fa-layer-group"></i> 骨材 (Aggregates)</div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between"><span class="text-slate-500">砂:</span> <span class="text-white font-mono">${sand} kg</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">${currentTab === 'S60' ? '3分石 <span class="text-[10px] text-amber-500">(主要)</span>' : '3分石'}:</span> <span class="text-white font-mono">${stone3} kg</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">${currentTab === 'M60' ? '6分石 <span class="text-[10px] text-amber-500">(主要)</span>' : '6分石'}:</span> <span class="text-white font-mono">${stone6} kg</span></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 水與特性 -->
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 border-l-2 border-l-neon-blue">
+                                <div class="text-slate-400 mb-2 font-bold flex items-center gap-2"><i class="fas fa-tint"></i> 水與屬性 (Properties)</div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between"><span class="text-slate-500">總耗用水:</span> <span class="text-neon-blue font-bold font-mono">${water} kg</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">水膠比:</span> <span class="text-white font-mono">${wb}</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">坍度:</span> <span class="text-white font-mono">${row['坍度(cm)'] || '--'} cm</span></div>
+                                </div>
+                            </div>
+                            
+                            <!-- 拌合電流 -->
+                            <div class="bg-slate-800/80 p-3 rounded-lg border border-slate-700 border-l-2 border-l-emerald-400">
+                                <div class="text-slate-400 mb-2 font-bold flex items-center gap-2"><i class="fas fa-bolt"></i> 拌電流特徵 (Mixer Current)</div>
+                                <div class="space-y-1.5">
+                                    <div class="flex justify-between"><span class="text-slate-500">最終電流:</span> <span class="text-emerald-400 font-bold font-mono">${row['最終電流'] ? parseFloat(row['最終電流']).toFixed(1) : '--'} A</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">最大電流:</span> <span class="text-white font-mono">${row['最大電流'] ? parseFloat(row['最大電流']).toFixed(1) : '--'} A</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">電流標準差:</span> <span class="text-white font-mono">${row['電流標準差'] ? parseFloat(row['電流標準差']).toFixed(1) : '--'} A</span></div>
+                                </div>
+                            </div>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(detailTr);
             });
 
             // Update Controls
@@ -1089,6 +1418,21 @@
             updateTable(null, null); // Refreshes with stored tableData
         }
 
+        // Toggle Expand/Collapse for Table Row Details
+        window.toggleDetails = function(matchKey) {
+            const detailRow = document.getElementById(`detail-${matchKey}`);
+            const icon = document.getElementById(`icon-${matchKey}`);
+            
+            if (detailRow.classList.contains('hidden')) {
+                detailRow.classList.remove('hidden');
+                icon.classList.add('rotate-90', 'text-neon-blue');
+                icon.classList.remove('text-slate-500');
+            } else {
+                detailRow.classList.add('hidden');
+                icon.classList.remove('rotate-90', 'text-neon-blue');
+                icon.classList.add('text-slate-500');
+            }
+        };
 
         // ============================================================
         // Cross Feature Analysis Logic (特徵交叉比對)
@@ -1200,7 +1544,7 @@
 
             if (!gKey) {
                 // =========== Single Feature Mode ===========
-                const groups = { };
+                const groups = {};
                 xGroupNames.forEach(g => groups[g] = []);
 
                 dataset.forEach(d => {
@@ -1598,10 +1942,12 @@
             // Calc Stats
             const r2 = 1 - (sumSqureRes / sumSquareTot);
             const mae = sumAbsErr / dataset.length;
+            const residualStd = Math.sqrt(sumSqureRes / dataset.length);
 
             // Update DOM - Accuracy section gauge
             document.getElementById('acc-r2').innerText = r2.toFixed(3);
             document.getElementById('acc-mae').innerText = mae.toFixed(1);
+            document.getElementById('acc-residual-std').innerText = residualStd.toFixed(1);
             drawGauge('acc-gauge', r2, { size: 'large', showValue: false });
             document.getElementById('acc-gauge-label').innerText = getR2Label(r2);
 
@@ -1792,6 +2138,9 @@
                     allData = results.data;
                     // Initialize with S60
                     switchTab('S60');
+                    
+                    const now = new Date();
+                    document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
                 }
             });
 
@@ -1857,6 +2206,26 @@
             <div id="curve-message" class="text-center text-slate-500 mt-4 hidden"></div>
         </div>
     </div>
+
+    <!-- Scroll to Top Button -->
+    <button id="scrollToTopBtn" onclick="window.scrollTo({top: 0, behavior: 'smooth'})"
+        class="fixed bottom-8 right-8 bg-slate-700/80 hover:bg-neon-blue text-white w-12 h-12 rounded-full flex items-center justify-center shadow-[0_0_15px_rgba(0,0,0,0.5)] hover:shadow-[0_0_20px_rgba(59,130,246,0.6)] transition-all duration-500 opacity-0 pointer-events-none translate-y-4 z-50 border border-slate-600 hover:border-neon-blue">
+        <i class="fas fa-arrow-up text-lg"></i>
+    </button>
+
+    <script>
+        // Scroll to Top Button Logic
+        window.addEventListener('scroll', () => {
+            const scrollBtn = document.getElementById('scrollToTopBtn');
+            if (window.scrollY > 400) {
+                scrollBtn.classList.remove('opacity-0', 'pointer-events-none', 'translate-y-4');
+                scrollBtn.classList.add('opacity-100', 'pointer-events-auto', 'translate-y-0');
+            } else {
+                scrollBtn.classList.add('opacity-0', 'pointer-events-none', 'translate-y-4');
+                scrollBtn.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
+            }
+        });
+    </script>
 </body>
 
 </html>
