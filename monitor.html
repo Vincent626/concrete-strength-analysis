@@ -360,7 +360,7 @@
                     <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
                     取樣明細列表 (Sampling List)
                 </div>
-                <button onclick="openResearchModal()" class="text-xs bg-neon-blue/20 text-neon-blue border border-neon-blue/40 px-3 py-1.5 rounded-lg hover:bg-neon-blue/30 transition-colors group flex items-center gap-2 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                <button onclick="openResearchModal(event)" class="text-xs bg-neon-blue/20 text-neon-blue border border-neon-blue/40 px-3 py-1.5 rounded-lg hover:bg-neon-blue/30 transition-colors group flex items-center gap-2 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                     <i class="fas fa-book-open group-hover:scale-110 transition-transform"></i> 
                     學術文獻參考 (電流曲線)
                 </button>
@@ -2317,7 +2317,7 @@
     </div>
 
     <!-- Research Modal -->
-    <div id="research-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-[60] opacity-0 transition-opacity duration-300">
+    <div id="research-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-50 opacity-0 transition-opacity duration-300">
         <div class="glass-panel p-6 w-full max-w-3xl transform scale-95 transition-transform duration-300 relative max-h-[90vh] overflow-y-auto" id="research-modal-content">
             <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#0f172a] z-10 p-2 shadow-md">
                 <h3 class="text-xl font-bold text-white flex items-center gap-2">
