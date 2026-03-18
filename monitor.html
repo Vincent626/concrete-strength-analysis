@@ -504,6 +504,7 @@
                 <div class="text-3xl font-black text-white font-mono"><span id="acc-mae">--</span></div>
                 <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
                 <div class="text-[11px] text-slate-500 mt-2">每次預測平均偏差多少</div>
+                <div id="acc-mae-eval" class="text-sm font-bold mt-2 h-5"></div>
             </div>
 
             <!-- Residual Std Dev -->
@@ -513,6 +514,7 @@
                 <div class="text-3xl font-black text-white font-mono"><span id="acc-residual-std">--</span></div>
                 <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
                 <div class="text-[11px] text-slate-500 mt-2">預測誤差的離散程度</div>
+                <div id="acc-residual-std-eval" class="text-sm font-bold mt-2 h-5"></div>
             </div>
 
             <!-- R² Explanation -->
@@ -2051,6 +2053,36 @@
             drawGauge('acc-gauge', r2, { size: 'large', showValue: false });
             document.getElementById('acc-gauge-label').innerText = getR2Label(r2);
 
+            // MAE Eval
+            const maeEval = document.getElementById('acc-mae-eval');
+            if (maeEval) {
+                if (mae < 30) {
+                    maeEval.innerHTML = '🟢 優 <span class="text-xs font-normal text-slate-400">(預測極準確)</span>';
+                    maeEval.className = 'text-sm font-bold mt-2 text-emerald-400';
+                } else if (mae < 50) {
+                    maeEval.innerHTML = '🟡 良 <span class="text-xs font-normal text-slate-400">(正常誤差)</span>';
+                    maeEval.className = 'text-sm font-bold mt-2 text-amber-400';
+                } else {
+                    maeEval.innerHTML = '🔴 注意 <span class="text-xs font-normal text-slate-400">(誤差偏高)</span>';
+                    maeEval.className = 'text-sm font-bold mt-2 text-red-500';
+                }
+            }
+
+            // Std Eval
+            const stdEval = document.getElementById('acc-residual-std-eval');
+            if (stdEval) {
+                if (residualStd < 35) {
+                    stdEval.innerHTML = '🟢 優 <span class="text-xs font-normal text-slate-400">(穩定)</span>';
+                    stdEval.className = 'text-sm font-bold mt-2 text-emerald-400';
+                } else if (residualStd < 60) {
+                    stdEval.innerHTML = '🟡 良 <span class="text-xs font-normal text-slate-400">(尚可)</span>';
+                    stdEval.className = 'text-sm font-bold mt-2 text-amber-400';
+                } else {
+                    stdEval.innerHTML = '🔴 注意 <span class="text-xs font-normal text-slate-400">(離散大)</span>';
+                    stdEval.className = 'text-sm font-bold mt-2 text-red-500';
+                }
+            }
+
             // Update KPI Card 4 - Rolling 3-month sigma
             updateRollingSigma();
 
@@ -2116,7 +2148,7 @@
                             callbacks: {
                                 label: function (context) {
                                     const p = context.raw;
-                                    return `${p.match_key || ''}: Pred ${p.x.toFixed(0)} vs Act ${p.y} kgf/cm²`;
+                                    return `${p.match_key || ''}: Pred ${parseFloat(p.x).toFixed(1)} vs Act ${parseFloat(p.y).toFixed(1)} kgf/cm²`;
                                 }
                             }
                         }
