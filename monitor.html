@@ -580,20 +580,9 @@
             <div class="space-y-6">
                 <!-- S60 Inputs -->
                 <div id="inputs-s60" class="space-y-5">
-                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 flex items-center gap-2">
-                        <span class="w-2 h-2 bg-neon-blue rounded-full"></span>
-                        Top 1 關鍵因子 (Primary Factors)
-                    </div>
-                    <!-- 強度標準差 (ReadOnly / Calculated) -->
-                    <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-800">
-                        <div class="flex justify-between mb-1">
-                            <label class="text-slate-300 font-medium">抗壓強度標準差 (σ) <span class="text-amber-400 text-xs">🔬</span></label>
-                            <span id="val-s60-intra-sigma" class="text-neon-blue font-mono font-bold">--</span>
-                        </div>
-                        <div class="text-[10px] text-slate-500">此批次試體間的穩定度指標 (主管指定 #1 監控因子)</div>
-                    </div>
+
                     
-                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 mt-4 flex items-center gap-2">
+                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 flex items-center gap-2">
                         <span class="w-2 h-2 bg-slate-600 rounded-full"></span>
                         生產控制因子 (Control Factors)
                     </div>
@@ -634,20 +623,9 @@
 
                 <!-- M60 Inputs (Hidden by default) -->
                 <div id="inputs-m60" class="space-y-5 hidden">
-                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 flex items-center gap-2">
-                        <span class="w-2 h-2 bg-neon-green rounded-full"></span>
-                        Top 1 關鍵因子 (Primary Factors)
-                    </div>
-                    <!-- 強度標準差 (Calculated) -->
-                    <div class="bg-slate-900/40 p-3 rounded-lg border border-slate-800">
-                        <div class="flex justify-between mb-1">
-                            <label class="text-slate-300 font-medium">抗壓強度標準差 (σ) <span class="text-amber-400 text-xs">🔬</span></label>
-                            <span id="val-m60-intra-sigma" class="text-neon-green font-mono font-bold">--</span>
-                        </div>
-                        <div class="text-[10px] text-slate-500">主管指定 #1 監控因子</div>
-                    </div>
 
-                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 mt-4 flex items-center gap-2">
+
+                    <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-1 flex items-center gap-2">
                         <span class="w-2 h-2 bg-slate-600 rounded-full"></span>
                         生產控制因子 (Control Factors)
                     </div>
@@ -752,7 +730,7 @@
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-slate-800">
-                        <tr><td class="py-1.5">抗壓強度標準差 ⭐</td><td>品質穩定度核心，#1 關鍵監控指標</td><td>主管指定核心因子 (2026)</td></tr>
+
                         <tr><td class="py-1.5">水膠比 (W/B)</td><td>主要強度成因，↑0.05 可致強度↓27%</td><td>Abrams (1918); SHAP Analysis, PMC</td></tr>
                     </tbody>
                 </table>
@@ -796,10 +774,7 @@
                 document.getElementById('val-s60-slump').innerText = slump.toFixed(1) + ' cm';
                 document.getElementById('val-s60-temp').innerText = temp + ' °C';
 
-                // Typical Standard Deviation based on results
-                const currentData = allData.filter(d => d.母體 && d.母體.startsWith('S60') && d['抗壓強度標準差'] > 0);
-                const avgSigma = currentData.length > 0 ? (currentData.reduce((a, b) => a + b['抗壓強度標準差'], 0) / currentData.length) : 0;
-                document.getElementById('val-s60-intra-sigma').innerText = avgSigma.toFixed(1) + ' kgf/cm²';
+
 
             } else {
                 // 共通因子: 水膠比 + 坍度 + 混凝土溫度
@@ -823,9 +798,7 @@
                 document.getElementById('val-m60-sf').innerText = sf + ' %';
                 document.getElementById('val-m60-cur').innerText = cur + ' A';
 
-                const currentData = allData.filter(d => d.母體 && d.母體.startsWith('M60') && d['抗壓強度標準差'] > 0);
-                const avgSigma = currentData.length > 0 ? (currentData.reduce((a, b) => a + b['抗壓強度標準差'], 0) / currentData.length) : 0;
-                document.getElementById('val-m60-intra-sigma').innerText = avgSigma.toFixed(1) + ' kgf/cm²';
+
             }
 
             // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
