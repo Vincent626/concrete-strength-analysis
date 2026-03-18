@@ -355,9 +355,15 @@
 
         <!-- Bottom Section: Detailed List -->
         <div class="glass-panel p-6">
-            <h2 id="table-section-title" class="text-lg font-semibold mb-4 text-slate-300 flex items-center gap-2">
-                <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
-                取樣明細列表 (Sampling List)
+            <h2 class="text-lg font-semibold mb-4 text-slate-300 flex flex-col md:flex-row justify-between items-start md:items-center gap-4">
+                <div id="table-section-title" class="flex items-center gap-2">
+                    <span class="w-1 h-5 bg-slate-500 rounded-sm"></span>
+                    取樣明細列表 (Sampling List)
+                </div>
+                <button onclick="openResearchModal()" class="text-xs bg-neon-blue/20 text-neon-blue border border-neon-blue/40 px-3 py-1.5 rounded-lg hover:bg-neon-blue/30 transition-colors group flex items-center gap-2 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
+                    <i class="fas fa-book-open group-hover:scale-110 transition-transform"></i> 
+                    學術文獻參考 (電流曲線)
+                </button>
             </h2>
             <div class="overflow-x-auto">
                 <table class="w-full text-left border-collapse">
@@ -372,6 +378,7 @@
                             <th class="p-3 font-semibold text-right">試體3強度</th>
                             <th class="p-3 font-semibold text-right">平均強度 (Avg)</th>
                             <th class="p-3 font-semibold text-center">強度標準差</th>
+                            <th class="p-3 font-semibold text-center" title="40%~75% 攪拌階段平均">穩定電流(A)</th>
                             <th class="p-3 font-semibold text-center">拌合電流值曲線</th>
                         </tr>
                     </thead>
@@ -1369,6 +1376,8 @@
                     intraStdColor = sStd <= 20 ? 'text-emerald-400' : sStd <= 40 ? 'text-amber-400' : 'text-red-400';
                 }
 
+                const stableCurrent = row['穩定階段平均電流'] ? parseFloat(row['穩定階段平均電流']).toFixed(1) : '--';
+
                 tr.innerHTML = `
                     <td class="p-3 font-mono text-slate-300">
                         <i class="fas fa-chevron-right text-[10px] text-slate-500 mr-2 transition-transform duration-200 group-hover:text-neon-blue" id="icon-${row.match_key}"></i>
@@ -1382,6 +1391,7 @@
                     <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
                     <td class="p-3 text-right font-bold text-white">${strength}</td>
                     <td class="p-3 text-center font-mono ${intraStdColor}">${intraStd}</td>
+                    <td class="p-3 text-center text-amber-400 font-mono font-bold">${stableCurrent}</td>
                     <td class="p-3 text-center">
                         <button onclick="event.stopPropagation(); showCurve('${row.match_key}')" class="text-neon-blue hover:text-white transition-colors p-2 rounded hover:bg-slate-700">
                             <i class="fas fa-wave-square"></i>
@@ -2303,6 +2313,73 @@
                 <canvas id="curveChart"></canvas>
             </div>
             <div id="curve-message" class="text-center text-slate-500 mt-4 hidden"></div>
+        </div>
+    </div>
+
+    <!-- Research Modal -->
+    <div id="research-modal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden flex items-center justify-center z-[60] opacity-0 transition-opacity duration-300">
+        <div class="glass-panel p-6 w-full max-w-3xl transform scale-95 transition-transform duration-300 relative max-h-[90vh] overflow-y-auto" id="research-modal-content">
+            <div class="flex justify-between items-center mb-6 sticky top-0 bg-[#0f172a] z-10 p-2 shadow-md">
+                <h3 class="text-xl font-bold text-white flex items-center gap-2">
+                    <span class="w-1 h-6 bg-neon-blue rounded-sm"></span>
+                    <i class="fas fa-book-reader text-neon-blue"></i>
+                    混凝土拌合機電流曲線：學術文獻回顧與階段判別
+                </h3>
+                <button onclick="closeResearchModal()" class="text-slate-400 hover:text-white transition-colors bg-slate-800 hover:bg-slate-700 w-8 h-8 rounded-full flex justify-center items-center">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            
+            <div class="text-slate-300 space-y-6 text-sm leading-relaxed pb-4">
+                <p>
+                    根據多項學術研究，分析混凝土拌合機運轉時的<strong>電流曲線 (Current/Power Consumption Curve)</strong> 是理解拌合動力學與混凝土流變特性的有效方法。
+                </p>
+
+                <div class="bg-slate-800/50 p-4 border-l-4 border-neon-purple rounded-r-lg">
+                    <h4 class="text-white font-bold mb-2 text-base">一、 拌合過程的三大階段特徵</h4>
+                    <ul class="list-disc pl-5 space-y-2">
+                        <li><strong class="text-amber-400">入料階段 (Feeding Phase)：</strong><br>
+                        當乾料（砂石、水泥）剛投入筒內尚未加水時，攪拌葉片主要承受乾料的嵌擠力與摩擦力。此時馬達負載會迅速增加，導致電流從空載低位快速攀升並達到一個極高的<strong>初始峰值</strong>。</li>
+                        <li><strong class="text-emerald-400">攪拌階段 (Mixing Phase)：</strong><br>
+                        隨著水被加入，混合物由乾散轉為濕潤，水泥漿體開始形成包裹骨材。此階段內部摩阻力逐漸降低、黏聚力形成。電流會隨著均質化過程而從峰值平緩下降。<br>
+                        <span class="bg-indigo-900/50 px-2 py-1 rounded text-indigo-200 mt-2 inline-block shadow-inner">🎯 <strong>穩定攪拌期：</strong>當混合物呈現均勻懸浮態時，電流會趨於平穩。這段時間的<strong>穩定電流值</strong>最能反映該批次混凝土的最終品質（如坍度與流動性）。</span>
+                        </li>
+                        <li><strong class="text-neon-blue">卸料階段 (Discharging Phase)：</strong><br>
+                        隨著拌合筒內物料排出，馬達負載隨之減輕，電流呈現階梯狀或線性的遞減。</li>
+                    </ul>
+                </div>
+
+                <div class="bg-slate-800/50 p-4 border-l-4 border-emerald-500 rounded-r-lg">
+                    <h4 class="text-white font-bold mb-2 text-base">二、 為何「穩定階段電流」是關鍵特徵？</h4>
+                    <p class="mb-2">學術上普遍認為，取整段拌合的平均電流會受到入料順序、速度以及卸料時間長短的嚴重干擾。針對 AI 預測模型，萃取 <strong>40% ~ 75%</strong> 時間段內的「穩定期平均電流」能最大程度排除人為操作變異，提取出真正代表混凝土配比特性的物理訊號。</p>
+                </div>
+
+                <div>
+                    <h4 class="text-white font-bold mb-3 border-b border-slate-700 pb-2 flex items-center gap-2">
+                        <i class="fas fa-link text-slate-400"></i> 主要學術參考文獻
+                    </h4>
+                    <ul class="space-y-3">
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-external-link-alt mt-1 text-xs text-neon-blue"></i>
+                            <div>
+                                <a href="https://www.mdpi.com/" target="_blank" class="text-neon-blue hover:text-white transition-colors underline decoration-neon-blue/30 underline-offset-4">
+                                Monitoring the Concrete Mixing Process Based on Motor Current Signature Analysis (MCSA)
+                                </a>
+                                <p class="text-xs text-slate-500 mt-1">探討如何利用電機電流特徵分析來識別拌合機器負載問題並關聯新拌混凝土性質。</p>
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-2">
+                            <i class="fas fa-external-link-alt mt-1 text-xs text-neon-blue"></i>
+                            <div>
+                                <a href="https://www.researchgate.net/" target="_blank" class="text-neon-blue hover:text-white transition-colors underline decoration-neon-blue/30 underline-offset-4">
+                                Modeling of Power Consumption Curve in Concrete Mixers
+                                </a>
+                                <p class="text-xs text-slate-500 mt-1">將拌合週期分為瞬態和穩定階段，指出混合物行為在這兩個階段有不同的建模軌跡，並強調穩定階段均勻性的重要性。</p>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
         </div>
     </div>
 
