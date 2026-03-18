@@ -240,17 +240,17 @@
                 <div id="kpi-sigma-level" class="mt-1 text-xs text-amber-500 font-bold">--</div>
             </div>
 
-            <!-- Card 4: Prediction Accuracy (Gauge) -->
+            <!-- Card 4: 近 3 個月滾動標準差 -->
             <div
                 class="glass-panel p-6 border-l-4 border-neon-purple relative group hover:-translate-y-1 transition-transform duration-300">
-                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-1">AI 模型解釋力 (R²)</h3>
-                <div class="flex items-center justify-center" style="height: 100px;">
-                    <canvas id="kpi-gauge" width="160" height="100"></canvas>
+                <h3 class="text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">近 3 個月滾動標準差 (σ)</h3>
+                <div class="flex items-center gap-2 h-10">
+                    <span id="kpi-rolling-sigma" class="text-2xl font-black text-white truncate">--</span>
+                    <span class="text-sm text-slate-500">kgf/cm²</span>
                 </div>
-                <div id="kpi-accuracy" class="hidden">--</div>
-                <div id="kpi-gauge-label" class="text-center text-xs text-slate-400 mt-1">--</div>
-                <div class="text-center text-[11px] text-slate-600 mt-1"
-                    title="R² 代表 AI 模型能解釋多少比例的強度變化。數值越接近 1 代表預測越準確。">💡 越靠近右邊（綠色）= 預測越準</div>
+                <div id="kpi-rolling-sigma-level" class="mt-1 text-xs font-bold">--</div>
+                <div class="text-[11px] text-slate-600 mt-1"
+                    title="僅計算近 3 個月資料的平均強度標準差，排除季節性影響">💡 排除季節效應的品質穩定度</div>
             </div>
         </div>
 
@@ -1032,6 +1032,58 @@
             } else {
                 sigmaLevelEl.className = 'mt-1 text-xs font-bold text-red-400';
                 sigmaLevelEl.innerHTML = '🔴 偏高 — 需排查原因';
+            }
+            // Also update rolling sigma
+            updateRollingSigma();
+        }
+
+        function updateRollingSigma() {
+            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && d['平均強度'] > 0);
+            if (data.length === 0) return;
+
+            // Parse dates and find the latest date
+            const withDates = data.map(d => ({
+                ...d,
+                _date: new Date(d['日期'])
+            })).filter(d => !isNaN(d._date.getTime()));
+
+            if (withDates.length === 0) return;
+
+            const latestDate = new Date(Math.max(...withDates.map(d => d._date.getTime())));
+            const threeMonthsAgo = new Date(latestDate);
+            threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+
+            // Filter data within 3 months
+            const recentData = withDates.filter(d => d._date >= threeMonthsAgo);
+
+            const el = document.getElementById('kpi-rolling-sigma');
+            const levelEl = document.getElementById('kpi-rolling-sigma-level');
+
+            if (recentData.length < 3) {
+                el.innerText = '--';
+                levelEl.innerHTML = '資料不足 (需至少 3 筆)';
+                levelEl.className = 'mt-1 text-xs font-bold text-slate-500';
+                return;
+            }
+
+            // Calculate standard deviation of 平均強度 for recent data
+            const strengths = recentData.map(d => parseFloat(d['平均強度']));
+            const mean = strengths.reduce((a, b) => a + b, 0) / strengths.length;
+            const variance = strengths.reduce((a, b) => a + Math.pow(b - mean, 2), 0) / strengths.length;
+            const rollingSigma = Math.sqrt(variance);
+
+            el.innerText = rollingSigma.toFixed(1);
+
+            // Status thresholds
+            if (rollingSigma <= 30) {
+                levelEl.className = 'mt-1 text-xs font-bold text-emerald-400';
+                levelEl.innerHTML = `🟢 穩定 — 近 3 月品質控制良好 (${recentData.length} 筆)`;
+            } else if (rollingSigma <= 50) {
+                levelEl.className = 'mt-1 text-xs font-bold text-amber-400';
+                levelEl.innerHTML = `🟡 尚可 — 近 3 月有輕微波動 (${recentData.length} 筆)`;
+            } else {
+                levelEl.className = 'mt-1 text-xs font-bold text-red-400';
+                levelEl.innerHTML = `🔴 偏高 — 近 3 月品質需關注 (${recentData.length} 筆)`;
             }
         }
 
@@ -1984,10 +2036,8 @@
             drawGauge('acc-gauge', r2, { size: 'large', showValue: false });
             document.getElementById('acc-gauge-label').innerText = getR2Label(r2);
 
-            // Update KPI Card 4 - Small gauge
-            document.getElementById('kpi-accuracy').innerText = r2.toFixed(3);
-            drawGauge('kpi-gauge', r2, { size: 'small', showValue: true });
-            document.getElementById('kpi-gauge-label').innerText = getR2Label(r2);
+            // Update KPI Card 4 - Rolling 3-month sigma
+            updateRollingSigma();
 
             // Chart
             const ctx = document.getElementById('accuracyChart').getContext('2d');
