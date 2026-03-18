@@ -2416,6 +2416,44 @@
                 scrollBtn.classList.remove('opacity-100', 'pointer-events-auto', 'translate-y-0');
             }
         });
+
+        // Research Modal Logic
+        window.openResearchModal = function(e) {
+            if (e && e.stopPropagation) e.stopPropagation();
+            try {
+                const modal = document.getElementById('research-modal');
+                const content = document.getElementById('research-modal-content');
+                if (!modal) {
+                    console.error("research-modal not found");
+                    return;
+                }
+                modal.classList.remove('hidden');
+                modal.style.display = 'flex'; // 強制顯示
+                modal.style.zIndex = '9999';
+                
+                // Trigger reflow
+                void modal.offsetWidth;
+                
+                modal.classList.remove('opacity-0');
+                if (content) content.classList.remove('scale-95');
+            } catch (err) {
+                console.error("Error opening modal:", err);
+            }
+        };
+
+        window.closeResearchModal = function(e) {
+            if (e && e.stopPropagation) e.stopPropagation();
+            const modal = document.getElementById('research-modal');
+            const content = document.getElementById('research-modal-content');
+            if(modal) modal.classList.add('opacity-0');
+            if(content) content.classList.add('scale-95');
+            setTimeout(() => {
+                if(modal) {
+                    modal.classList.add('hidden');
+                    modal.style.display = 'none';
+                }
+            }, 300);
+        };
     </script>
 </body>
 
