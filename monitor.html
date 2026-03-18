@@ -1533,8 +1533,13 @@
             const xValues = dataset.map(d => parseFloat(d[xKey]));
             const xThresholds = tercileSplit(xValues, 3);
 
-            // Group labels for X axis
+            // Group labels for X axis (Metadata)
             const xGroupNames = [`${xLabel} 低`, `${xLabel} 中`, `${xLabel} 高`];
+            const xRanges = [
+                { min: Math.min(...xValues), max: xThresholds[0] },
+                { min: xThresholds[0], max: xThresholds[1] },
+                { min: xThresholds[1], max: Math.max(...xValues) }
+            ];
 
             if (!gKey) {
                 // =========== Single Feature Mode ===========
@@ -1547,14 +1552,16 @@
                     if (groups[label]) groups[label].push(d);
                 });
 
-                const stats = xGroupNames.map(g => ({ name: g, ...calcGroupStats(groups[g]) }));
+                const stats = xGroupNames.map((g, idx) => ({ 
+                    name: g, 
+                    range: xRanges[idx],
+                    ...calcGroupStats(groups[g]) 
+                }));
 
                 // Draw chart
                 drawCrossChart(stats, null, xLabel);
-                // Conclusion
-                generateConclusion(stats, xLabel, null);
                 // Table
-                renderCrossTable(stats);
+                renderCrossTable(stats, xKey);
 
             } else {
                 // =========== Cross Comparison Mode ===========
@@ -1568,6 +1575,10 @@
                 // Cross groups: X (3 levels) x G (2 levels)
                 const crossGroups = {};
                 const gSubLabels = [`${gLabel} 低`, `${gLabel} 高`];
+                const gRanges = [
+                    { min: Math.min(...gValues), max: gMedian },
+                    { min: gMedian, max: Math.max(...gValues) }
+                ];
 
                 xGroupNames.forEach(xg => {
                     gSubLabels.forEach(gg => {
@@ -1584,17 +1595,24 @@
                     if (crossGroups[key]) crossGroups[key].push(d);
                 });
 
-                const stats = Object.keys(crossGroups).map(k => ({
-                    name: k,
-                    ...calcGroupStats(crossGroups[k])
-                }));
+                const stats = Object.keys(crossGroups).map(k => {
+                    const parts = k.split(' / ');
+                    const xIdx = xGroupNames.indexOf(parts[0]);
+                    const gIdx = gSubLabels.indexOf(parts[1]);
+                    return {
+                        name: k,
+                        xRange: xIdx !== -1 ? xRanges[xIdx] : null,
+                        gRange: gIdx !== -1 ? gRanges[gIdx] : null,
+                        ...calcGroupStats(crossGroups[k])
+                    };
+                });
 
                 // Draw grouped chart
                 drawCrossChart(null, { xGroupNames, gSubLabels, crossGroups }, xLabel, gLabel);
                 // Conclusion
                 generateCrossConclusion(stats, xLabel, gLabel);
                 // Table
-                renderCrossTable(stats);
+                renderCrossTable(stats, xKey);
             }
         }
 
@@ -1746,7 +1764,7 @@
             document.getElementById('cross-conclusion-text').innerHTML = text;
         }
 
-        function renderCrossTable(stats) {
+        function renderCrossTable(stats, currentXKey) {
             const tbody = document.getElementById('cross-summary-body');
             tbody.innerHTML = '';
 
@@ -1759,9 +1777,28 @@
                 const rowClass = isBest ? 'bg-emerald-500/10' : '';
                 const badge = isBest ? ' <span class="text-emerald-400 text-xs ml-1">★ 最佳</span>' : '';
 
+                // Format range string helpers
+                const isWB = currentXKey === '水膠比' || currentXKey === 'W/B Ratio';
+                const fmt = (v) => isWB ? v.toFixed(2) : v.toFixed(1);
+                
+                let rangeInfo = '';
+                if (s.xRange) {
+                    // In Cross Mode, show both X and G ranges if possible? 
+                    // For now focus on X range as it's the primary grouping
+                    rangeInfo = `<div class="text-[10px] text-slate-500 font-normal">(${fmt(s.xRange.min)} ~ ${fmt(s.xRange.max)})</div>`;
+                } else if (s.range) {
+                    // Single Mode
+                    rangeInfo = `<div class="text-[10px] text-slate-500 font-normal">(${fmt(s.range.min)} ~ ${fmt(s.range.max)})</div>`;
+                }
+
                 tbody.innerHTML += `
                     <tr class="${rowClass} border-b border-slate-800/50">
-                        <td class="p-2 text-slate-200 font-medium">${s.name}${badge}</td>
+                        <td class="p-2 text-slate-200 font-medium whitespace-nowrap">
+                            <div class="flex flex-col">
+                                <span>${s.name}${badge}</span>
+                                ${rangeInfo}
+                            </div>
+                        </td>
                         <td class="p-2 text-center text-slate-400">${s.count}</td>
                         <td class="p-2 text-right font-bold ${isBest ? 'text-emerald-400' : 'text-white'}">${s.mean.toFixed(1)}</td>
                         <td class="p-2 text-right text-slate-400">±${s.std.toFixed(1)}</td>
