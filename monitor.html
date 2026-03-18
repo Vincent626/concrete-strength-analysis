@@ -491,7 +491,10 @@
         <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
             <!-- Gauge -->
             <div class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center border border-slate-700">
-                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">R² 模型解釋力</div>
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2 flex items-center gap-2">
+                    R² 模型解釋力
+                    <span class="text-[10px] bg-slate-700 text-slate-300 font-normal px-1.5 py-0.5 rounded border border-slate-600 hidden sm:inline-block" title="目標：越大越好（理想 > 0.6）">🎯 越大越好</span>
+                </div>
                 <canvas id="acc-gauge" width="200" height="110"></canvas>
                 <div id="acc-r2" class="text-lg font-bold text-white font-mono mt-1">--</div>
                 <div id="acc-gauge-label" class="text-xs text-slate-400">--</div>
@@ -500,7 +503,10 @@
             <!-- MAE -->
             <div
                 class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center justify-center border border-slate-700">
-                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">MAE 平均誤差</div>
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                    MAE 平均誤差
+                    <span class="text-[10px] bg-slate-700 text-slate-300 font-normal px-1.5 py-0.5 rounded border border-slate-600" title="目標：越小越好（建議小於 30）">🎯 越小越好</span>
+                </div>
                 <div class="text-3xl font-black text-white font-mono"><span id="acc-mae">--</span></div>
                 <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
                 <div class="text-[11px] text-slate-500 mt-2">每次預測平均偏差多少</div>
@@ -510,7 +516,10 @@
             <!-- Residual Std Dev -->
             <div
                 class="bg-slate-800/60 rounded-lg p-4 flex flex-col items-center justify-center border border-slate-700">
-                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2">σ(殘差) 誤差穩定度</div>
+                <div class="text-xs text-slate-400 font-bold uppercase tracking-wider mb-2 flex flex-col sm:flex-row items-center gap-1 sm:gap-2">
+                    σ(殘差) 誤差穩定度
+                    <span class="text-[10px] bg-slate-700 text-slate-300 font-normal px-1.5 py-0.5 rounded border border-slate-600" title="目標：越小越好（建議小於 35）">🎯 越小越好</span>
+                </div>
                 <div class="text-3xl font-black text-white font-mono"><span id="acc-residual-std">--</span></div>
                 <div class="text-xs text-slate-400 mt-1">kgf/cm²</div>
                 <div class="text-[11px] text-slate-500 mt-2">預測誤差的離散程度</div>
