@@ -362,7 +362,7 @@
                 </div>
                 <button onclick="openResearchModal(event)" class="text-xs bg-neon-blue/20 text-neon-blue border border-neon-blue/40 px-3 py-1.5 rounded-lg hover:bg-neon-blue/30 transition-colors group flex items-center gap-2 shadow-[0_0_10px_rgba(59,130,246,0.2)]">
                     <i class="fas fa-book-open group-hover:scale-110 transition-transform"></i> 
-                    學術文獻參考 (電流曲線)
+                    學術文獻參考 (拌合階段與特徵)
                 </button>
             </h2>
             <div class="overflow-x-auto">
@@ -378,8 +378,8 @@
                             <th class="p-3 font-semibold text-right">試體3強度</th>
                             <th class="p-3 font-semibold text-right">平均強度 (Avg)</th>
                             <th class="p-3 font-semibold text-center">強度標準差</th>
-                            <th class="p-3 font-semibold text-center" title="40%~75% 攪拌階段平均">穩定電流(A)</th>
-                            <th class="p-3 font-semibold text-center">拌合電流值曲線</th>
+                            <th class="p-3 font-semibold text-center">電流特徵(A)<br><span class="text-[10px] text-slate-500 font-normal">穩定 / 峰值 / 最終</span></th>
+                            <th class="p-3 font-semibold text-center">拌合電流曲線</th>
                         </tr>
                     </thead>
                     <tbody id="table-body" class="text-sm divide-y divide-slate-800/50">
@@ -1391,7 +1391,12 @@
                     <td class="p-3 text-right font-mono text-slate-400">${x3}</td>
                     <td class="p-3 text-right font-bold text-white">${strength}</td>
                     <td class="p-3 text-center font-mono ${intraStdColor}">${intraStd}</td>
-                    <td class="p-3 text-center text-amber-400 font-mono font-bold">${stableCurrent}</td>
+                    <td class="p-3 text-center">
+                        <div class="flex flex-col items-center justify-center font-mono leading-tight">
+                            <span class="text-amber-400 font-bold" title="穩定階段">${stableCurrent}</span>
+                            <span class="text-[10px] text-slate-400 mt-0.5" title="峰值 / 最終">${row['最大電流'] ? parseFloat(row['最大電流']).toFixed(1) : '--'} / ${row['最終電流'] ? parseFloat(row['最終電流']).toFixed(1) : '--'}</span>
+                        </div>
+                    </td>
                     <td class="p-3 text-center">
                         <button onclick="event.stopPropagation(); showCurve('${row.match_key}')" class="text-neon-blue hover:text-white transition-colors p-2 rounded hover:bg-slate-700">
                             <i class="fas fa-wave-square"></i>
@@ -2350,8 +2355,18 @@
                 </div>
 
                 <div class="bg-slate-800/50 p-4 border-l-4 border-emerald-500 rounded-r-lg">
-                    <h4 class="text-white font-bold mb-2 text-base">二、 為何「穩定階段電流」是關鍵特徵？</h4>
-                    <p class="mb-2">學術上普遍認為，取整段拌合的平均電流會受到入料順序、速度以及卸料時間長短的嚴重干擾。針對 AI 預測模型，萃取 <strong>40% ~ 75%</strong> 時間段內的「穩定期平均電流」能最大程度排除人為操作變異，提取出真正代表混凝土配比特性的物理訊號。</p>
+                    <h4 class="text-white font-bold mb-2 text-base">二、 相關拌合監測特徵與流變學關聯</h4>
+                    <p class="mb-2">學術上普遍認為，混凝土的<strong>流變特性 (Rheology)</strong>（包含降伏應力 Yield Stress 與塑性黏度 Plastic Viscosity）與拌合機運轉時的訊號息息相關：</p>
+                    <ul class="list-disc pl-5 space-y-2 mt-2">
+                        <li><strong class="text-sky-400">平均與穩定階段電流 (Stable Average Current)：</strong><br>
+                        針對 AI 預測模型，萃取 <strong>40% ~ 75%</strong> 時間段內的「穩定期平均電流」能最大程度排除人為加料操作變異，也是與混凝土坍度 (Slump) 及工作性呈現最高相關度的物理訊號。</li>
+                        <li><strong class="text-purple-400">最大電流 / 峰值 (Peak Current)：</strong><br>
+                        代表乾料互相強力摩擦時的最大阻力，受骨材粒徑分佈與入料水量影響甚鉅。過高的峰值可能暗示配方過乾或拌合機超載。</li>
+                        <li><strong class="text-pink-400">最終卸料電流 (Final Current)：</strong><br>
+                        反映出料前混凝土被完全攪拌均勻後的動態阻力，亦可輔助判斷最終坍度。</li>
+                        <li><strong class="text-yellow-400">其他文獻常見監測特徵：</strong><br>
+                        除電流外，<strong>消耗功率 (Power Consumption)</strong> 與 <strong>馬達扭矩 (Torque)</strong> 同樣被廣泛應用。當電流訊號結合微波水分計 (Moisture Sensor) 數據時，更能實現新拌混凝土水膠比的精準控制。</li>
+                    </ul>
                 </div>
 
                 <div>
