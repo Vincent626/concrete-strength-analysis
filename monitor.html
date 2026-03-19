@@ -2217,8 +2217,6 @@
             let annotations = {};
             
             if (n > 0 && endIdx > startIdx) {
-                const xMin = data.t[startIdx];
-                const xMax = data.t[endIdx];
                 const sliceV = data.v.slice(startIdx, endIdx);
                 const avgV = sliceV.reduce((a, b) => a + b, 0) / sliceV.length;
                 const avgCurrentText = avgV.toFixed(1);
@@ -2226,8 +2224,8 @@
                 annotations = {
                     box1: {
                         type: 'box',
-                        xMin: xMin,
-                        xMax: xMax,
+                        xMin: startIdx,
+                        xMax: endIdx,
                         backgroundColor: 'rgba(0, 255, 157, 0.1)',
                         borderColor: 'rgba(0, 255, 157, 0.4)',
                         borderWidth: 1,
