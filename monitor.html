@@ -9,6 +9,8 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <!-- Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Chart.js Annotation Plugin -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-annotation/2.2.1/chartjs-plugin-annotation.min.js"></script>
     <!-- PapaParse (CSV Parser) -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.3.0/papaparse.min.js"></script>
     <!-- Google Fonts -->
@@ -2208,6 +2210,40 @@
                 document.getElementById('curve-message').classList.add('hidden');
             }
 
+            // Calculate 40% ~ 75% steady range
+            const n = data.t.length;
+            const startIdx = Math.floor(n * 0.4);
+            const endIdx = Math.floor(n * 0.75);
+            let annotations = {};
+            
+            if (n > 0 && endIdx > startIdx) {
+                const xMin = data.t[startIdx];
+                const xMax = data.t[endIdx];
+                const sliceV = data.v.slice(startIdx, endIdx);
+                const avgV = sliceV.reduce((a, b) => a + b, 0) / sliceV.length;
+                const avgCurrentText = avgV.toFixed(1);
+                
+                annotations = {
+                    box1: {
+                        type: 'box',
+                        xMin: xMin,
+                        xMax: xMax,
+                        backgroundColor: 'rgba(0, 255, 157, 0.1)',
+                        borderColor: 'rgba(0, 255, 157, 0.4)',
+                        borderWidth: 1,
+                        label: {
+                            display: true,
+                            content: `穩定期萃取範圍 (40%-75%) | 平均: ${avgCurrentText} A`,
+                            position: 'start',
+                            color: '#00ff9d',
+                            font: { size: 10, family: 'Inter' },
+                            backgroundColor: 'rgba(15, 23, 42, 0.8)',
+                            padding: 4
+                        }
+                    }
+                };
+            }
+
             curveChartInstance = new Chart(ctx, {
                 type: 'line',
                 data: {
@@ -2229,6 +2265,9 @@
                     maintainAspectRatio: false,
                     interaction: { mode: 'index', intersect: false },
                     plugins: {
+                        annotation: {
+                            annotations: annotations
+                        },
                         legend: { labels: { color: getChartTheme().text } },
                         tooltip: {
                             backgroundColor: getChartTheme().tooltipBg,
