@@ -256,6 +256,78 @@
             </div>
         </div>
 
+        <!-- Real-time QC / Water Advisor (即時流動性監控與加水建議) -->
+        <div class="glass-panel p-6 mb-8 border-l-4 border-cyan-500 animate-fade-in delay-150">
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
+                <h2 class="text-xl font-bold text-white flex items-center gap-3">
+                    <span class="w-1 h-6 bg-cyan-500 rounded-sm"></span>
+                    最新批次：即時流動性監控與加水建議 (Water Advisor)
+                </h2>
+                <div class="flex items-center gap-2 text-sm text-slate-400 bg-slate-800 px-3 py-1 rounded">
+                    配比: <span id="advisor-tab-label" class="font-bold text-white">--</span>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Data Display -->
+                <div class="bg-slate-800/60 rounded-lg p-5 border border-slate-700 col-span-1">
+                    <div class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-4 border-b border-slate-700 pb-2">檢測數據 (最新一車)</div>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-end">
+                            <span class="text-sm text-slate-400">紀錄時間</span>
+                            <span id="advisor-time" class="text-sm font-bold text-white">--</span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-sm text-slate-400">拌合米數</span>
+                            <span id="advisor-vol" class="text-lg font-bold text-white font-mono">-- <span class="text-xs text-slate-500">m³</span></span>
+                        </div>
+                        <div class="flex justify-between items-end bg-slate-900/50 p-2 rounded -mx-2">
+                            <span class="text-sm text-slate-300 font-bold tracking-wide">單位體積電流</span>
+                            <span id="advisor-current" class="text-2xl font-black text-cyan-400 font-mono">-- <span class="text-xs text-slate-500">A/m³</span></span>
+                        </div>
+                        <div class="flex justify-between items-end">
+                            <span class="text-sm text-slate-400">電流標準差 (σ)</span>
+                            <span id="advisor-std" class="text-lg font-bold text-white font-mono">-- <span class="text-xs text-slate-500">A</span></span>
+                        </div>
+                        
+                        <div class="pt-2 mt-2 border-t border-slate-700">
+                            <div class="flex justify-between items-end">
+                                <span class="text-xs text-slate-500" title="歷史所有紀錄的平均值">歷史基準值 (Target)</span>
+                                <span id="advisor-target" class="text-sm font-bold text-slate-400 font-mono">--</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Advisory Logic Result -->
+                <div id="advisor-result-bg" class="bg-slate-800/60 rounded-lg p-5 border border-slate-700 col-span-1 md:col-span-2 flex flex-col justify-center relative overflow-hidden group transition-colors duration-500">
+                    <!-- Absolute icon background -->
+                    <i id="advisor-bg-icon" class="fas fa-tint absolute -right-6 -bottom-6 text-9xl text-slate-700/20 group-hover:scale-110 transition-transform duration-500"></i>
+                    
+                    <div class="relative z-10 flex flex-col h-full justify-center">
+                        <div>
+                            <div class="flex items-center gap-3 mb-2">
+                                <div id="advisor-status-dot" class="w-3 h-3 rounded-full bg-slate-500 animate-pulse border border-white/20"></div>
+                                <h3 id="advisor-status-title" class="text-xl font-black text-white tracking-wide">等待讀取資料...</h3>
+                            </div>
+                            <div id="advisor-message" class="text-white text-base leading-relaxed mt-4 p-4 bg-black/30 rounded-lg border-l-4 border-slate-500 shadow-inner">
+                                系統正在載入並比對歷史經驗庫...
+                            </div>
+                        </div>
+                        
+                        <!-- Std Dev Warning -->
+                        <div id="advisor-std-warning" class="mt-4 text-sm font-bold text-white hidden flex items-start gap-2 bg-red-600/80 p-3 rounded shadow-lg border border-red-400">
+                            <i class="fas fa-exclamation-triangle mt-1 text-lg text-yellow-300"></i>
+                            <span>[警報] 此盤電流標準差異常偏高 (波動劇烈)，代表拌合極不均勻或骨材粒徑異常，請現場確認是否有大塊料或機台葉片問題！</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <p class="text-[11px] text-slate-500 mt-4 flex items-center justify-end gap-1">
+                <i class="fas fa-robot text-slate-400"></i> 依據您選擇的配比，自動抓取最新批次的 40~75% 穩定期電流並除以米數，與歷史水準進行智能診斷
+            </p>
+        </div>
+
         <!-- Main Chart Section: 雙變數相關性分析 -->
         <div class="glass-panel p-6 mb-8 flex flex-col border-l-4 border-neon-blue">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -1055,6 +1127,99 @@
             }
             // Also update rolling sigma
             updateRollingSigma();
+            updateWaterAdvisor();
+        }
+
+        function updateWaterAdvisor() {
+            const data = allData.filter(d => d['母體'] && d['母體'].startsWith(currentTab) && parseFloat(d['平均強度']) > 0);
+            
+            // Labels and Elements
+            document.getElementById('advisor-tab-label').innerText = currentTab;
+            
+            if (data.length === 0) return;
+
+            // Sort data by Date to get the latest
+            const sortedData = [...data].sort((a, b) => {
+                const dateA = new Date(a['日期'] || a['日期及時間'] || 0);
+                const dateB = new Date(b['日期'] || b['日期及時間'] || 0);
+                return dateB - dateA; // Descending
+            });
+            
+            const latest = sortedData[0];
+            const dateStr = latest['日期'] || latest['日期及時間'] || '--';
+            const vol = parseFloat(latest['拌合米數']);
+            const current = parseFloat(latest['單位體積穩定電流']);
+            const std = parseFloat(latest['電流標準差']);
+
+            document.getElementById('advisor-time').innerText = dateStr;
+            document.getElementById('advisor-vol').innerHTML = !isNaN(vol) ? `${vol.toFixed(1)} <span class="text-xs text-slate-500">m³</span>` : '--';
+            document.getElementById('advisor-current').innerHTML = !isNaN(current) ? `${current.toFixed(2)} <span class="text-xs text-slate-500">A/m³</span>` : '--';
+            document.getElementById('advisor-std').innerHTML = !isNaN(std) ? `${std.toFixed(2)} <span class="text-xs text-slate-500">A</span>` : '--';
+
+            // Calculate historical target
+            const validCurrents = data.map(d => parseFloat(d['單位體積穩定電流'])).filter(v => !isNaN(v));
+            if (validCurrents.length < 5 || isNaN(current)) {
+                document.getElementById('advisor-target').innerText = '資料不足';
+                return;
+            }
+
+            const meanCurrent = validCurrents.reduce((a, b) => a + b, 0) / validCurrents.length;
+            const varCurrent = validCurrents.reduce((a, b) => a + Math.pow(b - meanCurrent, 2), 0) / validCurrents.length;
+            const stdCurrent = Math.sqrt(varCurrent);
+            const tolerance = Math.max(stdCurrent, 0.5); // At least 0.5A tolerance
+
+            document.getElementById('advisor-target').innerText = `${meanCurrent.toFixed(2)} ± ${tolerance.toFixed(2)} A/m³`;
+
+            // Elements for status
+            const statusDot = document.getElementById('advisor-status-dot');
+            const statusTitle = document.getElementById('advisor-status-title');
+            const message = document.getElementById('advisor-message');
+            const resultBg = document.getElementById('advisor-result-bg');
+            const bgIcon = document.getElementById('advisor-bg-icon');
+            const stdWarning = document.getElementById('advisor-std-warning');
+
+            // Reset classes
+            statusDot.className = "w-3 h-3 rounded-full animate-pulse border border-white/20";
+            resultBg.className = "bg-slate-800/60 rounded-lg p-5 border col-span-1 md:col-span-2 flex flex-col justify-center relative overflow-hidden group transition-colors duration-500";
+            bgIcon.className = "fas absolute -right-6 -bottom-6 text-9xl text-slate-700/20 group-hover:scale-110 transition-transform duration-500";
+            message.className = "text-white text-base leading-relaxed mt-4 p-4 bg-black/30 rounded-lg border-l-4 shadow-inner";
+
+            // Logic Assessment
+            if (current > meanCurrent + tolerance) {
+                // Too Dry
+                statusDot.classList.add('bg-red-500');
+                statusTitle.innerText = "🔴 坍度偏小 / 混凝土偏乾";
+                statusTitle.className = "text-xl font-black text-red-400 tracking-wide";
+                resultBg.classList.add('border-red-500/50', 'bg-red-900/10');
+                bgIcon.classList.add('fa-fire');
+                message.classList.add('border-red-500');
+                message.innerHTML = `此盤單位體積電流 (<b class="text-red-400">${current.toFixed(2)}</b>) 高出歷史基準線甚多，流動性較差。<br><br>💡 <b>建議動作：</b><br>1. 檢查砂石含水率是否設定錯誤 (可能實際骨材偏乾)。<br>2. 現場可斟酌人工追加微量拌合水 (如 5~10 kg) 並延長攪拌 15 秒。`;
+            } else if (current < meanCurrent - tolerance) {
+                // Too Wet
+                statusDot.classList.add('bg-yellow-400');
+                statusTitle.innerText = "🟡 坍度偏大 / 混凝土偏濕";
+                statusTitle.className = "text-xl font-black text-yellow-400 tracking-wide";
+                resultBg.classList.add('border-yellow-500/50', 'bg-yellow-900/10');
+                bgIcon.classList.add('fa-tint-slash');
+                message.classList.add('border-yellow-500');
+                message.innerHTML = `此盤單位體積電流 (<b class="text-yellow-400">${current.toFixed(2)}</b>) 低於安全基準，流動性過大。<br><br>💡 <b>建議動作：</b><br>1. <b>絕對禁止再補水！</b><br>2. 可能遭遇雨後砂石含水率突增，請立即回報品管檢查骨材庫。`;
+            } else {
+                // Normal
+                statusDot.classList.add('bg-emerald-400');
+                statusTitle.innerText = "🟢 稠度完美 / 流動性優良";
+                statusTitle.className = "text-xl font-black text-emerald-400 tracking-wide";
+                resultBg.classList.add('border-emerald-500/50', 'bg-emerald-900/20');
+                bgIcon.classList.add('fa-check-circle', 'text-emerald-500/10');
+                message.classList.add('border-emerald-500');
+                message.innerHTML = `此盤電流數值十分貼近最佳歷史基準 (<b class="text-emerald-400">${meanCurrent.toFixed(2)}</b>)。<br>目前水膠比與含水率搭配極佳，保持現狀即可，<b>正常出車卸料！</b>`;
+            }
+
+            // Std warning
+            if (!isNaN(std) && std > 10.0) { // Assume > 10.0 is too high standard deviation
+                stdWarning.classList.remove('hidden');
+            } else {
+                stdWarning.classList.add('hidden');
+            }
         }
 
         function updateRollingSigma() {
