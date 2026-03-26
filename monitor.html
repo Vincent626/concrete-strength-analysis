@@ -651,7 +651,7 @@
         <h2 class="text-xl font-bold mb-6 text-white flex items-center gap-3">
             <span class="w-1 h-6 bg-neon-blue rounded-sm"></span>
             AI 強度預測工具 (AI Strength Predictor)
-            <span class="text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-400 font-mono">Model v8</span>
+            <span class="text-xs px-2 py-0.5 rounded bg-slate-700 text-slate-400 font-mono">Model v9</span>
             <span class="text-xs px-2 py-0.5 rounded bg-amber-900/50 text-amber-400 font-mono">📚 學術驗證</span>
         </h2>
 
@@ -711,6 +711,31 @@
                         <input type="range" id="input-s60-temp" min="20" max="35" step="1" value="28"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
                     </div>
+
+                    <div class="border-t border-slate-700/50 pt-4 mt-4">
+                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            砂石品質因子 (Aggregate Quality)
+                        </div>
+                    </div>
+                    <!-- Sand FM -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">砂細度模數 (Sand F.M.) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-s60-fm" class="text-neon-blue font-mono font-bold">2.80</span>
+                        </div>
+                        <input type="range" id="input-s60-fm" min="2.0" max="3.5" step="0.05" value="2.80"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                    </div>
+                    <!-- Sand Mud Content -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">砂含泥量 (Mud Content) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-s60-mud" class="text-neon-blue font-mono font-bold">3.5 %</span>
+                        </div>
+                        <input type="range" id="input-s60-mud" min="1.0" max="8.0" step="0.1" value="3.5"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                    </div>
                 </div>
 
                 <!-- M60 Inputs (Hidden by default) -->
@@ -753,6 +778,31 @@
 
                     <div class="border-t border-slate-700/50 pt-4 mt-4">
                         <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            砂石品質因子 (Aggregate Quality)
+                        </div>
+                    </div>
+                    <!-- Sand FM -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">砂細度模數 (Sand F.M.) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-fm" class="text-neon-green font-mono font-bold">2.80</span>
+                        </div>
+                        <input type="range" id="input-m60-fm" min="2.0" max="3.5" step="0.05" value="2.80"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                    </div>
+                    <!-- Sand Mud Content -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">砂含泥量 (Mud Content) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-mud" class="text-neon-green font-mono font-bold">3.5 %</span>
+                        </div>
+                        <input type="range" id="input-m60-mud" min="1.0" max="8.0" step="0.1" value="3.5"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                    </div>
+
+                    <div class="border-t border-slate-700/50 pt-4 mt-4">
+                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
                             <span class="w-2 h-2 bg-amber-400 rounded-full"></span>
                             M60 專屬因子 (M60-Specific Factors)
                         </div>
@@ -789,7 +839,7 @@
                         class="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300">--</span>
                     <div
                         class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded text-xs text-slate-300 pointer-events-none">
-                        基於 v8 線性回歸模型
+                        基於 v9 線性回歸模型
                     </div>
                 </div>
                 <span class="text-xl text-slate-500 mt-2 font-bold">kgf/cm²</span>
@@ -852,34 +902,45 @@
 
             // Add contribution of visible sliders
             if (currentTab === 'S60') {
-                // 共通因子: 水膠比 + 坍度 + 混凝土溫度
+                // 共通因子 + 品質因子
                 const wb = parseFloat(document.getElementById('input-s60-wb').value);
                 const slump = parseFloat(document.getElementById('input-s60-slump').value);
                 const temp = parseFloat(document.getElementById('input-s60-temp').value);
+                const fm = parseFloat(document.getElementById('input-s60-fm').value);
+                const mud = parseFloat(document.getElementById('input-s60-mud').value);
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
                 score += getScaled('混凝土溫度(℃)', temp);
+                score += getScaled('FM_砂', fm);
+                score += getScaled('Mud_Content_砂', mud);
 
                 // Update Labels
                 document.getElementById('val-s60-wb').innerText = wb.toFixed(2);
                 document.getElementById('val-s60-slump').innerText = slump.toFixed(1) + ' cm';
                 document.getElementById('val-s60-temp').innerText = temp + ' °C';
+                document.getElementById('val-s60-fm').innerText = fm.toFixed(2);
+                document.getElementById('val-s60-mud').innerText = mud.toFixed(1) + ' %';
 
 
 
             } else {
-                // 共通因子: 水膠比 + 坍度 + 混凝土溫度
+                // 共通因子 + 品質因子 + M60專屬因子
                 const wb = parseFloat(document.getElementById('input-m60-wb').value);
                 const slump = parseFloat(document.getElementById('input-m60-slump').value);
                 const temp = parseFloat(document.getElementById('input-m60-temp').value);
-                // M60 專屬因子: 矽灰取代率 + 最終電流
+                const fm = parseFloat(document.getElementById('input-m60-fm').value);
+                const mud = parseFloat(document.getElementById('input-m60-mud').value);
+
                 const sf = parseFloat(document.getElementById('input-m60-sf').value);
                 const cur = parseFloat(document.getElementById('input-m60-cur').value);
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
                 score += getScaled('混凝土溫度(℃)', temp);
+                score += getScaled('FM_砂', fm);
+                score += getScaled('Mud_Content_砂', mud);
+
                 score += getScaled('矽灰取代率', sf);
                 score += getScaled('最終電流', cur);
 
@@ -887,10 +948,10 @@
                 document.getElementById('val-m60-wb').innerText = wb.toFixed(2);
                 document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
                 document.getElementById('val-m60-temp').innerText = temp + ' °C';
+                document.getElementById('val-m60-fm').innerText = fm.toFixed(2);
+                document.getElementById('val-m60-mud').innerText = mud.toFixed(1) + ' %';
                 document.getElementById('val-m60-sf').innerText = sf + ' %';
                 document.getElementById('val-m60-cur').innerText = cur + ' A';
-
-
             }
 
             // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
@@ -932,7 +993,7 @@
         }
 
         // Bind Events
-        ['s60-wb', 's60-slump', 's60-temp', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur'].forEach(id => {
+        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-mud', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm', 'm60-mud'].forEach(id => {
             const el = document.getElementById(`input-${id}`);
             if (el) el.addEventListener('input', updatePrediction);
         });
