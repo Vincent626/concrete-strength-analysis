@@ -1074,7 +1074,10 @@
                     const residuals = tabData.map(d => {
                         let p = mdl.intercept;
                         mdl.features.forEach(f => {
-                            const v = parseFloat(d[f.name]) || 0;
+                            const raw = d[f.name];
+                            if (raw === undefined || raw === null || raw === '') return;
+                            const v = parseFloat(raw);
+                            if (isNaN(v)) return;
                             if (f.scale !== 0) p += (v - f.mean) / f.scale * f.coef;
                         });
                         return parseFloat(d['平均強度']) - p;
@@ -2363,7 +2366,10 @@
                 // Calculate Prediction
                 let pred = model.intercept;
                 model.features.forEach(feat => {
-                    const val = parseFloat(d[feat.name]) || 0;
+                    const raw = d[feat.name];
+                    if (raw === undefined || raw === null || raw === '') return; // 依線性模型特性，視為等於平均值(貢獻0)
+                    const val = parseFloat(raw);
+                    if (isNaN(val)) return;
                     if (feat.scale !== 0) {
                         pred += (val - feat.mean) / feat.scale * feat.coef;
                     }
