@@ -2569,6 +2569,10 @@
                 header: true,
                 dynamicTyping: true,
                 complete: function (results) {
+                    if (!results.data || results.data.length === 0) {
+                        document.getElementById('last-updated').innerHTML = '<span class="text-red-500">Error: Empty CSV</span>';
+                        return;
+                    }
                     allData = results.data;
                     // Calculate calculated fields
                     allData.forEach(d => {
@@ -2590,6 +2594,11 @@
                     
                     const now = new Date();
                     document.getElementById('last-updated').innerText = `Updated: ${now.toLocaleDateString()} ${now.toLocaleTimeString()}`;
+                },
+                error: function (err) {
+                    console.error("CSV Load Error:", err);
+                    document.getElementById('last-updated').innerHTML = '<span class="text-red-500 font-bold"><i class="fas fa-exclamation-triangle"></i> Load Failed</span>';
+                    alert("無法載入 CSV 資料！這通常是因為瀏覽器安全性限制（CORS）或檔案不存在。如果您是直接點開 HTML 檔案，請改用 VS Code Live Server 開啟或上傳至 GitHub Pages 查看。");
                 }
             });
 
