@@ -758,23 +758,7 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-slate-700/50 pt-4 mt-4">
-                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-pink-500 rounded-full"></span>
-                            現場干預訊號 (Intervention Signal) ⚠️
-                        </div>
-                    </div>
-                    <!-- Water fix -->
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="text-slate-300 font-medium select-none cursor-pointer" for="input-s60-water_fix">拌合手微調水量 <span class="text-pink-400 text-xs text-[10px] ml-1">📍 現場修比</span></label>
-                        <div class="flex items-center gap-3">
-                            <span id="val-s60-water_fix" class="text-slate-400 font-mono font-bold text-xs uppercase transition-colors">無 (0)</span>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="input-s60-water_fix" class="sr-only peer">
-                                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500 shadow-inner"></div>
-                            </label>
-                        </div>
-                    </div>
+
                 </div>
 
                 <!-- M60 Inputs (Hidden by default) -->
@@ -887,23 +871,7 @@
                         </div>
                     </div>
 
-                    <div class="border-t border-slate-700/50 pt-4 mt-4">
-                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
-                            <span class="w-2 h-2 bg-pink-500 rounded-full"></span>
-                            現場干預訊號 (Intervention Signal) ⚠️
-                        </div>
-                    </div>
-                    <!-- Water fix -->
-                    <div class="flex items-center justify-between mb-2">
-                        <label class="text-slate-300 font-medium select-none cursor-pointer" for="input-m60-water_fix">拌合手微調水量 <span class="text-pink-400 text-xs text-[10px] ml-1">📍 現場修比</span></label>
-                        <div class="flex items-center gap-3">
-                            <span id="val-m60-water_fix" class="text-slate-400 font-mono font-bold text-xs uppercase transition-colors">無 (0)</span>
-                            <label class="relative inline-flex items-center cursor-pointer">
-                                <input type="checkbox" id="input-m60-water_fix" class="sr-only peer">
-                                <div class="w-11 h-6 bg-slate-700 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-pink-500 shadow-inner"></div>
-                            </label>
-                        </div>
-                    </div>
+
                 </div>
             </div>
 
@@ -916,7 +884,7 @@
                         class="text-6xl font-black text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] transition-all duration-300">--</span>
                     <div
                         class="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity whitespace-nowrap bg-black/80 px-2 py-1 rounded text-xs text-slate-300 pointer-events-none">
-                        基於 v11 線性回歸模型 (含扣水率干預訊號)
+                        基於 v11 線性回歸模型
                     </div>
                 </div>
                 <span class="text-xl text-slate-500 mt-2 font-bold">kgf/cm²</span>
@@ -954,7 +922,7 @@
                     </tbody>
                 </table>
                 <p class="mt-3 text-slate-500 italic">📖 = 國際學術公認因子 | 🔬 = 本研究創新特徵</p>
-                <p class="text-slate-600 mt-1">註：模型底層使用 33 個完整特徵訓練（Lasso/Ridge/ElasticNet + LOOCV），此處展示的為經學術驗證的關鍵可調參數。V11 新增水泥砂漿強度、扣水率干預訊號，並消除高共線性特徵（設定扣水率、扣水率變動幅度、水量微調偏離度）。</p>
+                <p class="text-slate-600 mt-1">註：模型底層使用多個特徵訓練（Lasso/Ridge/ElasticNet + LOOCV），此處展示的為經學術驗證的關鍵可調參數。V11 捨棄具備高共線性與易受人為干擾的次要特徵（如：扣水微調等），聚焦於最具物理含意的材料特徵。</p>
             </div>
         </details>
     </div>
@@ -986,7 +954,6 @@
                 const fm = parseFloat(document.getElementById('input-s60-fm').value);
                 const mud = parseFloat(document.getElementById('input-s60-mud').value);
                 const cement28 = parseFloat(document.getElementById('input-s60-cement28').value);
-                const waterFix = document.getElementById('input-s60-water_fix').checked ? 1 : 0;
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
@@ -1003,11 +970,7 @@
                 document.getElementById('val-s60-mud').innerText = mud.toFixed(1) + ' %';
                 document.getElementById('val-s60-cement28').innerText = cement28 + ' kgf/cm²';
 
-                score += getScaled('扣水率_是否變更', waterFix);
-                
-                const valS60Water = document.getElementById('val-s60-water_fix');
-                valS60Water.innerText = waterFix ? '有干預 (1)' : '無 (0)';
-                valS60Water.className = waterFix ? 'text-pink-400 font-mono font-bold text-xs uppercase transition-colors' : 'text-slate-400 font-mono font-bold text-xs uppercase transition-colors';
+
 
             } else {
                 // 共通因子 + 品質因子 + M60專屬因子
@@ -1020,7 +983,6 @@
 
                 const sf = parseFloat(document.getElementById('input-m60-sf').value);
                 const cur = parseFloat(document.getElementById('input-m60-cur').value);
-                const waterFix = document.getElementById('input-m60-water_fix').checked ? 1 : 0;
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
@@ -1042,11 +1004,7 @@
                 document.getElementById('val-m60-cur').innerText = cur + ' A';
                 document.getElementById('val-m60-cement28').innerText = cement28 + ' kgf/cm²';
                 
-                score += getScaled('扣水率_是否變更', waterFix);
-                
-                const valM60Water = document.getElementById('val-m60-water_fix');
-                valM60Water.innerText = waterFix ? '有干預 (1)' : '無 (0)';
-                valM60Water.className = waterFix ? 'text-pink-400 font-mono font-bold text-xs uppercase transition-colors' : 'text-slate-400 font-mono font-bold text-xs uppercase transition-colors';
+
             }
 
             // Add contribution of HIDDEN features (assumed to be at MEAN, so scaled value is 0)
@@ -1091,7 +1049,7 @@
         }
 
         // Bind Events
-        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-mud', 's60-cement28', 's60-water_fix', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm', 'm60-mud', 'm60-cement28', 'm60-water_fix'].forEach(id => {
+        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-mud', 's60-cement28', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm', 'm60-mud', 'm60-cement28'].forEach(id => {
             const el = document.getElementById(`input-${id}`);
             if (el) el.addEventListener('input', updatePrediction);
         });
@@ -1435,6 +1393,7 @@
         const CORR_FEATURES = [
             { key: '抗壓強度標準差', label: '抗壓強度標準差 (σ)' },
             { key: '平均強度', label: '平均強度 (28天)' },
+            { key: '水泥砂漿_28天平均強度', label: '水泥砂漿28天強度 (🆕)' },
             { key: '坍度(cm)', label: '坍度' },
             { key: '混凝土溫度(℃)', label: '混凝土溫度' },
             { key: '水膠比', label: '水膠比' },
@@ -1844,6 +1803,7 @@
         let crossChart = null;
 
         const CROSS_FEATURES = [
+            { key: '水泥砂漿_28天平均強度', label: '水泥砂漿28天強度 (🆕)' },
             { key: '坍度(cm)', label: '坍度' },
             { key: '混凝土溫度(℃)', label: '混凝土溫度' },
             { key: '耗用骨材1', label: '砂（細骨材）' },
