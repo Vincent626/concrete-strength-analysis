@@ -718,22 +718,22 @@
                             砂石品質因子 (Aggregate Quality)
                         </div>
                     </div>
-                    <!-- Sand FM -->
+                    <!-- 六分石 FM (Coarse Aggregate) -->
                     <div>
                         <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">砂細度模數 (Sand F.M.) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-fm" class="text-neon-blue font-mono font-bold">2.80</span>
+                            <label class="text-slate-300 font-medium">六分石細度模數 (Coarse F.M.) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-s60-fm" class="text-neon-blue font-mono font-bold">6.71</span>
                         </div>
-                        <input type="range" id="input-s60-fm" min="2.0" max="3.5" step="0.05" value="2.80"
+                        <input type="range" id="input-s60-fm" min="6.1" max="7.3" step="0.05" value="6.71"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
                     </div>
                     <!-- Sand Mud Content -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">砂含泥量 (Mud Content) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-mud" class="text-neon-blue font-mono font-bold">3.5 %</span>
+                            <span id="val-s60-mud" class="text-neon-blue font-mono font-bold">4.9 %</span>
                         </div>
-                        <input type="range" id="input-s60-mud" min="1.0" max="8.0" step="0.1" value="3.5"
+                        <input type="range" id="input-s60-mud" min="3.0" max="9.0" step="0.1" value="4.9"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
                     </div>
 
@@ -787,18 +787,27 @@
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">砂細度模數 (Sand F.M.) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-fm" class="text-neon-green font-mono font-bold">2.80</span>
+                            <span id="val-m60-fm" class="text-neon-green font-mono font-bold">2.94</span>
                         </div>
-                        <input type="range" id="input-m60-fm" min="2.0" max="3.5" step="0.05" value="2.80"
+                        <input type="range" id="input-m60-fm" min="2.6" max="3.2" step="0.05" value="2.94"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                    </div>
+                    <!-- 六分石 FM (Coarse Aggregate) -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">六分石細度模數 (Coarse F.M.) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-fm6" class="text-neon-green font-mono font-bold">6.71</span>
+                        </div>
+                        <input type="range" id="input-m60-fm6" min="6.1" max="7.3" step="0.05" value="6.71"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
                     </div>
                     <!-- Sand Mud Content -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">砂含泥量 (Mud Content) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-mud" class="text-neon-green font-mono font-bold">3.5 %</span>
+                            <span id="val-m60-mud" class="text-neon-green font-mono font-bold">5.5 %</span>
                         </div>
-                        <input type="range" id="input-m60-mud" min="1.0" max="8.0" step="0.1" value="3.5"
+                        <input type="range" id="input-m60-mud" min="3.0" max="9.0" step="0.1" value="5.5"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
                     </div>
 
@@ -911,14 +920,12 @@
                 const temp = parseFloat(document.getElementById('input-s60-temp').value);
                 const fm = parseFloat(document.getElementById('input-s60-fm').value);
                 const mud = parseFloat(document.getElementById('input-s60-mud').value);
-                const cement28 = parseFloat(document.getElementById('input-s60-cement28').value);
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
                 score += getScaled('混凝土溫度(℃)', temp);
-                score += getScaled('砂_FM', fm);
-                score += getScaled('砂_Mud_Content', mud);
-                // score += getScaled('水泥砂漿_28天平均強度', cement28);
+                score += getScaled('六分_FM', fm);
+                score += getScaled('砂_Mud', mud);
 
                 // Update Labels
                 document.getElementById('val-s60-wb').innerText = wb.toFixed(2);
@@ -926,7 +933,6 @@
                 document.getElementById('val-s60-temp').innerText = temp + ' °C';
                 document.getElementById('val-s60-fm').innerText = fm.toFixed(2);
                 document.getElementById('val-s60-mud').innerText = mud.toFixed(1) + ' %';
-                // document.getElementById('val-s60-cement28').innerText = cement28 + ' kgf/cm²';
 
 
 
@@ -936,8 +942,8 @@
                 const slump = parseFloat(document.getElementById('input-m60-slump').value);
                 const temp = parseFloat(document.getElementById('input-m60-temp').value);
                 const fm = parseFloat(document.getElementById('input-m60-fm').value);
+                const fm6 = parseFloat(document.getElementById('input-m60-fm6').value);
                 const mud = parseFloat(document.getElementById('input-m60-mud').value);
-                const cement28 = parseFloat(document.getElementById('input-m60-cement28').value);
 
                 const sf = parseFloat(document.getElementById('input-m60-sf').value);
                 const cur = parseFloat(document.getElementById('input-m60-cur').value);
@@ -946,8 +952,8 @@
                 score += getScaled('坍度(cm)', slump);
                 score += getScaled('混凝土溫度(℃)', temp);
                 score += getScaled('砂_FM', fm);
-                score += getScaled('砂_Mud_Content', mud);
-                // score += getScaled('水泥砂漿_28天平均強度', cement28);
+                score += getScaled('六分_FM', fm6);
+                score += getScaled('砂_Mud', mud);
 
                 score += getScaled('矽灰取代率', sf);
                 score += getScaled('最終電流', cur);
@@ -957,10 +963,10 @@
                 document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
                 document.getElementById('val-m60-temp').innerText = temp + ' °C';
                 document.getElementById('val-m60-fm').innerText = fm.toFixed(2);
+                document.getElementById('val-m60-fm6').innerText = fm6.toFixed(2);
                 document.getElementById('val-m60-mud').innerText = mud.toFixed(1) + ' %';
                 document.getElementById('val-m60-sf').innerText = sf + ' %';
                 document.getElementById('val-m60-cur').innerText = cur + ' A';
-                // document.getElementById('val-m60-cement28').innerText = cement28 + ' kgf/cm²';
                 
 
             }
@@ -1007,7 +1013,7 @@
         }
 
         // Bind Events
-        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-mud', 's60-cement28', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm', 'm60-mud', 'm60-cement28'].forEach(id => {
+        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-mud', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm', 'm60-fm6', 'm60-mud'].forEach(id => {
             const el = document.getElementById(`input-${id}`);
             if (el) el.addEventListener('input', updatePrediction);
         });
@@ -1365,7 +1371,7 @@
             { key: '粗細骨材比', label: '粗細骨材比' },
             { key: '耗用骨材1', label: '砂（細骨材）' },
             { key: '耗用骨材2', label: '3分石（粗骨材小）' },
-            { key: '耗用骨材3', label: '6分石（粗骨材大）' },
+            { key: '耗用骨材3', label: '六分石（粗骨材大）' },
             { key: '耗用泥料1', label: 'II型水泥' },
             { key: '耗用泥料2', label: '矽灰' },
             { key: '耗用泥料4', label: '爐石' },
@@ -1380,6 +1386,10 @@
             { key: '砂_Mud_Content', label: '砂 含泥量 (%)' },
             { key: '三分_FM', label: '三分石 細度模數' },
             { key: '六分_FM', label: '六分石 細度模數' },
+            { key: '水泥取代率', label: '水泥取代率' },
+            { key: '水泥_流動性', label: '水泥流動性' },
+            { key: '水泥砂漿_7天平均強度', label: '水泥砂漿 7天強度' },
+            { key: '水泥砂漿_28天平均強度', label: '水泥砂漿 28天強度' },
         ];
 
         function getCorrLabel(key) {
@@ -1487,8 +1497,28 @@
             const step = isFraction ? 0.01 : 1;
             const displaySlope = stats.slope * step;
 
-            document.getElementById('corr-slope').innerText = displaySlope.toFixed(2);
-            document.getElementById('corr-slope-desc').innerHTML = '當 X 變更 ' + step + ' 個單位時<br>Y 平均會變動的數值';
+            const slopeEl = document.getElementById('corr-slope');
+            const slopeDescEl = document.getElementById('corr-slope-desc');
+            const absR = Math.abs(stats.r);
+            if (absR >= 0.5) {
+                slopeEl.innerText = displaySlope.toFixed(2);
+                slopeEl.style.color = '#ffffff';
+                slopeEl.style.textDecoration = 'none';
+                slopeEl.style.opacity = '1';
+                slopeDescEl.innerHTML = '當 X 變更 ' + step + ' 個單位時<br>Y 平均會變動的數值';
+            } else if (absR >= 0.3) {
+                slopeEl.innerText = displaySlope.toFixed(2) + ' ⚠';
+                slopeEl.style.color = '#f59e0b';
+                slopeEl.style.textDecoration = 'none';
+                slopeEl.style.opacity = '1';
+                slopeDescEl.innerHTML = '當 X 變更 ' + step + ' 個單位時<br>Y 平均會變動的數值<br><span style="color:#f59e0b">相關性偏弱，僅供參考</span>';
+            } else {
+                slopeEl.innerText = displaySlope.toFixed(2);
+                slopeEl.style.color = '#64748b';
+                slopeEl.style.textDecoration = 'line-through';
+                slopeEl.style.opacity = '0.6';
+                slopeDescEl.innerHTML = '<span style="color:#ef4444;font-weight:bold">相關性不足（R &lt; 0.3）</span><br>此斜率不具參考意義<br>請忽略此數值';
+            }
             document.getElementById('corr-n').innerText = points.length;
 
             // Auto-conclusion
@@ -1699,7 +1729,7 @@
                                 <div class="space-y-1.5">
                                     <div class="flex justify-between"><span class="text-slate-500">砂:</span> <span class="text-white font-mono">${sand} kg</span></div>
                                     <div class="flex justify-between"><span class="text-slate-500">${currentTab === 'S60' ? '3分石 <span class="text-[10px] text-amber-500">(主要)</span>' : '3分石'}:</span> <span class="text-white font-mono">${stone3} kg</span></div>
-                                    <div class="flex justify-between"><span class="text-slate-500">${currentTab === 'M60' ? '6分石 <span class="text-[10px] text-amber-500">(主要)</span>' : '6分石'}:</span> <span class="text-white font-mono">${stone6} kg</span></div>
+                                    <div class="flex justify-between"><span class="text-slate-500">${currentTab === 'M60' ? '六分石 <span class="text-[10px] text-amber-500">(主要)</span>' : '六分石'}:</span> <span class="text-white font-mono">${stone6} kg</span></div>
                                 </div>
                             </div>
                             
@@ -1765,7 +1795,7 @@
             { key: '混凝土溫度(℃)', label: '混凝土溫度' },
             { key: '耗用骨材1', label: '砂（細骨材）' },
             { key: '耗用骨材2', label: '3分石（粗骨材小）' },
-            { key: '耗用骨材3', label: '6分石（粗骨材大）' },
+            { key: '耗用骨材3', label: '六分石（粗骨材大）' },
             { key: '耗用水', label: '拌合水' },
             { key: '耗用泥料1', label: 'II型水泥' },
             { key: '耗用泥料2', label: '矽灰' },
@@ -1790,6 +1820,10 @@
             { key: '砂_Mud_Content', label: '砂 含泥量 (%)' },
             { key: '三分_FM', label: '三分石 細度模數' },
             { key: '六分_FM', label: '六分石 細度模數' },
+            { key: '水泥取代率', label: '水泥取代率' },
+            { key: '水泥_流動性', label: '水泥流動性' },
+            { key: '水泥砂漿_7天平均強度', label: '水泥砂漿 7天強度' },
+            { key: '水泥砂漿_28天平均強度', label: '水泥砂漿 28天強度' },
         ];
 
         function getCrossLabel(key) {
@@ -2270,7 +2304,7 @@
             // Filter Valid Data
             const dataset = allData.filter(d => d.母體 && d.母體.startsWith(currentTab) && d.平均強度 > 100);
 
-            let sumSqureRes = 0;
+            let sumSquaredRes = 0;
             let sumSquareTot = 0;
             let sumAbsErr = 0;
             let yMean = dataset.reduce((a, b) => a + (parseFloat(b.平均強度) || 0), 0) / dataset.length;
@@ -2294,7 +2328,7 @@
                 });
 
                 // Metrics
-                sumSqureRes += Math.pow(actual - pred, 2);
+                sumSquaredRes += Math.pow(actual - pred, 2);
                 sumSquareTot += Math.pow(actual - yMean, 2);
                 sumAbsErr += Math.abs(actual - pred);
 
@@ -2310,9 +2344,9 @@
             });
 
             // Calc Stats
-            const r2 = 1 - (sumSqureRes / sumSquareTot);
+            const r2 = 1 - (sumSquaredRes / sumSquareTot);
             const mae = sumAbsErr / dataset.length;
-            const residualStd = Math.sqrt(sumSqureRes / dataset.length);
+            const residualStd = Math.sqrt(sumSquaredRes / dataset.length);
 
             // Update DOM - Accuracy section gauge
             document.getElementById('acc-r2').innerText = r2.toFixed(3);
