@@ -366,11 +366,11 @@
                     class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
                     <div
                         class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                        相關係數 (R) <i class="fas fa-info-circle text-slate-500 cursor-help" title="衡量兩個變數一起變動的關聯程度。"></i>
+                        相關係數 (R) <i class="fas fa-info-circle text-slate-500 cursor-help" title="衡量兩個變數一起變動的關聯程度。範圍固定在 -1 到 +1 之間。"></i>
                     </div>
                     <div id="corr-r" class="text-xl font-black text-white font-mono">--</div>
                     <div class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
-                        完全沒關係是 0<br>數字越接近 ±1 關係越強
+                        範圍 -1 到 +1<br>|R|&lt;0.3 弱｜0.3~0.7 中｜&gt;0.7 強
                     </div>
                 </div>
                 <div
@@ -378,22 +378,22 @@
                     <div
                         class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
                         決定係數 (R²) <i class="fas fa-info-circle text-slate-500 cursor-help"
-                            title="由 R 的平方計算而來，表示 Y 的變化有多少能被 X 解釋。"></i>
+                            title="由 R 的平方計算而來，表示 Y 的變化有多少比例能被 X 解釋。例如 R²=0.4 代表 X 能解釋 40% 的 Y 變化。"></i>
                     </div>
                     <div id="corr-r2" class="text-xl font-black text-white font-mono">--</div>
                     <div class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
-                        越高代表 X 對 Y 的<br>解釋與預測能力越好
+                        範圍 0 到 1<br>例：0.4 = X 解釋了 40% 的 Y 變化
                     </div>
                 </div>
                 <div
                     class="bg-slate-800/60 rounded-lg p-3 border border-slate-700 flex flex-col items-center justify-center relative group">
                     <div
                         class="text-[11px] text-slate-400 font-bold uppercase tracking-wider mb-1 flex items-center gap-1">
-                        趨勢斜率 <i class="fas fa-info-circle text-slate-500 cursor-help" title="線性回歸直線的斜率。"></i>
+                        趨勢斜率 <i class="fas fa-info-circle text-slate-500 cursor-help" title="線性回歸直線的斜率，無固定範圍（不同於相關係數 R）。數值大小取決於 X 和 Y 的單位，僅在 |R| ≥ 0.3 時具參考意義。"></i>
                     </div>
                     <div id="corr-slope" class="text-xl font-black text-white font-mono">--</div>
                     <div id="corr-slope-desc" class="text-[11px] text-slate-500 mt-1 leading-tight text-center">
-                        當 X 變更 1 個單位時<br>Y 平均會變動的數值
+                        X 每增加 1 單位<br>Y 平均變動的數值（無固定範圍）
                     </div>
                 </div>
                 <div

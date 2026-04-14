@@ -1,0 +1,19 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python -c ':*)",
+      "Bash(python3 -c ':*)",
+      "Bash(python3 add_mixer_quality_features.py)",
+      "Bash(python3 train_v11.py)",
+      "Bash(python3 extract_daily_fm_v2.py)",
+      "Bash(python3 add_fm_features.py)",
+      "Bash(python3 patch_sand_fm_v11.py)",
+      "Bash(python3 export_model_for_web.py)",
+      "Bash(python3 extract_daily_coarse.py)",
+      "Bash(ls \"D:\\\\OneDrive - 振添股份有限公司\\\\ML_DATA\"/patch_*.py \"D:\\\\OneDrive - 振添股份有限公司\\\\ML_DATA\"/Daily_Coarse*.csv)",
+      "Bash(grep -l \"六分_FM\\\\|三分_FM\\\\|Coarse\" \"D:\\\\OneDrive - 振添股份有限公司\\\\ML_DATA\"/*.py)",
+      "Bash(ls \"D:\\\\OneDrive - 振添股份有限公司\\\\ML_DATA\"/patch_coarse*.py)",
+      "Bash(grep -l \"六分_FM\\\\|三分_FM\" \"D:\\\\OneDrive - 振添股份有限公司\\\\ML_DATA\"/patch_*.py)"
+    ]
+  }
+}
