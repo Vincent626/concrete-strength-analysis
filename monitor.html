@@ -145,6 +145,15 @@
         body.light-theme tr:hover {
             background-color: rgba(241, 245, 249, 0.8);
         }
+
+        /* Main Tab Navigation */
+        .main-tab-btn { color: #64748b; }
+        .main-tab-btn:hover { color: #e2e8f0; background: rgba(255,255,255,0.05); }
+        .main-tab-btn.active-tab { background: rgba(99,102,241,0.2); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.4); }
+
+        @media (max-width: 640px) {
+            .main-tab-nav { display: grid; grid-template-columns: 1fr 1fr; }
+        }
     </style>
 </head>
 
@@ -328,6 +337,17 @@
             </p>
         </div>
 
+        <!-- Main Tab Navigation -->
+        <div class="main-tab-nav flex gap-1 p-1 rounded-xl bg-slate-900/60 border border-slate-700/50 mb-6">
+            <button id="main-tab-corr"  onclick="switchMainTab('corr')"  class="main-tab-btn active-tab flex-1 py-2.5 rounded-lg text-sm font-bold transition-all">📊 相關性分析</button>
+            <button id="main-tab-cross" onclick="switchMainTab('cross')" class="main-tab-btn flex-1 py-2.5 rounded-lg text-sm font-bold transition-all">🔀 交叉比對</button>
+            <button id="main-tab-acc"   onclick="switchMainTab('acc')"   class="main-tab-btn flex-1 py-2.5 rounded-lg text-sm font-bold transition-all">🎯 模型準確度</button>
+            <button id="main-tab-pred"  onclick="switchMainTab('pred')"  class="main-tab-btn flex-1 py-2.5 rounded-lg text-sm font-bold transition-all">🤖 強度預測</button>
+        </div>
+
+        <!-- Tab 1: 相關性分析 -->
+        <div id="tab-content-corr">
+
         <!-- Main Chart Section: 雙變數相關性分析 -->
         <div class="glass-panel p-6 mb-8 flex flex-col border-l-4 border-neon-blue">
             <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6 gap-4">
@@ -475,9 +495,11 @@
                 </div>
             </div>
         </div>
-    </div>
 
+        </div><!-- /tab-content-corr -->
 
+        <!-- Tab 2: 交叉比對 -->
+        <div id="tab-content-cross" class="hidden">
 
     <!-- Feature Cross Analysis (交叉比對分析) -->
     <div class="glass-panel p-6 mb-8 border-l-4 border-emerald-500 animate-fade-in delay-250">
@@ -553,6 +575,11 @@
             *資料依數值排序後均分為三組（低/中/高），每組約佔總樣本數的 1/3
         </p>
     </div>
+
+        </div><!-- /tab-content-cross -->
+
+        <!-- Tab 3: 模型準確度 -->
+        <div id="tab-content-acc" class="hidden">
 
     <!-- Model Accuracy Analysis (New Section) -->
     <div class="glass-panel p-6 mb-8 border-l-4 border-amber-500 animate-fade-in delay-300">
@@ -640,6 +667,11 @@
             </div>
         </div>
     </div>
+
+        </div><!-- /tab-content-acc -->
+
+        <!-- Tab 4: 強度預測 -->
+        <div id="tab-content-pred" class="hidden">
 
     <!-- AI Prediction Tool Section -->
     <div id="ai-tool-container"
@@ -1010,6 +1042,10 @@
         </details>
     </div>
 
+        </div><!-- /tab-content-pred -->
+
+    </div><!-- /dashboard-content -->
+
     <script src="model_data.js"></script>
     <script>
         // Prediction Logic
@@ -1293,6 +1329,18 @@
         function switchTab(tab) {
             currentTab = tab;
             render();
+        }
+
+        function switchMainTab(tab) {
+            ['corr','cross','acc','pred'].forEach(t => {
+                document.getElementById('tab-content-' + t).classList.toggle('hidden', t !== tab);
+                const btn = document.getElementById('main-tab-' + t);
+                btn.classList.toggle('active-tab', t === tab);
+            });
+            // 切換到相關性分析時重繪圖表
+            if (tab === 'corr' && typeof mainChart !== 'undefined' && mainChart) mainChart.resize();
+            if (tab === 'cross' && typeof crossChart !== 'undefined' && crossChart) crossChart.resize();
+            if (tab === 'acc' && typeof accuracyChart !== 'undefined' && accuracyChart) accuracyChart.resize();
         }
 
 
