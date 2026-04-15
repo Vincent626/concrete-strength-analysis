@@ -682,13 +682,12 @@
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">水膠比 (W/B Ratio) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-wb" class="text-neon-blue font-mono font-bold">0.32</span>
+                            <span id="val-s60-wb" class="text-neon-blue font-mono font-bold">0.31</span>
                         </div>
-                        <input type="range" id="input-s60-wb" min="0.28" max="0.36" step="0.01" value="0.32"
+                        <input type="range" id="input-s60-wb" min="0.25" max="0.36" step="0.01" value="0.31"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue hover:bg-slate-600 transition-colors">
                         <div class="flex justify-between text-xs text-slate-500 mt-1">
-                            <span>0.28 (濃)</span>
-                            <span>0.36 (稀)</span>
+                            <span>0.25 (濃)</span><span>0.36 (稀)</span>
                         </div>
                     </div>
 
@@ -696,20 +695,59 @@
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">坍度 (Slump) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-slump" class="text-neon-blue font-mono font-bold">4.2 cm</span>
+                            <span id="val-s60-slump" class="text-neon-blue font-mono font-bold">4.3 cm</span>
                         </div>
-                        <input type="range" id="input-s60-slump" min="1.0" max="8.0" step="0.5" value="4.2"
+                        <input type="range" id="input-s60-slump" min="1.0" max="8.0" step="0.5" value="4.3"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>1.0 cm</span><span>8.0 cm</span>
+                        </div>
                     </div>
 
                     <!-- Temp -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">混凝土溫度 (Temp) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-temp" class="text-neon-blue font-mono font-bold">28 °C</span>
+                            <span id="val-s60-temp" class="text-neon-blue font-mono font-bold">27 °C</span>
                         </div>
-                        <input type="range" id="input-s60-temp" min="20" max="35" step="1" value="28"
+                        <input type="range" id="input-s60-temp" min="20" max="33" step="1" value="27"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>20°C</span><span>33°C</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-700/50 pt-4 mt-4">
+                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            骨材配比因子 (Aggregate Ratio)
+                        </div>
+                    </div>
+
+                    <!-- 砂石比 -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">砂石比 (Sand Ratio) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-s60-sr" class="text-neon-blue font-mono font-bold">0.417</span>
+                        </div>
+                        <input type="range" id="input-s60-sr" min="0.37" max="0.48" step="0.005" value="0.417"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>0.37 (少砂)</span><span>0.48 (多砂)</span>
+                        </div>
+                    </div>
+
+                    <!-- 粗細骨材比 -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">粗細骨材比 (Coarse/Fine) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-s60-cfr" class="text-neon-blue font-mono font-bold">1.40</span>
+                        </div>
+                        <input type="range" id="input-s60-cfr" min="1.10" max="1.90" step="0.05" value="1.40"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>1.10 (少粗骨材)</span><span>1.90 (多粗骨材)</span>
+                        </div>
                     </div>
 
                     <div class="border-t border-slate-700/50 pt-4 mt-4">
@@ -718,23 +756,49 @@
                             砂石品質因子 (Aggregate Quality)
                         </div>
                     </div>
-                    <!-- 六分石 FM (Coarse Aggregate) -->
+
+                    <!-- 六分石 FM -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">六分石細度模數 (Coarse F.M.) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-fm" class="text-neon-blue font-mono font-bold">6.71</span>
+                            <span id="val-s60-fm" class="text-neon-blue font-mono font-bold">6.72</span>
                         </div>
-                        <input type="range" id="input-s60-fm" min="6.1" max="7.3" step="0.05" value="6.71"
+                        <input type="range" id="input-s60-fm" min="6.14" max="7.23" step="0.05" value="6.72"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>6.14</span><span>7.23</span>
+                        </div>
                     </div>
+
+                    <!-- 三分石 FM -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">三分石細度模數 (Fine Coarse F.M.) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-s60-fm3" class="text-neon-blue font-mono font-bold">6.57</span>
+                        </div>
+                        <input type="range" id="input-s60-fm3" min="6.31" max="6.94" step="0.05" value="6.57"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>6.31</span><span>6.94</span>
+                        </div>
+                    </div>
+
                     <!-- Sand Mud Content -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">砂含泥量 (Mud Content) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-s60-mud" class="text-neon-blue font-mono font-bold">4.9 %</span>
+                            <span id="val-s60-mud" class="text-neon-blue font-mono font-bold">5.7 %</span>
                         </div>
-                        <input type="range" id="input-s60-mud" min="3.0" max="9.0" step="0.1" value="4.9"
+                        <input type="range" id="input-s60-mud" min="5.4" max="6.4" step="0.1" value="5.7"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-blue">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>5.4%</span><span>6.4%</span>
+                        </div>
+                    </div>
+
+                    <!-- 砂FM 固定說明 -->
+                    <div class="bg-slate-900/50 rounded-lg p-3 border border-slate-700/50">
+                        <div class="text-xs text-slate-500">砂細度模數 (Sand F.M.)：本廠歷史資料幾乎固定於 <span class="text-slate-300 font-mono font-bold">2.94</span>，變異極小，已設為固定值。</div>
                     </div>
 
                 </div>
@@ -747,34 +811,76 @@
                         <span class="w-2 h-2 bg-slate-600 rounded-full"></span>
                         生產控制因子 (Control Factors)
                     </div>
-                    <!-- W/B Ratio (共通) -->
+                    <!-- W/B Ratio -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">水膠比 (W/B Ratio) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-wb" class="text-neon-green font-mono font-bold">0.31</span>
+                            <span id="val-m60-wb" class="text-neon-green font-mono font-bold">0.32</span>
                         </div>
-                        <input type="range" id="input-m60-wb" min="0.25" max="0.38" step="0.01" value="0.31"
+                        <input type="range" id="input-m60-wb" min="0.26" max="0.37" step="0.01" value="0.32"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>0.26 (濃)</span><span>0.37 (稀)</span>
+                        </div>
                     </div>
 
-                    <!-- Slump (共通) -->
+                    <!-- Slump -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">坍度 (Slump) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-slump" class="text-neon-green font-mono font-bold">4.5 cm</span>
+                            <span id="val-m60-slump" class="text-neon-green font-mono font-bold">4.4 cm</span>
                         </div>
-                        <input type="range" id="input-m60-slump" min="1.0" max="8.0" step="0.5" value="4.5"
+                        <input type="range" id="input-m60-slump" min="1.0" max="9.0" step="0.5" value="4.4"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>1.0 cm</span><span>9.0 cm</span>
+                        </div>
                     </div>
 
-                    <!-- Temp (共通) -->
+                    <!-- Temp -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">混凝土溫度 (Temp) <span class="text-amber-400 text-xs">📖</span></label>
                             <span id="val-m60-temp" class="text-neon-green font-mono font-bold">26 °C</span>
                         </div>
-                        <input type="range" id="input-m60-temp" min="18" max="35" step="1" value="26"
+                        <input type="range" id="input-m60-temp" min="18" max="33" step="1" value="26"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>18°C</span><span>33°C</span>
+                        </div>
+                    </div>
+
+                    <div class="border-t border-slate-700/50 pt-4 mt-4">
+                        <div class="text-xs text-slate-500 uppercase tracking-wider font-bold mb-3 flex items-center gap-2">
+                            <span class="w-2 h-2 bg-purple-500 rounded-full"></span>
+                            骨材配比因子 (Aggregate Ratio)
+                        </div>
+                    </div>
+
+                    <!-- 砂石比 -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">砂石比 (Sand Ratio) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-sr" class="text-neon-green font-mono font-bold">0.418</span>
+                        </div>
+                        <input type="range" id="input-m60-sr" min="0.38" max="0.47" step="0.005" value="0.418"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>0.38 (少砂)</span><span>0.47 (多砂)</span>
+                        </div>
+                    </div>
+
+                    <!-- 粗細骨材比 -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">粗細骨材比 (Coarse/Fine) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-cfr" class="text-neon-green font-mono font-bold">1.40</span>
+                        </div>
+                        <input type="range" id="input-m60-cfr" min="1.10" max="1.90" step="0.05" value="1.40"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>1.10 (少粗骨材)</span><span>1.90 (多粗骨材)</span>
+                        </div>
                     </div>
 
                     <div class="border-t border-slate-700/50 pt-4 mt-4">
@@ -783,32 +889,49 @@
                             砂石品質因子 (Aggregate Quality)
                         </div>
                     </div>
-                    <!-- Sand FM -->
-                    <div>
-                        <div class="flex justify-between mb-2">
-                            <label class="text-slate-300 font-medium">砂細度模數 (Sand F.M.) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-fm" class="text-neon-green font-mono font-bold">2.94</span>
-                        </div>
-                        <input type="range" id="input-m60-fm" min="2.6" max="3.2" step="0.05" value="2.94"
-                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
-                    </div>
-                    <!-- 六分石 FM (Coarse Aggregate) -->
+
+                    <!-- 六分石 FM -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">六分石細度模數 (Coarse F.M.) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-fm6" class="text-neon-green font-mono font-bold">6.71</span>
+                            <span id="val-m60-fm6" class="text-neon-green font-mono font-bold">6.72</span>
                         </div>
-                        <input type="range" id="input-m60-fm6" min="6.1" max="7.3" step="0.05" value="6.71"
+                        <input type="range" id="input-m60-fm6" min="6.14" max="7.23" step="0.05" value="6.72"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>6.14</span><span>7.23</span>
+                        </div>
                     </div>
+
+                    <!-- 三分石 FM -->
+                    <div>
+                        <div class="flex justify-between mb-2">
+                            <label class="text-slate-300 font-medium">三分石細度模數 (Fine Coarse F.M.) <span class="text-amber-400 text-xs">📖</span></label>
+                            <span id="val-m60-fm3" class="text-neon-green font-mono font-bold">6.62</span>
+                        </div>
+                        <input type="range" id="input-m60-fm3" min="6.31" max="6.94" step="0.05" value="6.62"
+                            class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>6.31</span><span>6.94</span>
+                        </div>
+                    </div>
+
                     <!-- Sand Mud Content -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">砂含泥量 (Mud Content) <span class="text-amber-400 text-xs">📖</span></label>
-                            <span id="val-m60-mud" class="text-neon-green font-mono font-bold">5.5 %</span>
+                            <span id="val-m60-mud" class="text-neon-green font-mono font-bold">5.6 %</span>
                         </div>
-                        <input type="range" id="input-m60-mud" min="3.0" max="9.0" step="0.1" value="5.5"
+                        <input type="range" id="input-m60-mud" min="5.4" max="6.4" step="0.1" value="5.6"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>5.4%</span><span>6.4%</span>
+                        </div>
+                    </div>
+
+                    <!-- 砂FM 固定說明 -->
+                    <div class="bg-slate-900/50 rounded-lg p-3 border border-slate-700/50">
+                        <div class="text-xs text-slate-500">砂細度模數 (Sand F.M.)：本廠歷史資料幾乎固定於 <span class="text-slate-300 font-mono font-bold">2.94</span>，變異極小，已設為固定值。</div>
                     </div>
 
                     <div class="border-t border-slate-700/50 pt-4 mt-4">
@@ -818,26 +941,31 @@
                         </div>
                     </div>
 
-                    <!-- Silica Fume (M60專屬) -->
+                    <!-- Silica Fume -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">矽灰取代率 (Silica Fume) <span class="text-amber-400 text-xs">📖</span></label>
                             <span id="val-m60-sf" class="text-neon-green font-mono font-bold">6 %</span>
                         </div>
-                        <input type="range" id="input-m60-sf" min="0" max="12" step="1" value="6"
+                        <input type="range" id="input-m60-sf" min="0" max="11" step="1" value="6"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>0%</span><span>11%</span>
+                        </div>
                     </div>
 
-                    <!-- Final Current (M60專屬) -->
+                    <!-- Final Current -->
                     <div>
                         <div class="flex justify-between mb-2">
                             <label class="text-slate-300 font-medium">最終電流 (Final Current) <span class="text-emerald-400 text-xs">🔬</span></label>
                             <span id="val-m60-cur" class="text-neon-green font-mono font-bold">78 A</span>
                         </div>
-                        <input type="range" id="input-m60-cur" min="60" max="100" step="1" value="78"
+                        <input type="range" id="input-m60-cur" min="64" max="94" step="1" value="78"
                             class="w-full h-2 bg-slate-700 rounded-lg appearance-none cursor-pointer accent-neon-green">
+                        <div class="flex justify-between text-xs text-slate-500 mt-1">
+                            <span>64 A</span><span>94 A</span>
+                        </div>
                     </div>
-
 
                 </div>
             </div>
@@ -914,47 +1042,53 @@
 
             // Add contribution of visible sliders
             if (currentTab === 'S60') {
-                // 共通因子 + 品質因子
                 const wb = parseFloat(document.getElementById('input-s60-wb').value);
                 const slump = parseFloat(document.getElementById('input-s60-slump').value);
                 const temp = parseFloat(document.getElementById('input-s60-temp').value);
                 const fm = parseFloat(document.getElementById('input-s60-fm').value);
+                const fm3 = parseFloat(document.getElementById('input-s60-fm3').value);
                 const mud = parseFloat(document.getElementById('input-s60-mud').value);
+                const sr = parseFloat(document.getElementById('input-s60-sr').value);
+                const cfr = parseFloat(document.getElementById('input-s60-cfr').value);
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
                 score += getScaled('混凝土溫度(℃)', temp);
                 score += getScaled('六分_FM', fm);
+                score += getScaled('三分_FM', fm3);
                 score += getScaled('砂_Mud', mud);
+                score += getScaled('砂石比', sr);
+                score += getScaled('粗細骨材比', cfr);
 
-                // Update Labels
                 document.getElementById('val-s60-wb').innerText = wb.toFixed(2);
                 document.getElementById('val-s60-slump').innerText = slump.toFixed(1) + ' cm';
                 document.getElementById('val-s60-temp').innerText = temp + ' °C';
                 document.getElementById('val-s60-fm').innerText = fm.toFixed(2);
+                document.getElementById('val-s60-fm3').innerText = fm3.toFixed(2);
                 document.getElementById('val-s60-mud').innerText = mud.toFixed(1) + ' %';
-
-
+                document.getElementById('val-s60-sr').innerText = sr.toFixed(3);
+                document.getElementById('val-s60-cfr').innerText = cfr.toFixed(2);
 
             } else {
-                // 共通因子 + 品質因子 + M60專屬因子
                 const wb = parseFloat(document.getElementById('input-m60-wb').value);
                 const slump = parseFloat(document.getElementById('input-m60-slump').value);
                 const temp = parseFloat(document.getElementById('input-m60-temp').value);
-                const fm = parseFloat(document.getElementById('input-m60-fm').value);
                 const fm6 = parseFloat(document.getElementById('input-m60-fm6').value);
+                const fm3 = parseFloat(document.getElementById('input-m60-fm3').value);
                 const mud = parseFloat(document.getElementById('input-m60-mud').value);
-
+                const sr = parseFloat(document.getElementById('input-m60-sr').value);
+                const cfr = parseFloat(document.getElementById('input-m60-cfr').value);
                 const sf = parseFloat(document.getElementById('input-m60-sf').value);
                 const cur = parseFloat(document.getElementById('input-m60-cur').value);
 
                 score += getScaled('水膠比', wb);
                 score += getScaled('坍度(cm)', slump);
                 score += getScaled('混凝土溫度(℃)', temp);
-                score += getScaled('砂_FM', fm);
                 score += getScaled('六分_FM', fm6);
+                score += getScaled('三分_FM', fm3);
                 score += getScaled('砂_Mud', mud);
-
+                score += getScaled('砂石比', sr);
+                score += getScaled('粗細骨材比', cfr);
                 score += getScaled('矽灰取代率', sf);
                 score += getScaled('最終電流', cur);
 
@@ -962,9 +1096,11 @@
                 document.getElementById('val-m60-wb').innerText = wb.toFixed(2);
                 document.getElementById('val-m60-slump').innerText = slump.toFixed(1) + ' cm';
                 document.getElementById('val-m60-temp').innerText = temp + ' °C';
-                document.getElementById('val-m60-fm').innerText = fm.toFixed(2);
                 document.getElementById('val-m60-fm6').innerText = fm6.toFixed(2);
+                document.getElementById('val-m60-fm3').innerText = fm3.toFixed(2);
                 document.getElementById('val-m60-mud').innerText = mud.toFixed(1) + ' %';
+                document.getElementById('val-m60-sr').innerText = sr.toFixed(3);
+                document.getElementById('val-m60-cfr').innerText = cfr.toFixed(2);
                 document.getElementById('val-m60-sf').innerText = sf + ' %';
                 document.getElementById('val-m60-cur').innerText = cur + ' A';
                 
@@ -1013,7 +1149,8 @@
         }
 
         // Bind Events
-        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-mud', 'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm', 'm60-fm6', 'm60-mud'].forEach(id => {
+        ['s60-wb', 's60-slump', 's60-temp', 's60-fm', 's60-fm3', 's60-mud', 's60-sr', 's60-cfr',
+         'm60-wb', 'm60-slump', 'm60-temp', 'm60-sf', 'm60-cur', 'm60-fm6', 'm60-fm3', 'm60-mud', 'm60-sr', 'm60-cfr'].forEach(id => {
             const el = document.getElementById(`input-${id}`);
             if (el) el.addEventListener('input', updatePrediction);
         });
